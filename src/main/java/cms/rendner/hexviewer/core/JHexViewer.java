@@ -287,7 +287,7 @@ public class JHexViewer extends JComponent
 
         if (newValue == null)
         {
-            if (offsetValueFormatter.getCustomValue() == null)
+            if (offsetValueFormatter.getPreferredValue() == null)
             {
                 return;
             }
@@ -295,7 +295,7 @@ public class JHexViewer extends JComponent
 
         if (oldValue != newValue)
         {
-            offsetValueFormatter.setValue(newValue);
+            offsetValueFormatter.setPreferredValue(newValue);
             recreateOffsetRowTemplate();
             firePropertyChange(PROPERTY_OFFSET_FORMATTER, oldValue, offsetValueFormatter.getValue());
 
@@ -321,7 +321,7 @@ public class JHexViewer extends JComponent
 
         if (newValue == null)
         {
-            if (hexValueFormatter.getCustomValue() == null)
+            if (hexValueFormatter.getPreferredValue() == null)
             {
                 return;
             }
@@ -329,7 +329,7 @@ public class JHexViewer extends JComponent
 
         if (oldValue != newValue)
         {
-            hexValueFormatter.setValue(newValue);
+            hexValueFormatter.setPreferredValue(newValue);
             firePropertyChange(PROPERTY_HEX_FORMATTER, oldValue, hexValueFormatter.getValue());
 
             if (damager != null)
@@ -354,7 +354,7 @@ public class JHexViewer extends JComponent
 
         if (newValue == null)
         {
-            if (asciiValueFormatter.getCustomValue() == null)
+            if (asciiValueFormatter.getPreferredValue() == null)
             {
                 return;
             }
@@ -362,7 +362,7 @@ public class JHexViewer extends JComponent
 
         if (oldValue != newValue)
         {
-            asciiValueFormatter.setValue(newValue);
+            asciiValueFormatter.setPreferredValue(newValue);
             firePropertyChange(PROPERTY_ASCII_FORMATTER, oldValue, asciiValueFormatter.getValue());
 
             if (damager != null)

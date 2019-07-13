@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.utils;
 
 /**
- * Allows to specify a default value which is returned if no valid alternative value was set.
+ * Allows to specify a fallback value which is returned if no valid preferred value was set.
  *
  * @author rendner
  */
@@ -10,15 +10,15 @@ public class FallbackValue<T>
     /**
      * The preferred value.
      */
-    private T value;
+    private T preferredValue;
 
     /**
-     * The "fall back" value.
+     * The fallback value.
      */
-    private T defaultValue;
+    private T fallbackValue;
 
     /**
-     * Creates an empty instance.
+     * Creates an empty instance and sets the fallback value to <code>null</code>.
      */
     public FallbackValue()
     {
@@ -26,50 +26,49 @@ public class FallbackValue<T>
     }
 
     /**
-     * Creates an instance with the specified default value.
+     * Creates an instance with the specified fallback value.
      *
-     * @param defaultValue the default value.
+     * @param fallbackValue the fallback value to use if no value is set.
      */
-    public FallbackValue(final T defaultValue)
+    public FallbackValue(final T fallbackValue)
     {
         super();
-        this.defaultValue = defaultValue;
+        this.fallbackValue = fallbackValue;
     }
 
     /**
-     * Overwrites the default value.
-     * This becomes the new "fall back" value.
+     * Sets the fallback value.
      *
-     * @param defaultValue the "fall back" value to set, can be <code>null</code>.
+     * @param fallbackValue the fallback value to set, can be <code>null</code>.
      */
-    public void setDefaultValue(final T defaultValue)
+    public void seFallbackValue(final T fallbackValue)
     {
-        this.defaultValue = defaultValue;
+        this.fallbackValue = fallbackValue;
     }
 
     /**
-     * @return the value if not <code>null</code> otherwise the default value. Can be <code>null</code>.
+     * @return the preferred value if not <code>null</code> otherwise the fallback value. Can be <code>null</code>.
      */
     public T getValue()
     {
-        return value != null ? value : defaultValue;
+        return preferredValue != null ? preferredValue : fallbackValue;
     }
 
     /**
-     * Sets the value which is preferred over the default value.
+     * Sets the value which is preferred over the fallback value.
      *
-     * @param value value to set, can be <code>null</code>.
+     * @param preferredValue value to set, can be <code>null</code>.
      */
-    public void setValue(final T value)
+    public void setPreferredValue(final T preferredValue)
     {
-        this.value = value;
+        this.preferredValue = preferredValue;
     }
 
     /**
-     * @return the "fall back" value, can be <code>null</code>.
+     * @return the preferred value which "overwrites" the internal fallback value, can be <code>null</code>.
      */
-    public T getCustomValue()
+    public T getPreferredValue()
     {
-        return value;
+        return preferredValue;
     }
 }

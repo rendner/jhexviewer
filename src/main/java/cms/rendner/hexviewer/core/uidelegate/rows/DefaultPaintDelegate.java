@@ -117,7 +117,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
     public void setRowColorProvider(final AreaId id, final IRowColorProvider newColorProvider)
     {
         CheckUtils.checkNotNull(id);
-        rowColorProviderMap.get(id).setValue(newColorProvider);
+        rowColorProviderMap.get(id).setPreferredValue(newColorProvider);
 
         if (hexViewer.getDamager() != null)
         {
