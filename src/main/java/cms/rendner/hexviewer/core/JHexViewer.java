@@ -1261,9 +1261,9 @@ public class JHexViewer extends JComponent
      */
     protected void createDefaultModels()
     {
-        setOffsetFormatter(new OffsetFormatter(4));
-        setHexFormatter(new LookupValueFormatter(LookupTableFactory.createHexTable()));
-        setAsciiFormatter(new LookupValueFormatter(LookupTableFactory.createAsciiTable()));
+        offsetValueFormatter.setFallbackValue(new OffsetFormatter(4));
+        hexValueFormatter.setFallbackValue(new LookupValueFormatter(LookupTableFactory.createHexTable()));
+        asciiValueFormatter.setFallbackValue(new LookupValueFormatter(LookupTableFactory.createAsciiTable()));
 
         setRowTemplateConfiguration(new DefaultRowTemplateConfiguration());
         setDataModel(new DefaultDataModel());

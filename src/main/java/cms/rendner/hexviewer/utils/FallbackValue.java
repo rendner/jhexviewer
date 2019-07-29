@@ -41,7 +41,7 @@ public class FallbackValue<T>
      *
      * @param fallbackValue the fallback value to set, can be <code>null</code>.
      */
-    public void seFallbackValue(final T fallbackValue)
+    public void setFallbackValue(final T fallbackValue)
     {
         this.fallbackValue = fallbackValue;
     }
