@@ -42,7 +42,6 @@ import cms.rendner.hexviewer.utils.observer.ObserverUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -795,35 +794,6 @@ public class JHexViewer extends JComponent
     }
 
     /**
-     * Releases all of the internal used resources used by this component, also clears all cyclic dependencies.
-     * <b>Note</b>
-     * After calling this method the component is in an undefined state and can't be reused.
-     */
-    public void dispose()
-    {
-        if (internalHandler != null)
-        {
-            hexRowsView.removeMouseListener(internalHandler);
-            asciiRowsView.removeMouseListener(internalHandler);
-            internalHandler = null;
-        }
-
-        if (rowsViewPropertiesProvider != null)
-        {
-            rowsViewPropertiesProvider.deleteObservers();
-            rowsViewPropertiesProvider = null;
-        }
-
-        setCaret(null);
-        setDataModel(null);
-        setHighlighter(null);
-        setScrollableDelegate(null);
-        setDamager(null);
-
-        setUI(null);
-    }
-
-    /**
      * Forwards a color provider to the current installed paint delegate. If no paint delegate is installed this method
      * does nothing. The paint delegate is usually installed by the UI delegate which provides the look and feel of the
      * hexViewer.
@@ -1210,10 +1180,14 @@ public class JHexViewer extends JComponent
     {
         setLayout(new BorderLayout());
         setFocusTraversalKeysEnabled(false);
+
+        internalHandler = createInternalHandler();
+
         createSubComponents();
-        createAndRegisterInternalHandler();
         createDefaultModels();
         setFocusedArea(AreaId.HEX);
+
+        registerInternalHandler(internalHandler);
 
         revalidate();
         repaint();
@@ -1255,16 +1229,29 @@ public class JHexViewer extends JComponent
     }
 
     /**
-     * Creates and registers the internal handler.
-     * By default the <code>internalHandler</code> is registered as <code>{@link java.awt.event.MouseListener}</code>
-     * with the <code>hexRowsView</code> and <code>asciiRowsView</code> to handle mouse clicks. And also registered as
-     * <code>{@link FocusListener}</code> with the hex viewer.
+     * Creates the internal handler used to register for events sent by internal sub components or observable objects.
+     * <p/>
+     * Overwrite this method if a custom internal handler should be used.
+     * @return the internal handler for the <code>{@link JHexViewer}</code>.
      */
-    protected void createAndRegisterInternalHandler()
+    protected InternalHandler createInternalHandler()
     {
-        internalHandler = new InternalHandler();
-        hexRowsView.addMouseListener(internalHandler);
-        asciiRowsView.addMouseListener(internalHandler);
+        return new InternalHandler();
+    }
+
+    /**
+     * Registers the <code>internalHandler</code> as listener to internal sub components or observable objects.
+     * <p/>
+     * By default the <code>internalHandler</code> is registered as <code>{@link java.awt.event.MouseListener}</code>
+     * with the <code>hexRowsView</code> and <code>asciiRowsView</code> to handle mouse clicks.
+     * @param handler the internal handler to register as listener.
+     */
+    protected void registerInternalHandler(final InternalHandler handler)
+    {
+        CheckUtils.checkNotNull(handler);
+
+        hexRowsView.addMouseListener(handler);
+        asciiRowsView.addMouseListener(handler);
     }
 
     /**
