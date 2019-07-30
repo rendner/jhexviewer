@@ -41,7 +41,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         context = createFreshContext(hexViewer);
 
         final IRowTemplateConfiguration configuration = context.getConfiguration();
-        final int caretWidth = convert(configuration.getCaretWidth());
+        final int caretWidth = resolveValue(configuration.getCaretWidth());
         final RowInsetValues rowInsets = configuration.getRowInsets(AreaId.HEX);
         final IElement.IDimension byteDimension = createElementDimension(2);
         final List<IElement> bytes = createHexRowElements(rowInsets, byteDimension, caretWidth);
@@ -56,7 +56,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         context = createFreshContext(hexViewer);
 
         final IRowTemplateConfiguration configuration = context.getConfiguration();
-        final int caretWidth = convert(configuration.getCaretWidth());
+        final int caretWidth = resolveValue(configuration.getCaretWidth());
         final RowInsetValues rowInsets = configuration.getRowInsets(AreaId.ASCII);
         final IElement.IDimension byteDimension = createElementDimension(1);
         final List<IElement> bytes = createAsciiRowElements(rowInsets, byteDimension, caretWidth);
@@ -74,7 +74,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      */
     protected List<IElement> createOffsetRowElements(final RowInsetValues rowInsets, final IElement.IDimension elementDimension)
     {
-        final int x = convert(rowInsets.getLeft());
+        final int x = resolveValue(rowInsets.getLeft());
         final List<IElement> result = new ArrayList<>(1);
         result.add(new Element(elementDimension, new ElementPosition(x, 0)));
         return result;
@@ -95,7 +95,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         final IElement lastElement = elements.get(elements.size() - 1);
         final FontMetrics fm = context.getFontMetrics();
 
-        final int width = lastElement.right() + convert(rowInsets.getRight());
+        final int width = lastElement.right() + resolveValue(rowInsets.getRight());
         final int height = fm.getAscent() + fm.getDescent() + fm.getLeading();
         final IRowTemplate.IDimension rowDimension = new RowDimension(width, height);
 
@@ -119,7 +119,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 
         final List<IElement> result = new ArrayList<>();
 
-        int x = convert(rowInsets.getLeft()) + caretWidth;
+        int x = resolveValue(rowInsets.getLeft()) + caretWidth;
         for (int i = 0; i < bytesPerRow; i++)
         {
             result.add(new Element(elementDimension, new ElementPosition(x, 0)));
@@ -144,12 +144,12 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 
         final int bytesPerRow = configuration.getBytesPerRow();
         final int bytesPerGroup = configuration.getBytesPerGroup();
-        final int spaceBetweenByteGroups = convert(configuration.getSpaceBetweenGroups());
+        final int spaceBetweenByteGroups = resolveValue(configuration.getSpaceBetweenGroups());
 
         final List<IElement> result = new ArrayList<>(bytesPerRow);
 
         int byteIndexInByteGroup = 0;
-        int x = convert(rowInsets.getLeft()) + caretWidth;
+        int x = resolveValue(rowInsets.getLeft()) + caretWidth;
         for (int i = 0; i < bytesPerRow; i++)
         {
             result.add(new Element(elementDimension, new ElementPosition(x, 0)));
@@ -182,7 +182,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         final FontMetrics fm = context.getFontMetrics();
 
         // caret can be placed in front of the first element, for symmetry reasons caret width is also added to the end of the row
-        final int width = lastByte.right() + convert(rowInsets.getRight()) + caretWidth;
+        final int width = lastByte.right() + resolveValue(rowInsets.getRight()) + caretWidth;
         final int height = fm.getAscent() + fm.getDescent() + fm.getLeading();
         final IRowTemplate.IDimension rowDimension = new RowDimension(width, height);
 

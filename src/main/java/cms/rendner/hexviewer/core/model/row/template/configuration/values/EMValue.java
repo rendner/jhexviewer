@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template.configuration.values;
 
+import cms.rendner.hexviewer.utils.CheckUtils;
+
 import java.util.Objects;
 
 /**
@@ -8,41 +10,44 @@ import java.util.Objects;
  *
  * @author rendner
  */
-public class EMValue extends AbstractValue implements IVetoableValueContainer
+public final class EMValue implements IResolvableValue
 {
     /**
-     * The minimum value.
+     * Used to calculate the final value.
      */
-    private final double minValue;
+    private final double multiplier;
 
     /**
-     * Creates a new instance.
-     *
-     * @param value the value of the container.
+     * Creates a instance with a default multiplier of <code>1</code>.
      */
-    public EMValue(final double value)
+    public EMValue()
     {
-        this(1, value);
+        this(1.0d);
     }
 
     /**
-     * Creates a new instance.
+     * Creates a new instance with the provided multiplier.
      *
-     * @param minValue the minimum value of the container.
-     *                 This value is used as fallback if the calculated value is less than the minimum.
-     * @param value    the value of the container.
+     * @param multiplier used to calculate the final value.
      */
-    public EMValue(final double minValue, final double value)
+    public EMValue(final double multiplier)
     {
-        super(value);
+        super();
 
-        this.minValue = minValue;
+        CheckUtils.checkMinValue(multiplier, 0.0d);
+        this.multiplier = multiplier;
     }
 
+    /**
+     * Calculates the final value depending on the font size of the <code>JHexViewer</code>.
+     *
+     * @param fontSize the size of the <code>JHexViewer</code> font.
+     * @return the calculated value.
+     */
     @Override
-    public double getAcceptedValue(final double calculatedValue)
+    public double resolve(final double fontSize)
     {
-        return calculatedValue < minValue ? minValue : calculatedValue;
+        return fontSize * multiplier;
     }
 
     @Override
@@ -56,20 +61,13 @@ public class EMValue extends AbstractValue implements IVetoableValueContainer
         {
             return false;
         }
-        if (!super.equals(o))
-        {
-            return false;
-        }
-
         EMValue emValue = (EMValue) o;
-
-        return minValue == emValue.minValue;
-
+        return Double.compare(emValue.multiplier, multiplier) == 0;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(super.hashCode(), minValue);
+        return Objects.hash(multiplier);
     }
 }

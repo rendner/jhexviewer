@@ -1,10 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template.configuration;
 
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
+import cms.rendner.hexviewer.core.model.row.template.configuration.values.*;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.FixedValue;
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValueContainer;
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsetValues;
 import cms.rendner.hexviewer.utils.observer.Observable;
 import cms.rendner.hexviewer.utils.CheckUtils;
 
@@ -46,14 +43,14 @@ public abstract class AbstractRowTemplateConfiguration extends Observable<Object
      * In the most cases this value should depend on the used font-size, therefore a <code>{@link EMValue}</code>
      * should be used to specify the width.
      */
-    private IValueContainer spaceBetweenGroups = new FixedValue(0);
+    private IValue spaceBetweenGroups = new FixedValue(0);
 
     /**
      * The width for the caret.
      * In the most cases this value should depend on the used font-size, therefore a <code>{@link EMValue}</code>
      * should be used to specify the width.
      */
-    private IValueContainer caretWidth = new FixedValue(1);
+    private IValue caretWidth = new FixedValue(1);
 
     /**
      * The number of bytes displayed in a single row.
@@ -61,16 +58,15 @@ public abstract class AbstractRowTemplateConfiguration extends Observable<Object
     private int bytesPerRow = 16;
 
     @Override
-    public IValueContainer getCaretWidth()
+    public IValue getCaretWidth()
     {
         return caretWidth;
     }
 
     @Override
-    public IRowTemplateConfiguration setCaretWidth(final IValueContainer value)
+    public IRowTemplateConfiguration setCaretWidth(final IValue value)
     {
         CheckUtils.checkNotNull(value);
-        CheckUtils.checkMinValue(value.getValue(), 0);
 
         if (!value.equals(caretWidth))
         {
@@ -102,16 +98,15 @@ public abstract class AbstractRowTemplateConfiguration extends Observable<Object
     }
 
     @Override
-    public IValueContainer getSpaceBetweenGroups()
+    public IValue getSpaceBetweenGroups()
     {
         return spaceBetweenGroups;
     }
 
     @Override
-    public IRowTemplateConfiguration setSpaceBetweenGroups(final IValueContainer value)
+    public IRowTemplateConfiguration setSpaceBetweenGroups(final IValue value)
     {
         CheckUtils.checkNotNull(value);
-        CheckUtils.checkMinValue(value.getValue(), 0);
 
         if (!value.equals(spaceBetweenGroups))
         {

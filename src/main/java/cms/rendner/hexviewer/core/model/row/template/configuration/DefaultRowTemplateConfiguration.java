@@ -25,10 +25,12 @@ public class DefaultRowTemplateConfiguration extends AbstractRowTemplateConfigur
      */
     private void initializeWithDefaultValues()
     {
-        setCaretWidth(new EMValue(0.05f));
+        setCaretWidth(new EMValue(0.05d));
         setBytesPerGroup(2);
-        setSpaceBetweenGroups(new EMValue(1.5f));
-        final RowInsetValues rowInsets = new RowInsetValues(new EMValue(1.0f), new EMValue(1.0f));
+        setSpaceBetweenGroups(new EMValue(1.5d));
+        final RowInsetValues rowInsets = new RowInsetValues(
+                new EMValue(1.0d),
+                new EMValue(1.0d));
         setRowInset(AreaId.OFFSET, rowInsets);
         setRowInset(AreaId.HEX, rowInsets);
         setRowInset(AreaId.ASCII, rowInsets);

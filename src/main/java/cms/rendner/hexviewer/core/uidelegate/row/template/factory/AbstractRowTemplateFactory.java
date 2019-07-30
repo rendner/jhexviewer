@@ -1,7 +1,8 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValueContainer;
+import cms.rendner.hexviewer.core.model.row.template.configuration.values.FixedValue;
+import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementDimension;
 import cms.rendner.hexviewer.core.JHexViewer;
 
@@ -14,6 +15,11 @@ import java.awt.*;
  */
 public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
 {
+    /**
+     * The minimal final value for an <code>EMValue</code>.
+     */
+    protected int mimEmValue = 1;
+
     /**
      * Context.
      */
@@ -55,26 +61,24 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
     }
 
     /**
-     * Converts a value container into a value.
-     * This method requires that the context property was initialized.
+     * Calculates the final value of a <code>IValue</code>.
      *
-     * @param valueContainer the container which should be converted.
-     * @return the result, if <code>valueContainer</code> is <code>null</code> the result will be <code>0</code>.
+     * @param value the value to calculate the the real value.
+     * @return the result, if <code>IValue</code> is <code>null</code> the result will be <code>0</code>.
      */
-    protected int convert(final IValueContainer valueContainer)
+    protected int resolveValue(final IValue value)
     {
-        if (valueContainer == null)
+        if (value instanceof EMValue)
         {
-            return 0;
+            final int emValue = (int) Math.ceil(((EMValue)value).resolve(getCharHeight()));
+            return Math.max(mimEmValue, emValue);
+        }
+        else if(value instanceof FixedValue)
+        {
+            return (int) ((FixedValue) value).getValue();
         }
 
-        if (valueContainer instanceof EMValue)
-        {
-            final int calculatedValue = (int) Math.ceil(getCharHeight() * valueContainer.getValue());
-            return (int) ((EMValue) valueContainer).getAcceptedValue(calculatedValue);
-        }
-
-        return (int) valueContainer.getValue();
+        return 0;
     }
 
     /**

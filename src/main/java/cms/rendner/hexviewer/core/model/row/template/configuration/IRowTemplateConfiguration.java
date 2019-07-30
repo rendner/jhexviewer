@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.core.model.row.template.configuration;
 
+import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValueContainer;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsetValues;
 import cms.rendner.hexviewer.utils.observer.IObservable;
 
@@ -57,19 +57,19 @@ public interface IRowTemplateConfiguration extends IObservable<Object>
     /**
      * @return the space between group of bytes.
      */
-    IValueContainer getSpaceBetweenGroups();
+    IValue getSpaceBetweenGroups();
 
     /**
      * Sets the space between group of bytes.
      * Only the bytes of the <code>{@link AreaId#HEX}</code> area are grouped.
      * <p/>
-     * In the most cases this value should depend on the used font-size, therefore a <code>{@link EMValue}</code>
+     * In the most cases this value should depend on the used font-size, therefore an <code>{@link EMValue}</code>
      * should be used to specify the space.
      *
      * @param value the value.
      * @return the configuration instance, to allow method chaining.
      */
-    IRowTemplateConfiguration setSpaceBetweenGroups(IValueContainer value);
+    IRowTemplateConfiguration setSpaceBetweenGroups(IValue value);
 
     /**
      * Returns the width of the caret which can be placed in front of a byte in the rows of the
@@ -77,25 +77,25 @@ public interface IRowTemplateConfiguration extends IObservable<Object>
      *
      * @return the width of the caret.
      */
-    IValueContainer getCaretWidth();
+    IValue getCaretWidth();
 
     /**
      * Sets the width of the caret.
      * A caret can be placed in front of a byte in the rows of the
      * <code>{@link AreaId#HEX}</code> and <code>{@link AreaId#ASCII}</code> area.
      * <p/>
-     * In the most cases the width depends on the used font-size, therefore a <code>{@link EMValue}</code>
+     * In the most cases the width depends on the used font-size, therefore an <code>{@link EMValue}</code>
      * should be used to specify the width.
      *
-     * @param value the value container which holds the width of the caret.
+     * @param value the value which defines the width of the caret.
      * @return the configuration instance, to allow method chaining.
      */
-    IRowTemplateConfiguration setCaretWidth(IValueContainer value);
+    IRowTemplateConfiguration setCaretWidth(IValue value);
 
     /**
      * Sets the row insets of an area which defines the left and right space of a row.
      * <p/>
-     * In the most cases this value should depend on the used font-size, therefore a <code>{@link EMValue}</code>
+     * In the most cases this value should depend on the used font-size, therefore an <code>{@link EMValue}</code>
      * should be used to specify the insets.
      *
      * @param areaId the id of the area.

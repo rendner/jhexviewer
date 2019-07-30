@@ -14,12 +14,12 @@ public class RowInsetValues
     /**
      * The left inset of a row.
      */
-    private IValueContainer left;
+    private IValue left;
 
     /**
      * The right inset of a row.
      */
-    private IValueContainer right;
+    private IValue right;
 
     /**
      * Creates a new instance with an inset of <code>0</code>.
@@ -38,7 +38,7 @@ public class RowInsetValues
      * @param left  the inset for the left side, can't be <code>null</code>.
      * @param right the inset for the right side, can't be <code>null</code>.
      */
-    public RowInsetValues(final IValueContainer left, final IValueContainer right)
+    public RowInsetValues(final IValue left, final IValue right)
     {
         super();
 
@@ -47,42 +47,42 @@ public class RowInsetValues
     }
 
     /**
-     * Returns the value container for the right side of a row.
+     * Returns the value for the right side of a row.
      *
-     * @return the right value container.
+     * @return the right value.
      */
-    public IValueContainer getRight()
+    public IValue getRight()
     {
         return right;
     }
 
     /**
-     * Sets the new value container for the right side.
+     * Sets the new value for the right side.
      *
-     * @param right the new value container.
+     * @param right the new value.
      */
-    public void setRight(final IValueContainer right)
+    public void setRight(final IValue right)
     {
         CheckUtils.checkNotNull(right);
         this.right = right;
     }
 
     /**
-     * Returns the value container for the left side of a row.
+     * Returns the value for the left side of a row.
      *
-     * @return the left value container.
+     * @return the left value.
      */
-    public IValueContainer getLeft()
+    public IValue getLeft()
     {
         return left;
     }
 
     /**
-     * Sets the new value container for the left side.
+     * Sets the new value for the left side.
      *
-     * @param left the new value container.
+     * @param left the new value.
      */
-    public void setLeft(final IValueContainer left)
+    public void setLeft(final IValue left)
     {
         CheckUtils.checkNotNull(left);
         this.left = left;
