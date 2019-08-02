@@ -5,6 +5,7 @@ package cms.rendner.hexviewer.utils.observer;
  *
  * @author rendner
  */
+@Deprecated
 public class ObserverUtils
 {
     /**

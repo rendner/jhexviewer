@@ -2,13 +2,13 @@ package cms.rendner.hexviewer.core.view.areas;
 
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
-import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.core.view.areas.properties.Property;
 import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
+import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.swing.BorderlessJComponent;
+import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.observer.IObservable;
 import cms.rendner.hexviewer.utils.observer.IObserver;
-import cms.rendner.hexviewer.utils.CheckUtils;
 
 import java.awt.*;
 
@@ -253,11 +253,11 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return the current height of a single row in this view.
+     * @return the current height of a single row in this view, &gt;= 1.
      */
     public int rowHeight()
     {
-        return rowTemplate != null ? rowTemplate.height() : DUMMY_ROW_HEIGHT;
+        return rowTemplate != null ? Math.max(1, rowTemplate.height()) : DUMMY_ROW_HEIGHT;
     }
 
     @Override

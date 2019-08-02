@@ -1,7 +1,5 @@
 package cms.rendner.hexviewer.core;
 
-import cms.rendner.hexviewer.core.view.IContextMenuFactory;
-import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.formatter.IValueFormatter;
 import cms.rendner.hexviewer.core.formatter.LookupValueFormatter;
 import cms.rendner.hexviewer.core.formatter.lookup.LookupTableFactory;
@@ -19,13 +17,15 @@ import cms.rendner.hexviewer.core.uidelegate.DefaultHexViewerUI;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.row.template.factory.IRowTemplateFactory;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
-import cms.rendner.hexviewer.core.view.caret.ICaret;
-import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
-import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
+import cms.rendner.hexviewer.core.view.IContextMenuFactory;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
+import cms.rendner.hexviewer.core.view.caret.ICaret;
+import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
+import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import cms.rendner.hexviewer.swing.scrollable.IScrollableDelegate;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableRowsContainer;
@@ -33,12 +33,9 @@ import cms.rendner.hexviewer.swing.separator.JSeparatedView;
 import cms.rendner.hexviewer.swing.separator.JSeparatedViewport;
 import cms.rendner.hexviewer.swing.separator.Separator;
 import cms.rendner.hexviewer.swing.separator.VSeparatorPlaceholder;
-import cms.rendner.hexviewer.utils.FallbackValue;
-import cms.rendner.hexviewer.utils.observer.IObservable;
-import cms.rendner.hexviewer.utils.observer.IObserver;
 import cms.rendner.hexviewer.utils.CheckUtils;
+import cms.rendner.hexviewer.utils.FallbackValue;
 import cms.rendner.hexviewer.utils.IndexUtils;
-import cms.rendner.hexviewer.utils.observer.ObserverUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -1054,10 +1051,7 @@ public class JHexViewer extends JComponent
 
         if (rowTemplateConfiguration != newConfiguration)
         {
-            ObserverUtils.removeObserver(rowTemplateConfiguration, internalHandler);
             rowTemplateConfiguration = newConfiguration;
-            ObserverUtils.addObserver(rowTemplateConfiguration, internalHandler);
-
             handleRowTemplateConfigurationChange();
         }
     }
@@ -1066,7 +1060,7 @@ public class JHexViewer extends JComponent
      * Returns the number of bytes displayed in one row.
      * <p/>
      * This value represents the real displayed number of bytes and should be preferred over
-     * {@link IRowTemplateConfiguration#getBytesPerRow()} which is only a configuration which can be ignored by the
+     * {@link IRowTemplateConfiguration#bytesPerRow()} which is only a configuration which can be ignored by the
      * installed {@link IRowTemplateFactory}.
      * <p/>
      * This value changes whenever new row templates produced by the installed {@link IRowTemplateFactory} are set.
@@ -1265,7 +1259,7 @@ public class JHexViewer extends JComponent
         hexValueFormatter.setFallbackValue(new LookupValueFormatter(LookupTableFactory.createHexTable()));
         asciiValueFormatter.setFallbackValue(new LookupValueFormatter(LookupTableFactory.createAsciiTable()));
 
-        setRowTemplateConfiguration(new DefaultRowTemplateConfiguration());
+        setRowTemplateConfiguration(DefaultRowTemplateConfiguration.newBuilder().build());
         setDataModel(new DefaultDataModel());
     }
 
@@ -1359,7 +1353,7 @@ public class JHexViewer extends JComponent
             {
                 final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
                 final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
-                final int bytesPerRow = rowTemplateConfiguration.getBytesPerRow();
+                final int bytesPerRow = rowTemplateConfiguration.bytesPerRow();
                 offsetRowTemplate = rowTemplateFactory.createOffsetTemplate(this, totalOffsetCharCount, digitOffsetCharCount);
                 hexRowTemplate = rowTemplateFactory.createHexTemplate(this, bytesPerRow);
                 asciiRowTemplate = rowTemplateFactory.createAsciiTemplate(this, bytesPerRow);
@@ -1499,7 +1493,7 @@ public class JHexViewer extends JComponent
     /**
      * Hides the public methods of the implemented listener and delegates these to protected methods.
      */
-    protected class InternalHandler extends MouseAdapter implements IObserver<Object>
+    protected class InternalHandler extends MouseAdapter
     {
         @Override
         public void mousePressed(final MouseEvent event)
@@ -1511,15 +1505,6 @@ public class JHexViewer extends JComponent
         public void mouseReleased(final MouseEvent event)
         {
             handleMouseEvent(event);
-        }
-
-        @Override
-        public void update(final IObservable observable, final Object arg)
-        {
-            if (observable instanceof IRowTemplateConfiguration)
-            {
-                handleRowTemplateConfigurationChange();
-            }
         }
     }
 }

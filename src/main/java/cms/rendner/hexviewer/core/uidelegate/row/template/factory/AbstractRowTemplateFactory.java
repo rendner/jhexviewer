@@ -1,81 +1,121 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.FixedValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
+import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementDimension;
-import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.utils.CheckUtils;
 
 import java.awt.*;
+import java.util.List;
 
 /**
- * This abstract class provides default implementations for creating row templates.
+ * This abstract class provides methods that can be helpful in creating row templates.
  *
  * @author rendner
  */
 public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
 {
     /**
-     * The minimal final value for an <code>EMValue</code>.
-     */
-    protected int mimEmValue = 1;
-
-    /**
      * Context.
      */
     protected Context context;
 
     /**
-     * Returns the width of a char for the font metrics of the <code>context</code>.
-     * This method requires that the context property was initialized.
+     * Computes the width of a char.
+     * <p/>
+     * The value is calculated by using the font metrics provided by the proper initialized <code>context</code>.
+     * Note: This method requires that the context property was initialized.
      *
      * @return the width of a char.
      */
-    protected int getCharWidth()
+    protected int computeCharWidth()
     {
         return context.getFontMetrics().stringWidth("X");
     }
 
     /**
-     * Returns the height of a char for the font metrics of the <code>context</code>.
-     * This method requires that the context property was initialized.
+     * Computes the height of a char.
+     * <p/>
+     * The value is calculated by using the font metrics provided by the proper initialized <code>context</code>.
+     * Note: This method requires that the context property was initialized.
      *
      * @return the height of a char.
      */
-    protected int getCharHeight()
+    protected int computeCharHeight()
     {
         final FontMetrics fm = context.getFontMetrics();
         return fm.getAscent() + fm.getDescent();
     }
 
     /**
+     * Computes the height of a row.
+     * <p/>
+     * The value is calculated by using the font metrics provided by the proper initialized <code>context</code>.
+     * Note: This method requires that the context property was initialized.
+     *
+     * @param rowInsets the row insets to use for the calculation
+     * @return the height of the row.
+     */
+    protected int computeRowHeight(final RowInsets rowInsets)
+    {
+        CheckUtils.checkNotNull(rowInsets);
+        final FontMetrics fm = context.getFontMetrics();
+        final int heightWithoutInsets = fm.getAscent() + fm.getDescent() + fm.getLeading();
+        return heightWithoutInsets + computeValue(rowInsets.top()) + computeValue(rowInsets.bottom());
+    }
+
+    /**
+     * Computes the width of a row.
+     * <p/>
+     * The value is calculated by using the font metrics provided by the proper initialized <code>context</code>.
+     * Note: This method requires that the context property was initialized.
+     *
+     * @param elementsInRow list of elements displayed in the row.
+     * @param rowInsets the insets for the row.
+     * @return the width of the row.
+     */
+    protected int computeRowWidth(final List<IElement> elementsInRow, final RowInsets rowInsets)
+    {
+        final IElement lastElement = elementsInRow.get(elementsInRow.size() - 1);
+        return lastElement.right() + computeValue(rowInsets.right());
+    }
+
+    /**
      * Creates a dimension instance with the width and height of an element.
-     * This method requires that the context property was initialized.
+     * <p/>
+     * The value is calculated by using the font metrics provided by the proper initialized <code>context</code>.
+     * Note: This method requires that the context property was initialized.
      *
      * @param charsPerElement number of chars/digits displayed inside the bounds of the element.
      * @return the calculated dimension.
      */
-    protected ElementDimension createElementDimension(final int charsPerElement)
+    protected ElementDimension computeElementDimension(final int charsPerElement)
     {
-        return new ElementDimension(getCharWidth() * charsPerElement, getCharHeight());
+        return new ElementDimension(computeCharWidth() * charsPerElement, computeCharHeight());
     }
 
     /**
      * Calculates the final value of a <code>IValue</code>.
+     * <p/>
+     * A EMValue is calculated by using the font metrics provided by the proper initialized <code>context</code>.
+     * Note: This method requires that the context property was initialized.
      *
      * @param value the value to calculate the the real value.
      * @return the result, if <code>IValue</code> is <code>null</code> the result will be <code>0</code>.
      */
-    protected int resolveValue(final IValue value)
+    protected int computeValue(final IValue value)
     {
         if (value instanceof EMValue)
         {
-            final int emValue = (int) Math.ceil(((EMValue)value).resolve(getCharHeight()));
-            return Math.max(mimEmValue, emValue);
+            return (int) Math.ceil(((EMValue) value).resolve(computeCharHeight()));
         }
-        else if(value instanceof FixedValue)
+        else if (value instanceof FixedValue)
         {
-            return (int) ((FixedValue) value).getValue();
+            return (int) ((FixedValue) value).value();
         }
 
         return 0;

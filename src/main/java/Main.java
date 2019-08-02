@@ -1,5 +1,5 @@
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import example.DataModelFactory;
 import example.ExampleContextMenuFactory;
@@ -46,7 +46,7 @@ public class Main
             @Override
             public void propertyChange(final PropertyChangeEvent event)
             {
-                if(event.getPropertyName().equals(JHexViewer.PROPERTY_DATA_MODEL))
+                if (event.getPropertyName().equals(JHexViewer.PROPERTY_DATA_MODEL))
                 {
                     frame.pack();
                 }
@@ -69,11 +69,13 @@ public class Main
 
         ThemeFactory.applyRandomTheme(hexViewer);
 
-        hexViewer.getRowTemplateConfiguration()
-                .setBytesPerGroup(2)
-                .setSpaceBetweenGroups(new EMValue(1))
-                .setBytesPerRow(16)
-                .commit();
+        hexViewer.setRowTemplateConfiguration(
+                hexViewer.getRowTemplateConfiguration().toBuilder()
+                        .bytesPerRow(16)
+                        .bytesPerGroup(2)
+                        .spaceBetweenGroups(new EMValue(1))
+                        .build()
+        );
 
         final IHighlighter highlighter = hexViewer.getHighlighter();
         if (highlighter != null)

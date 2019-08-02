@@ -1,7 +1,5 @@
 package cms.rendner.hexviewer.core.model.row.template.configuration.values;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
-
 import java.util.Objects;
 
 /**
@@ -34,7 +32,6 @@ public final class EMValue implements IResolvableValue
     {
         super();
 
-        CheckUtils.checkMinValue(multiplier, 0.0d);
         this.multiplier = multiplier;
     }
 

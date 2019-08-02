@@ -3,14 +3,14 @@ package cms.rendner.hexviewer.core.model.row.template.configuration.values;
 import java.util.Objects;
 
 /**
- * Represents a fixed value, that means that the value returned by this value can't change during runtime'.
+ * Represents a fixed value, the value returned by this class can't change during runtime'.
  *
  * @author rendner
  */
 public final class FixedValue implements IValue
 {
     /**
-     * The value of the container.
+     * The fixed value.
      */
     private final double value;
 
@@ -34,9 +34,9 @@ public final class FixedValue implements IValue
     }
 
     /**
-     * @return the value of the fixed value.
+     * @return the fixed value.
      */
-    public double getValue()
+    public double value()
     {
         return value;
     }
