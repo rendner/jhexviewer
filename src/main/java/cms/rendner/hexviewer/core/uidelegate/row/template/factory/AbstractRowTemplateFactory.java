@@ -100,6 +100,8 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
 
     /**
      * Calculates the final value of a <code>IValue</code>.
+     * Some of the IValue implementations return a double instead of an int, such values will be converted into an int
+     * value by using Math.round.
      * <p/>
      * A EMValue is calculated by using the font metrics provided by the proper initialized <code>context</code>.
      * Note: This method requires that the context property was initialized.
@@ -109,16 +111,18 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      */
     protected int computeValue(final IValue value)
     {
+        double result = 0.0d;
+
         if (value instanceof EMValue)
         {
-            return (int) Math.ceil(((EMValue) value).resolve(computeCharHeight()));
+            result = ((EMValue) value).resolve(computeCharHeight());
         }
         else if (value instanceof FixedValue)
         {
-            return (int) ((FixedValue) value).value();
+            result = ((FixedValue) value).value();
         }
 
-        return 0;
+        return (int) Math.round(result);
     }
 
     /**
