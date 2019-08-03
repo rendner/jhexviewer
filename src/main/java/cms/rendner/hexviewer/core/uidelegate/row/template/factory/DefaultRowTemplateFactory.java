@@ -9,6 +9,7 @@ import cms.rendner.hexviewer.core.model.row.template.elements.ElementDimension;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementPosition;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,9 @@ import java.util.List;
  */
 public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 {
+    @NotNull
     @Override
-    public IOffsetRowTemplate createOffsetTemplate(final JHexViewer hexViewer, final int totalCharsCount, final int onlyDigitsCount)
+    public IOffsetRowTemplate createOffsetTemplate(@NotNull final JHexViewer hexViewer, final int totalCharsCount, final int onlyDigitsCount)
     {
         context = createFreshContext(hexViewer);
 
@@ -34,8 +36,9 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         return result;
     }
 
+    @NotNull
     @Override
-    public IByteRowTemplate createHexTemplate(final JHexViewer hexViewer, final int bytesPerRow)
+    public IByteRowTemplate createHexTemplate(@NotNull final JHexViewer hexViewer, final int bytesPerRow)
     {
         context = createFreshContext(hexViewer);
 
@@ -49,8 +52,9 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         return result;
     }
 
+    @NotNull
     @Override
-    public IByteRowTemplate createAsciiTemplate(final JHexViewer hexViewer, final int bytesPerRow)
+    public IByteRowTemplate createAsciiTemplate(@NotNull final JHexViewer hexViewer, final int bytesPerRow)
     {
         context = createFreshContext(hexViewer);
 
@@ -74,7 +78,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @param caretWidth the width of the caret which can be placed in front of a byte.
      * @return the byte-row template.
      */
-    protected IByteRowTemplate createByteRowTemplate(final List<IElement> bytes, final RowInsets rowInsets, final int caretWidth)
+    @NotNull
+    protected IByteRowTemplate createByteRowTemplate(@NotNull final List<IElement> bytes, @NotNull final RowInsets rowInsets, final int caretWidth)
     {
         // Caret can be placed in front of the first byte. This was taken into account in the calculation of the
         // x-position of the first byte, for symmetry reasons caret width is also added after the last byte
@@ -97,7 +102,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      *                        additional suffix or prefix.
      * @return the layout template for the offset-view of the JHexViewer.
      */
-    protected IOffsetRowTemplate createOffsetRowTemplate(final List<IElement> elements, final RowInsets rowInsets, final int totalCharsCount, final int onlyDigitsCount)
+    @NotNull
+    protected IOffsetRowTemplate createOffsetRowTemplate(@NotNull final List<IElement> elements, @NotNull final RowInsets rowInsets, final int totalCharsCount, final int onlyDigitsCount)
     {
         final int width = computeRowWidth(elements, rowInsets);
         final int height = computeRowHeight(rowInsets);
@@ -115,7 +121,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @param elementDimension the dimension for the elements to create.
      * @return list with one element.
      */
-    protected List<IElement> createOffsetRowElements(final RowInsets rowInsets, final IElement.IDimension elementDimension)
+    @NotNull
+    protected List<IElement> createOffsetRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension)
     {
         final int x = computeValue(rowInsets.left());
         final int y = computeValue(rowInsets.top());
@@ -132,7 +139,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @param caretWidth       the width for the caret.
      * @return list of elements.
      */
-    protected List<IElement> createHexRowElements(final RowInsets rowInsets, final IElement.IDimension elementDimension, final int caretWidth)
+    @NotNull
+    protected List<IElement> createHexRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension, final int caretWidth)
     {
         final IRowTemplateConfiguration configuration = context.getConfiguration();
 
@@ -169,7 +177,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @param caretWidth       the width for the caret.
      * @return list of elements.
      */
-    protected List<IElement> createAsciiRowElements(final RowInsets rowInsets, final IElement.IDimension elementDimension, final int caretWidth)
+    @NotNull
+    protected List<IElement> createAsciiRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension, final int caretWidth)
     {
         final IRowTemplateConfiguration configuration = context.getConfiguration();
         final int bytesPerRow = configuration.bytesPerRow();

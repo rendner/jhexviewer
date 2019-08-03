@@ -1,7 +1,8 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
-import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -10,72 +11,62 @@ import java.awt.*;
  *
  * @author rendner
  */
-public class Context
+public final class Context
 {
     /**
-     * The configuration to be used to build a template.
+     * Used to build a row template.
      */
-    private IRowTemplateConfiguration configuration;
+    @NotNull
+    private final IRowTemplateConfiguration configuration;
     /**
-     * The font metrics to build a row template.
+     * Used to determine the width and height for the elements placed in a row template.
      */
-    private FontMetrics fontMetrics;
+    @NotNull
+    private final FontMetrics fontMetrics;
     /**
-     * The hex viewer component for which the row template to be build..
+     * The hex viewer component for which the row template to be build.
      */
-    private JHexViewer hexViewer;
+    @NotNull
+    private final JHexViewer hexViewer;
+
+    /**
+     * Creates a new context instance.
+     *
+     * @param hexViewer the component to use to create the context.
+     */
+    public Context(@NotNull final JHexViewer hexViewer)
+    {
+        super();
+
+        this.fontMetrics = hexViewer.getFontMetrics(hexViewer.getFont());
+        this.configuration = hexViewer.getRowTemplateConfiguration();
+        this.hexViewer = hexViewer;
+    }
 
     /**
      * @return the configuration from which the <code>IRowTemplates</code> are build.
      */
+    @NotNull
     public IRowTemplateConfiguration getConfiguration()
     {
         return configuration;
     }
 
     /**
-     * Sets the configuration from which the <code>IRowTemplates</code> are build.
-     *
-     * @param configuration the configuration to create row templates.
-     */
-    public void setConfiguration(final IRowTemplateConfiguration configuration)
-    {
-        this.configuration = configuration;
-    }
-
-    /**
      * @return the font metrics of the font object used in the JHexViewer to render the bytes and offset values.
      */
+    @NotNull
     public FontMetrics getFontMetrics()
     {
         return fontMetrics;
     }
 
     /**
-     * Set the font metrics to use to create IRowTemplate objects.
-     *
-     * @param fontMetrics font metrics of the font object used in the JHexViewer to render the bytes and offset values.
-     */
-    public void setFontMetrics(final FontMetrics fontMetrics)
-    {
-        this.fontMetrics = fontMetrics;
-    }
-
-    /**
      * @return reference to the {@link JHexViewer} component.
      */
+    @NotNull
     public JHexViewer getHexViewer()
     {
         return hexViewer;
-    }
-
-    /**
-     * Sets the JHexViewer component.
-     *
-     * @param hexViewer reference to the {@link JHexViewer} component.
-     */
-    public void setHexViewer(final JHexViewer hexViewer)
-    {
-        this.hexViewer = hexViewer;
     }
 }

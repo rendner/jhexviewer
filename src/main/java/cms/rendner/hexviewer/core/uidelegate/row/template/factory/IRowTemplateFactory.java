@@ -1,8 +1,9 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
-import cms.rendner.hexviewer.core.JHexViewer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Factory which creates row templates which are used to render rows in the row based views of the JHexViewer.
@@ -20,7 +21,8 @@ public interface IRowTemplateFactory
      *                        additional suffix or prefix.
      * @return the layout template for the offset-view of the JHexViewer.
      */
-    IOffsetRowTemplate createOffsetTemplate(JHexViewer hexViewer, int totalCharsCount, int onlyDigitsCount);
+    @NotNull
+    IOffsetRowTemplate createOffsetTemplate(@NotNull JHexViewer hexViewer, int totalCharsCount, int onlyDigitsCount);
 
     /**
      * Creates the row template which defines the layout of the rows for the hex-view.
@@ -29,7 +31,8 @@ public interface IRowTemplateFactory
      * @param bytesPerRow the number of bytes displayed in the row.
      * @return the layout template for the hex-view of the JHexViewer.
      */
-    IByteRowTemplate createHexTemplate(JHexViewer hexViewer, int bytesPerRow);
+    @NotNull
+    IByteRowTemplate createHexTemplate(@NotNull JHexViewer hexViewer, int bytesPerRow);
 
     /**
      * Creates the row template which defines the layout of the rows for the ascii-view.
@@ -38,5 +41,6 @@ public interface IRowTemplateFactory
      * @param bytesPerRow the number of bytes displayed in the row.
      * @return the layout template for the ascii-view of the JHexViewer.
      */
-    IByteRowTemplate createAsciiTemplate(JHexViewer hexViewer, int bytesPerRow);
+    @NotNull
+    IByteRowTemplate createAsciiTemplate(@NotNull JHexViewer hexViewer, int bytesPerRow);
 }

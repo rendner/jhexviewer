@@ -7,7 +7,8 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementDimension;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -60,9 +61,8 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @param rowInsets the row insets to use for the calculation
      * @return the height of the row.
      */
-    protected int computeRowHeight(final RowInsets rowInsets)
+    protected int computeRowHeight(@NotNull final RowInsets rowInsets)
     {
-        CheckUtils.checkNotNull(rowInsets);
         final FontMetrics fm = context.getFontMetrics();
         final int heightWithoutInsets = fm.getAscent() + fm.getDescent() + fm.getLeading();
         return heightWithoutInsets + computeValue(rowInsets.top()) + computeValue(rowInsets.bottom());
@@ -78,7 +78,7 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @param rowInsets the insets for the row.
      * @return the width of the row.
      */
-    protected int computeRowWidth(final List<IElement> elementsInRow, final RowInsets rowInsets)
+    protected int computeRowWidth(@NotNull final List<IElement> elementsInRow, @NotNull final RowInsets rowInsets)
     {
         final IElement lastElement = elementsInRow.get(elementsInRow.size() - 1);
         return lastElement.right() + computeValue(rowInsets.right());
@@ -93,6 +93,7 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @param charsPerElement number of chars/digits displayed inside the bounds of the element.
      * @return the calculated dimension.
      */
+    @NotNull
     protected ElementDimension computeElementDimension(final int charsPerElement)
     {
         return new ElementDimension(computeCharWidth() * charsPerElement, computeCharHeight());
@@ -109,7 +110,7 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @param value the value to calculate the the real value.
      * @return the result, if <code>IValue</code> is <code>null</code> the result will be <code>0</code>.
      */
-    protected int computeValue(final IValue value)
+    protected int computeValue(@Nullable final IValue value)
     {
         double result = 0.0d;
 
@@ -133,15 +134,9 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @param hexViewer reference to the {@link JHexViewer} component.
      * @return the actual context.
      */
-    protected Context createFreshContext(final JHexViewer hexViewer)
+    @NotNull
+    protected Context createFreshContext(@NotNull final JHexViewer hexViewer)
     {
-        final Font font = hexViewer.getFont();
-        final FontMetrics fontMetrics = hexViewer.getFontMetrics(font);
-
-        final Context result = new Context();
-        result.setHexViewer(hexViewer);
-        result.setConfiguration(hexViewer.getRowTemplateConfiguration());
-        result.setFontMetrics(fontMetrics);
-        return result;
+        return new Context(hexViewer);
     }
 }
