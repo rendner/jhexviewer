@@ -4,6 +4,7 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValu
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A row template configuration defines the layout (e.g. spaces between bytes, number of bytes) of a row.
@@ -36,24 +37,28 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
      *
      * @return the width of the caret.
      */
+    @NotNull
     IValue caretWidth();
 
     /**
      * @return the space between group of bytes.
      */
+    @NotNull
     IValue spaceBetweenGroups();
 
     /**
      * Returns the row insets of an area by id.
      *
-     * @param areaId the id of the requested area, can't be <code>null</code>.
+     * @param areaId the id of the requested area.
      * @return the row insets of the area.
      */
+    @NotNull
     RowInsets rowInsets(AreaId areaId);
 
     /**
      * @return a new builder which is initialized with the values of the row template configuration instance
      */
+    @NotNull
     B toBuilder();
 
     /**
@@ -67,6 +72,7 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
         /**
          * @return a new row template configuration instance with the configured values.
          */
+        @NotNull
         C build();
 
         /**
@@ -76,6 +82,7 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
          * @return the builder instance, to allow method chaining.
          * @see IRowTemplateConfiguration#bytesPerRow()
          */
+        @NotNull
         IBuilder<B, C> bytesPerRow(int value);
 
         /**
@@ -85,6 +92,7 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
          * @return the builder instance, to allow method chaining.
          * @see IRowTemplateConfiguration#bytesPerGroup()
          */
+        @NotNull
         IBuilder<B, C> bytesPerGroup(int value);
 
         /**
@@ -93,11 +101,12 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
          * In the most cases the space should depend on the used font-size, therefore an <code>{@link EMValue}</code>
          * should be used to specify the value.
          *
-         * @param value the space between group of bytes, can't be <code>null</code>.
+         * @param value the space between group of bytes.
          * @return the builder instance, to allow method chaining.
          * @see IRowTemplateConfiguration#spaceBetweenGroups()
          */
-        IBuilder<B, C> spaceBetweenGroups(IValue value);
+        @NotNull
+        IBuilder<B, C> spaceBetweenGroups(@NotNull IValue value);
 
         /**
          * Sets the width for the caret. The caret is displayed in the
@@ -106,26 +115,29 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
          * In the most cases the width should depend on the used font-size, therefore an <code>{@link EMValue}</code>
          * should be used to specify the value.
          *
-         * @param value the width for the caret, can't be <code>null</code>.
+         * @param value the width for the caret.
          * @return the builder instance, to allow method chaining.
          */
-        IBuilder<B, C> caretWidth(IValue value);
+        @NotNull
+        IBuilder<B, C> caretWidth(@NotNull IValue value);
 
         /**
          * Sets the same row insets for all areas.
          *
-         * @param value the row insets for all areas, can't be <code>null</code>.
+         * @param value the row insets for all areas.
          * @return the builder instance, to allow method chaining.
          */
-        IBuilder<B, C> rowInsets(RowInsets value);
+        @NotNull
+        IBuilder<B, C> rowInsets(@NotNull RowInsets value);
 
         /**
          * Sets row insets for an area.
          *
-         * @param areaId the id of the area, can't be <code>null</code>.
-         * @param value  the insets for the area, can't be <code>null</code>.
+         * @param areaId the id of the area.
+         * @param value  the insets for the area.
          * @return the builder instance, to allow method chaining.
          */
-        IBuilder<B, C> rowInsets(AreaId areaId, RowInsets value);
+        @NotNull
+        IBuilder<B, C> rowInsets(@NotNull AreaId areaId, @NotNull RowInsets value);
     }
 }

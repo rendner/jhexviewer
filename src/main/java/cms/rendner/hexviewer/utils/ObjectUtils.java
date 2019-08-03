@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.utils;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Utility to work with objects.
  *
@@ -15,7 +17,8 @@ public class ObjectUtils
      * @param <T>    the type of the values.
      * @return the first value if not <code>null</code> otherwise the second value
      */
-    public static <T> T ifNotNullOtherwise(final T value, final T otherwise)
+    @Nullable
+    public static <T> T ifNotNullOtherwise(@Nullable final T value, @Nullable final T otherwise)
     {
         return value != null ? value : otherwise;
     }

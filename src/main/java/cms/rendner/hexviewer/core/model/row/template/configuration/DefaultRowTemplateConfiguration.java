@@ -6,8 +6,11 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowIns
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.ObjectUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.Objects;
 
 /**
  * Default implementation of a row template configuration.
@@ -31,6 +34,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
     /**
      * The insets for the rows mapped by area.
      */
+    @NotNull
     private final EnumMap<AreaId, RowInsets> rowInsets = new EnumMap<>(AreaId.class);
 
     /**
@@ -38,6 +42,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
      * In the most cases this value should depend on the used font-size, therefore a <code>{@link EMValue}</code>
      * should be used to specify the width.
      */
+    @NotNull
     private final IValue spaceBetweenGroups;
 
     /**
@@ -45,6 +50,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
      * In the most cases this value should depend on the used font-size, therefore a <code>{@link EMValue}</code>
      * should be used to specify the width.
      */
+    @NotNull
     private final IValue caretWidth;
 
     /**
@@ -60,6 +66,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
     /**
      * Returns a new builder for this class.
      */
+    @NotNull
     public static Builder newBuilder()
     {
         return new Builder();
@@ -70,7 +77,8 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
      * @param source the configuration used to initialize the new builder.
      * @return the created builder.
      */
-    public static Builder newBuilder(final IRowTemplateConfiguration source)
+    @NotNull
+    public static Builder newBuilder(@NotNull final IRowTemplateConfiguration source)
     {
         return new Builder(source);
     }
@@ -80,15 +88,17 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
      * Creates a new instance with all the values from a builder.
      * @param source the builder used to initialize the new instance.
      */
-    private DefaultRowTemplateConfiguration(final Builder source)
+    private DefaultRowTemplateConfiguration(@NotNull final Builder source)
     {
         super();
 
-        caretWidth = source.caretWidth;
         bytesPerRow = source.bytesPerRow;
         bytesPerGroup = source.bytesPerGroup;
-        spaceBetweenGroups = source.spaceBetweenGroups;
         rowInsets.putAll(source.rowInsets);
+
+        caretWidth = Objects.requireNonNull(source.caretWidth);
+        spaceBetweenGroups = Objects.requireNonNull(source.spaceBetweenGroups);
+
     }
 
     @Override
@@ -103,25 +113,28 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
         return bytesPerGroup;
     }
 
+    @NotNull
     @Override
     public IValue caretWidth()
     {
         return caretWidth;
     }
 
+    @NotNull
     @Override
     public IValue spaceBetweenGroups()
     {
         return spaceBetweenGroups;
     }
 
+    @NotNull
     @Override
-    public RowInsets rowInsets(final AreaId areaId)
+    public RowInsets rowInsets(@NotNull final AreaId areaId)
     {
-        CheckUtils.checkNotNull(areaId);
         return rowInsets.get(areaId);
     }
 
+    @NotNull
     @Override
     public Builder toBuilder()
     {
@@ -136,16 +149,19 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
         /**
          * The insets for the rows mapped by area.
          */
+        @NotNull
         private EnumMap<AreaId, RowInsets> rowInsets = new EnumMap<>(AreaId.class);
 
         /**
          * The space between two byte groups.
          */
+        @Nullable
         private IValue spaceBetweenGroups;
 
         /**
          * The width for the caret.
          */
+        @Nullable
         private IValue caretWidth;
 
         /**
@@ -173,7 +189,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
          *
          * @param source the configuration to initialize the new instance.
          */
-        private Builder(final IRowTemplateConfiguration source)
+        private Builder(@NotNull final IRowTemplateConfiguration source)
         {
             super();
 
@@ -186,6 +202,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
             rowInsets.put(AreaId.ASCII, source.rowInsets(AreaId.ASCII));
         }
 
+        @NotNull
         @Override
         public Builder bytesPerRow(final int value)
         {
@@ -194,6 +211,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
             return this;
         }
 
+        @NotNull
         @Override
         public Builder bytesPerGroup(final int value)
         {
@@ -202,41 +220,41 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
             return this;
         }
 
+        @NotNull
         @Override
-        public Builder spaceBetweenGroups(final IValue value)
+        public Builder spaceBetweenGroups(@NotNull final IValue value)
         {
-            CheckUtils.checkNotNull(value);
             spaceBetweenGroups = value;
             return this;
         }
 
+        @NotNull
         @Override
-        public Builder caretWidth(final IValue value)
+        public Builder caretWidth(@NotNull final IValue value)
         {
-            CheckUtils.checkNotNull(value);
             caretWidth = value;
             return this;
         }
 
+        @NotNull
         @Override
-        public Builder rowInsets(final RowInsets value)
+        public Builder rowInsets(@NotNull final RowInsets value)
         {
-            CheckUtils.checkNotNull(value);
             rowInsets.put(AreaId.OFFSET, value);
             rowInsets.put(AreaId.HEX, value);
             rowInsets.put(AreaId.ASCII, value);
             return this;
         }
 
+        @NotNull
         @Override
-        public Builder rowInsets(final AreaId areaId, final RowInsets value)
+        public Builder rowInsets(@NotNull final AreaId areaId, @NotNull final RowInsets value)
         {
-            CheckUtils.checkNotNull(areaId);
-            CheckUtils.checkNotNull(value);
             rowInsets.put(areaId, value);
             return this;
         }
 
+        @NotNull
         @Override
         public DefaultRowTemplateConfiguration build()
         {

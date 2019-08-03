@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template.configuration.values;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.ObjectUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -31,26 +31,31 @@ public final class RowInsets
     /**
      * The left inset of a row.
      */
+    @NotNull
     private final IValue left;
 
     /**
      * The right inset of a row.
      */
+    @NotNull
     private final IValue right;
 
     /**
      * The top inset of a row.
      */
+    @NotNull
     private final IValue top;
 
     /**
      * The top inset of a row.
      */
+    @NotNull
     private final IValue bottom;
 
     /**
      * Returns a new builder for this class.
      */
+    @NotNull
     public static Builder newBuilder()
     {
         return new Builder();
@@ -62,7 +67,7 @@ public final class RowInsets
      *
      * @param source the builder used to initialize the new instance.
      */
-    private RowInsets(final Builder source)
+    private RowInsets(@NotNull final Builder source)
     {
         super();
 
@@ -75,6 +80,7 @@ public final class RowInsets
     /**
      * Returns a builder containing all the values of this instance.
      */
+    @NotNull
     public Builder toBuilder()
     {
         return new Builder(this);
@@ -85,6 +91,7 @@ public final class RowInsets
      *
      * @return the right value.
      */
+    @NotNull
     public IValue right()
     {
         return right;
@@ -95,6 +102,7 @@ public final class RowInsets
      *
      * @return the left value.
      */
+    @NotNull
     public IValue left()
     {
         return left;
@@ -105,6 +113,7 @@ public final class RowInsets
      *
      * @return the top value.
      */
+    @NotNull
     public IValue top()
     {
         return top;
@@ -115,6 +124,7 @@ public final class RowInsets
      *
      * @return the bottom value.
      */
+    @NotNull
     public IValue bottom()
     {
         return bottom;
@@ -184,7 +194,7 @@ public final class RowInsets
          *
          * @param source the insets are used to initialize the new instance.
          */
-        private Builder(final RowInsets source)
+        private Builder(@NotNull final RowInsets source)
         {
             super();
 
@@ -203,9 +213,9 @@ public final class RowInsets
          * @param value the value for the right inset.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder right(final IValue value)
+        @NotNull
+        public Builder right(@NotNull final IValue value)
         {
-            CheckUtils.checkNotNull(value);
             right = value;
             return this;
         }
@@ -219,9 +229,9 @@ public final class RowInsets
          * @param value the value for the left inset.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder left(final IValue value)
+        @NotNull
+        public Builder left(@NotNull final IValue value)
         {
-            CheckUtils.checkNotNull(value);
             left = value;
             return this;
         }
@@ -235,9 +245,9 @@ public final class RowInsets
          * @param value the value for the top inset.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder top(final IValue value)
+        @NotNull
+        public Builder top(@NotNull final IValue value)
         {
-            CheckUtils.checkNotNull(value);
             top = value;
             return this;
         }
@@ -251,9 +261,9 @@ public final class RowInsets
          * @param value the value for the bottom inset.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder bottom(final IValue value)
+        @NotNull
+        public Builder bottom(@NotNull final IValue value)
         {
-            CheckUtils.checkNotNull(value);
             bottom = value;
             return this;
         }
@@ -267,7 +277,8 @@ public final class RowInsets
          * @param value the value for the left and right inset.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder horizontal(final IValue value)
+        @NotNull
+        public Builder horizontal(@NotNull final IValue value)
         {
             return left(value).right(value);
         }
@@ -281,7 +292,8 @@ public final class RowInsets
          * @param value the value for the top and bottom inset.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder vertical(final IValue value)
+        @NotNull
+        public Builder vertical(@NotNull final IValue value)
         {
             return top(value).bottom(value);
         }
@@ -295,7 +307,8 @@ public final class RowInsets
          * @param value the value to set.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder all(final IValue value)
+        @NotNull
+        public Builder all(@NotNull final IValue value)
         {
             return horizontal(value).vertical(value);
         }
@@ -306,6 +319,7 @@ public final class RowInsets
          *
          * @return the created instance.
          */
+        @NotNull
         public RowInsets build()
         {
             final IValue defaultValue = new FixedValue();
