@@ -65,9 +65,6 @@ Files can be loaded by **drag and drop**.
         - decrease font size (`crtl + '-'`)
     - switch focus between areas (`tab`)
 
-# Dependencies
-There are no third party dependencies used in the project.
-
 # Build the project
 Requires Maven and Java 8 or higher to build.
 
