@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.support.data.visitor.consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +34,7 @@ public class ToFileConsumer implements IConsumer
      * @param file the target file to write to.
      *             Already existing content in this file will be replaced with the consumed content.
      */
-    public ToFileConsumer(final File file)
+    public ToFileConsumer(@NotNull final File file)
     {
         super();
         this.file = file;
@@ -46,7 +48,7 @@ public class ToFileConsumer implements IConsumer
     }
 
     @Override
-    public void consume(final String content)
+    public void consume(@NotNull final String content)
     {
         stringConsumer.append(content);
 
@@ -69,7 +71,7 @@ public class ToFileConsumer implements IConsumer
      * @param content content to write into the specified file. The length of the content will be set to <code>0</code>
      *                after write.
      */
-    private void appendToFile(final File file, final StringBuilder content)
+    private void appendToFile(@NotNull final File file, @NotNull final StringBuilder content)
     {
         if (content.length() > 0)
         {
@@ -90,7 +92,7 @@ public class ToFileConsumer implements IConsumer
      * Clears the existing content of a file.
      * @param file file to clear.
      */
-    private void clearFileContent(final File file)
+    private void clearFileContent(@NotNull final File file)
     {
         try (FileOutputStream output = new FileOutputStream(file))
         {

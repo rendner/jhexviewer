@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.support.data.wrapper;
 
 import cms.rendner.hexviewer.core.model.data.IDataModel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Refers to data of a particular range of the data model used in the {@link cms.rendner.hexviewer.core.JHexViewer}.
@@ -17,7 +18,8 @@ public class DataPart implements IDataPart
     /**
      * The data model which provides the bytes.
      */
-    protected IDataModel dataModel;
+    @NotNull
+    protected final IDataModel dataModel;
 
     /**
      * Index of the first byte in this part in the data model.
@@ -31,7 +33,7 @@ public class DataPart implements IDataPart
      * @param offset    index of the first byte in this part in the data model.
      * @param size      the number of bytes in this part.
      */
-    public DataPart(final IDataModel dataModel, final int offset, final int size)
+    public DataPart(@NotNull final IDataModel dataModel, final int offset, final int size)
     {
         this.dataModel = dataModel;
         setRange(offset, size);
@@ -70,6 +72,6 @@ public class DataPart implements IDataPart
     protected void setRange(final int offset, final int size)
     {
         this.offset = offset;
-        this.size = dataModel == null ? 0 : Math.max(0, Math.min(dataModel.size() - offset, size));
+        this.size = Math.max(0, Math.min(dataModel.size() - offset, size));
     }
 }

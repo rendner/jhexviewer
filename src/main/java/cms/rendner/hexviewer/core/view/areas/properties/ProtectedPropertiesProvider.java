@@ -1,9 +1,12 @@
 package cms.rendner.hexviewer.core.view.areas.properties;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.utils.observer.Observable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Forwards new values for hidden properties of the areas.
@@ -23,7 +26,7 @@ public final class ProtectedPropertiesProvider extends Observable<Property>
      * @param target   the area to notify.
      * @param newValue the new focus state.
      */
-    public void forwardFocus(final AreaId target, final boolean newValue)
+    public void forwardFocus(@NotNull final AreaId target, final boolean newValue)
     {
         notifyArea(target, Property.FOCUS, newValue);
     }
@@ -34,7 +37,7 @@ public final class ProtectedPropertiesProvider extends Observable<Property>
      * @param target   the area to notify.
      * @param newValue the new row template.
      */
-    public void forwardRowTemplate(final AreaId target, final IRowTemplate newValue)
+    public void forwardRowTemplate(@NotNull final AreaId target, @Nullable final IRowTemplate newValue)
     {
         notifyArea(target, Property.ROW_TEMPLATE, newValue);
     }
@@ -54,7 +57,7 @@ public final class ProtectedPropertiesProvider extends Observable<Property>
      *
      * @param newValue the new delegate.
      */
-    public void forwardPaintDelegate(final IPaintDelegate newValue)
+    public void forwardPaintDelegate(@Nullable final IPaintDelegate newValue)
     {
         notifyAreas(Property.PAINT_DELEGATE, newValue);
     }
@@ -65,7 +68,7 @@ public final class ProtectedPropertiesProvider extends Observable<Property>
      * @param name  the name of the property to update.
      * @param value the new value for the property.
      */
-    private void notifyAreas(final String name, final Object value)
+    private void notifyAreas(@NotNull final String name, @Nullable final Object value)
     {
         setChangedAndNotifyObservers(
                 new Property(name, value)
@@ -79,7 +82,7 @@ public final class ProtectedPropertiesProvider extends Observable<Property>
      * @param name   the name of the property to update.
      * @param value  the new value for the property.
      */
-    private void notifyArea(final AreaId target, final String name, final Object value)
+    private void notifyArea(@NotNull final AreaId target, @NotNull final String name, @Nullable final Object value)
     {
         setChangedAndNotifyObservers(
                 new Property(target, name, value)

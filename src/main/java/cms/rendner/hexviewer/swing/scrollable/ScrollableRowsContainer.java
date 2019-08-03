@@ -1,6 +1,8 @@
 package cms.rendner.hexviewer.swing.scrollable;
 
 import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -19,6 +21,7 @@ public class ScrollableRowsContainer extends ScrollableContainer
     /**
      * The component forwards all "questions about how to scroll" to this delegate.
      */
+    @Nullable
     protected IScrollableDelegate scrollableDelegate;
 
     /**
@@ -50,8 +53,9 @@ public class ScrollableRowsContainer extends ScrollableContainer
     }
 
     /**
-     * @return the installed scroll delegate, can be <code>null</code>.
+     * @return the installed scroll delegate, can be <code>null</code> if no delegate was installed.
      */
+    @Nullable
     public IScrollableDelegate getScrollableDelegate()
     {
         return scrollableDelegate;
@@ -63,7 +67,7 @@ public class ScrollableRowsContainer extends ScrollableContainer
      *
      * @param newScrollableDelegate the new scroll delegate, can be <code>null</code>
      */
-    public void setScrollableDelegate(final IScrollableDelegate newScrollableDelegate)
+    public void setScrollableDelegate(@Nullable final IScrollableDelegate newScrollableDelegate)
     {
         scrollableDelegate = newScrollableDelegate;
         revalidate();
@@ -76,13 +80,13 @@ public class ScrollableRowsContainer extends ScrollableContainer
     }
 
     @Override
-    public int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction)
+    public int getScrollableUnitIncrement(@NotNull final Rectangle visibleRect, final int orientation, final int direction)
     {
         return scrollableDelegate == null ? 0 : scrollableDelegate.getScrollableUnitIncrement(visibleRect, orientation, direction);
     }
 
     @Override
-    public int getScrollableBlockIncrement(final Rectangle visibleRect, final int orientation, final int direction)
+    public int getScrollableBlockIncrement(@NotNull final Rectangle visibleRect, final int orientation, final int direction)
     {
         return scrollableDelegate == null ? 0 : scrollableDelegate.getScrollableBlockIncrement(visibleRect, orientation, direction);
     }

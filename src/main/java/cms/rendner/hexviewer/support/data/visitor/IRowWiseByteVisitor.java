@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.support.data.visitor;
 
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Visitor for doing operations on row of bytes level (searching, printing, etc.).
@@ -23,7 +24,7 @@ public interface IRowWiseByteVisitor
      * Is called for every row of bytes to visit.
      * @param rowData data of the row to visit.
      */
-    void visitRow(IRowData rowData);
+    void visitRow(@NotNull IRowData rowData);
 
     /**
      * Notifies the visitor that all rows are visited.

@@ -4,6 +4,7 @@ import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import example.DataModelFactory;
 import example.ExampleContextMenuFactory;
 import example.themes.ThemeFactory;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeListener;
  */
 public class Main
 {
-    public static void main(String[] args)
+    public static void main(@NotNull String[] args)
     {
         SwingUtilities.invokeLater(new Runnable()
         {
@@ -59,6 +60,7 @@ public class Main
         frame.setVisible(true);
     }
 
+    @NotNull
     private JComponent createHexViewer()
     {
         final JHexViewer hexViewer = new JHexViewer();

@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template.elements;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 /**
@@ -58,6 +60,7 @@ public interface IElement
      *
      * @return the position.
      */
+    @NotNull
     IPosition position();
 
     /**
@@ -65,6 +68,7 @@ public interface IElement
      *
      * @return the dimension.
      */
+    @NotNull
     IDimension dimension();
 
     /**
@@ -72,9 +76,8 @@ public interface IElement
      *
      * @param position the position to check.
      * @return <code>true</code> if inside otherwise <code>false</code>.
-     * @throws IllegalArgumentException if <code>position</code> is <code>null</code>.
      */
-    boolean contains(Point position);
+    boolean contains(@NotNull Point position);
 
     /**
      * Checks if the x-position is horizontal inside the element.
@@ -98,7 +101,8 @@ public interface IElement
      * @param returnValue the rectangle which should be filled.
      * @return <code>returnValue</code> modified to specify the bounds of the element.
      */
-    Rectangle toRectangle(Rectangle returnValue);
+    @NotNull
+    Rectangle toRectangle(@NotNull Rectangle returnValue);
 
     /**
      * The dimension of an element.

@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.view.geom;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A Range specifies a number of successive values.
@@ -159,29 +159,27 @@ public class Range
      * @param otherRange the second range.
      * @return the intersection of the two rectangles.
      * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange is <code>null</code> or invalid.
+     * @throws IllegalArgumentException if otherRange is invalid.
      */
-    public Range computeIntersection(final Range otherRange)
+    @NotNull
+    public Range computeIntersection(@NotNull final Range otherRange)
     {
-        CheckUtils.checkNotNull(otherRange);
-        return computeIntersection(otherRange.start, otherRange.end, null);
+        return computeIntersection(otherRange.start, otherRange.end, new Range());
     }
 
     /**
      * Convenience to calculate the intersection of two ranges without allocating a new range.
      * If the two ranges don't intersect, then the returned range is invalid.
      *
-     * @param otherRange  the range to intersect against, can't be <code>null</code>.
-     * @param returnValue the intersection of the two ranges is returned in this range, can't be <code>null</code>.
+     * @param otherRange  the range to intersect against.
+     * @param returnValue the intersection of the two ranges is returned in this range.
      * @return <code>returnValue</code>, modified to specify the intersection.
      * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange or returnValue is <code>null</code> or otherRange is invalid.
+     * @throws IllegalArgumentException if otherRange is invalid.
      */
-    public Range computeIntersection(final Range otherRange, final Range returnValue)
+    @NotNull
+    public Range computeIntersection(@NotNull final Range otherRange, @NotNull final Range returnValue)
     {
-        CheckUtils.checkNotNull(otherRange);
-        CheckUtils.checkNotNull(returnValue);
-
         return computeIntersection(otherRange.start, otherRange.end, returnValue);
     }
 
@@ -194,12 +192,11 @@ public class Range
      * @param returnValue the intersection of the two ranges is returned in this range.
      * @return <code>result</code>, modified to specify the intersection.
      * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if returnValue is <code>null</code> or the other range is invalid.
+     * @throws IllegalArgumentException if the other range is invalid.
      */
-    public Range computeIntersection(final int otherStart, final int otherEnd, final Range returnValue)
+    @NotNull
+    public Range computeIntersection(final int otherStart, final int otherEnd, @NotNull final Range returnValue)
     {
-        CheckUtils.checkNotNull(returnValue);
-
         if (!isValid())
         {
             throw new IllegalStateException("Can't intersect with an invalid range.");
@@ -245,12 +242,12 @@ public class Range
      * @param otherRange the second range.
      * @return the union of the tow ranges.
      * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange is <code>null</code> or invalid.
+     * @throws IllegalArgumentException if otherRange is invalid.
      */
-    public Range computeUnion(final Range otherRange)
+    @NotNull
+    public Range computeUnion(@NotNull final Range otherRange)
     {
-        CheckUtils.checkNotNull(otherRange);
-        return computeUnion(otherRange.start, otherRange.end, null);
+        return computeUnion(otherRange.start, otherRange.end, new Range());
     }
 
     /**
@@ -260,13 +257,11 @@ public class Range
      * @param returnValue the union of the two ranges is returned in this range.
      * @return the <code>returnValue</code> modified to specify the union.
      * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange or returnValue is <code>null</code> or otherRange is invalid.
+     * @throws IllegalArgumentException if otherRange is invalid.
      */
-    public Range computeUnion(final Range otherRange, final Range returnValue)
+    @NotNull
+    public Range computeUnion(@NotNull final Range otherRange, @NotNull final Range returnValue)
     {
-        CheckUtils.checkNotNull(otherRange);
-        CheckUtils.checkNotNull(returnValue);
-
         return computeUnion(otherRange.start, otherRange.end, returnValue);
     }
 
@@ -278,12 +273,11 @@ public class Range
      * @param returnValue the union of the two ranges is returned in this range.
      * @return the <code>returnValue</code> modified to specify the union.
      * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if returnValue is <code>null</code> or the other range is invalid.
+     * @throws IllegalArgumentException if the other range is invalid.
      */
-    public Range computeUnion(final int otherStart, final int otherEnd, final Range returnValue)
+    @NotNull
+    public Range computeUnion(final int otherStart, final int otherEnd, @NotNull final Range returnValue)
     {
-        CheckUtils.checkNotNull(returnValue);
-
         if (!isValid())
         {
             throw new IllegalStateException("Can't create union with an invalid range.");

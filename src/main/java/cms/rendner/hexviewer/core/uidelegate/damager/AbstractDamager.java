@@ -1,10 +1,11 @@
 package cms.rendner.hexviewer.core.uidelegate.damager;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.utils.RectangleUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,12 +21,14 @@ public abstract class AbstractDamager implements IDamager
      * A return value which is used to retrieve the bounds for a row, byte or caret.
      * This instance be reused to minimize creation of new rectangles.
      */
+    @NotNull
     private final Rectangle rvRect = new Rectangle();
 
     /**
      * A return value which is used to retrieve the bounds for a row, byte or caret.
      * This instance be reused to minimize creation of new rectangles.
      */
+    @NotNull
     private final Rectangle rvRect2 = new Rectangle();
 
     /**
@@ -34,13 +37,13 @@ public abstract class AbstractDamager implements IDamager
     protected JHexViewer hexViewer;
 
     @Override
-    public void install(final JHexViewer hexViewer)
+    public void install(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = hexViewer;
     }
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = null;
     }
@@ -88,14 +91,14 @@ public abstract class AbstractDamager implements IDamager
     }
 
     @Override
-    public void damageRow(final AreaId id, final int rowIndex)
+    public void damageRow(@NotNull final AreaId id, final int rowIndex)
     {
         final RowBasedView rowsView = hexViewer.getRowsView(id);
         damage(rowsView, rowsView.getRowRect(rowIndex, rvRect));
     }
 
     @Override
-    public void damageBytes(final AreaId id, final int startByteIndex, final int endByteIndex)
+    public void damageBytes(@NotNull final AreaId id, final int startByteIndex, final int endByteIndex)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
         final int startRowIndex = hexViewer.byteIndexToRowIndex(startByteIndex);
@@ -116,7 +119,7 @@ public abstract class AbstractDamager implements IDamager
     }
 
     @Override
-    public void damageArea(final AreaId id)
+    public void damageArea(@NotNull final AreaId id)
     {
         hexViewer.getRowsView(id).repaint();
     }
@@ -129,7 +132,7 @@ public abstract class AbstractDamager implements IDamager
         damageArea(AreaId.ASCII);
     }
 
-    protected void damageByte(final AreaId id, final int byteIndex)
+    protected void damageByte(@NotNull final AreaId id, final int byteIndex)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
         damage(rowsView, rowsView.getByteRect(byteIndex, rvRect));
@@ -144,7 +147,7 @@ public abstract class AbstractDamager implements IDamager
      * @param newStart the new start of the highlight.
      * @param newEnd   the new end of the highlight.
      */
-    protected void damageChangedHighlight(final AreaId id, final int oldStart, final int oldEnd, final int newStart, final int newEnd)
+    protected void damageChangedHighlight(@NotNull final AreaId id, final int oldStart, final int oldEnd, final int newStart, final int newEnd)
     {
         if (oldStart == newStart && oldEnd == newEnd)
         {
@@ -201,7 +204,7 @@ public abstract class AbstractDamager implements IDamager
      * @param id         the id of the area.
      * @param caretIndex the position of the caret.
      */
-    protected void damageCaret(final AreaId id, final int caretIndex)
+    protected void damageCaret(@NotNull final AreaId id, final int caretIndex)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
         damage(rowsView, rowsView.getCaretRect(caretIndex, rvRect));
@@ -213,7 +216,7 @@ public abstract class AbstractDamager implements IDamager
      * @param target      the component which should be damaged.
      * @param dirtyRegion the region which should be damaged.
      */
-    protected void damage(final JComponent target, final Rectangle dirtyRegion)
+    protected void damage(@NotNull final JComponent target, @NotNull final Rectangle dirtyRegion)
     {
         if (!dirtyRegion.isEmpty())
         {

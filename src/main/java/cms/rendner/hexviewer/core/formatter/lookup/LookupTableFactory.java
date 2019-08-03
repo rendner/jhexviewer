@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.formatter.lookup;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.event.KeyEvent;
 
 /**
@@ -14,6 +16,7 @@ public class LookupTableFactory
     /**
      * The dot.
      */
+    @NotNull
     private static final String DOT = ".";
 
     /**
@@ -34,6 +37,7 @@ public class LookupTableFactory
     /**
      * Creates a hex lookup table with 256 entries for the byte values '0x00' - '0xFF'.
      */
+    @NotNull
     public synchronized static ILookupTable createHexTable()
     {
         if (hexValueTable == null)
@@ -50,6 +54,7 @@ public class LookupTableFactory
      * ASCII defines 128 characters, which map to the numbers 0–127.
      * If an ASCII char in this range isn't printable a "." is used instead.
      */
+    @NotNull
     public synchronized static ILookupTable createAsciiTable()
     {
         if (asciiValueTable == null)
@@ -66,6 +71,7 @@ public class LookupTableFactory
      * Unicode is a superset of ASCII, and the numbers 0–128 have the same meaning in ASCII as they have in Unicode.
      * If an unicode char in this range isn't printable a "." is used instead.
      */
+    @NotNull
     public synchronized static ILookupTable createUnicodeTable()
     {
         if (unicodeValueTable == null)
@@ -79,6 +85,7 @@ public class LookupTableFactory
     /**
      * Creates a hex lookup table with 256 entries for the byte values '0x00' - '0xFF'.
      */
+    @NotNull
     private static ILookupTable generateHexTable()
     {
         final String[] result = new String[0xFF + 1];
@@ -94,6 +101,7 @@ public class LookupTableFactory
     /**
      * Creates an unicode lookup table with 256 entries for the byte values '0x00' - '0xFF'.
      */
+    @NotNull
     private static ILookupTable generateUnicodeTable()
     {
         final String[] result = new String[0xFF + 1];
@@ -118,6 +126,7 @@ public class LookupTableFactory
     /**
      * Creates an ASCII lookup table with 256 entries for the byte values '0x00' - '0xFF'.
      */
+    @NotNull
     private static ILookupTable generateAsciiTable()
     {
         final String[] result = new String[0xFF + 1];

@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.swing.separator;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -38,7 +40,7 @@ public class JSeparatedViewport extends JViewport
      *
      * @param g the <code>Graphics</code> context in which to paint.
      */
-    private void paintSeparators(final Graphics g)
+    private void paintSeparators(@NotNull final Graphics g)
     {
         final Component view = getView();
         if (view instanceof JSeparatedView)
@@ -63,7 +65,7 @@ public class JSeparatedViewport extends JViewport
      * @param xOffset     the x position of the view which is wrapped by the viewport.
      * @param height      the height for the separator.
      */
-    private void paintSeparator(final Graphics g, final VSeparatorPlaceholder placeholder, final int xOffset, final int height)
+    private void paintSeparator(@NotNull final Graphics g, @NotNull final VSeparatorPlaceholder placeholder, final int xOffset, final int height)
     {
         final Separator separator = placeholder.getSeparator();
         if (null != separator)

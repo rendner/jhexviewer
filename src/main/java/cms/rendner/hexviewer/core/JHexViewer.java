@@ -36,6 +36,8 @@ import cms.rendner.hexviewer.swing.separator.VSeparatorPlaceholder;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.FallbackValue;
 import cms.rendner.hexviewer.utils.IndexUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,15 +55,18 @@ public class JHexViewer extends JComponent
      * Constant used to determine when the <code>dataModel</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
+    @NotNull
     public static final String PROPERTY_DATA_MODEL = "dataModel";
     /**
      * Constant used to determine when the <code>caretModel</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
+    @NotNull
     public static final String PROPERTY_CARET = "caretModel";
     /**
      * Constant used to determine when the <code>areaFocus</code> property has changed.
      */
+    @NotNull
     public static final String PROPERTY_FOCUSED_AREA = "areaFocus";
     /**
      * Constant used to determine when the <code>highlighter</code> property has changed.
@@ -72,26 +77,31 @@ public class JHexViewer extends JComponent
      * Constant used to determine when the <code>damager</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
+    @NotNull
     public static final String PROPERTY_DAMAGER = "damager";
     /**
      * Constant used to determine when the offset <code>formatter</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
+    @NotNull
     private static final String PROPERTY_OFFSET_FORMATTER = "offsetFormatter";
     /**
      * Constant used to determine when the hex <code>formatter</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
+    @NotNull
     private static final String PROPERTY_HEX_FORMATTER = "hexFormatter";
     /**
      * Constant used to determine when the ascii <code>formatter</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
+    @NotNull
     private static final String PROPERTY_ASCII_FORMATTER = "asciiFormatter";
 
     /**
      * @see #getUIClassID
      */
+    @NotNull
     private static final String uiClassID = "HexViewerUI";
 
 
@@ -100,6 +110,7 @@ public class JHexViewer extends JComponent
      * Even if no one was set directly by the user, a default formatter is available which was set by the
      * installed ui delegate.
      */
+    @NotNull
     protected final FallbackValue<IOffsetValueFormatter> offsetValueFormatter = new FallbackValue<>();
 
     /**
@@ -107,6 +118,7 @@ public class JHexViewer extends JComponent
      * Even if no one was set directly by the user, a default formatter is available which was set by the
      * installed ui delegate.
      */
+    @NotNull
     protected final FallbackValue<IValueFormatter> hexValueFormatter = new FallbackValue<>();
 
     /**
@@ -114,6 +126,7 @@ public class JHexViewer extends JComponent
      * Even if no one was set directly by the user, a default formatter is available which was set by the
      * installed ui delegate.
      */
+    @NotNull
     protected final FallbackValue<IValueFormatter> asciiValueFormatter = new FallbackValue<>();
 
     /**
@@ -124,11 +137,13 @@ public class JHexViewer extends JComponent
     /**
      * The configuration from which the <code>IRowTemplates</code> are build.
      */
+    @NotNull
     protected IRowTemplateConfiguration rowTemplateConfiguration;
 
     /**
      * The factory which builds <code>IRowTemplates</code>.
      */
+    @Nullable
     protected IRowTemplateFactory rowTemplateFactory;
 
     /**
@@ -154,26 +169,31 @@ public class JHexViewer extends JComponent
     /**
      * Factory which is used to create a context menu.
      */
+    @Nullable
     private IContextMenuFactory contextMenuFactory;
 
     /**
      * The caret used to display the insert position and navigate throughout the <code>dataModel</code>.
      */
+    @Nullable
     private ICaret caret;
 
     /**
      * The damager used to request repaints of specific parts inside the hex viewer without knowing to much details.
      */
+    @Nullable
     private IDamager damager;
 
     /**
      * The data provider, the content of this provider is rendered by the hex viewer.
      */
+    @Nullable
     private IDataModel dataModel;
 
     /**
      * The object responsible for managing highlights.
      */
+    @Nullable
     private IHighlighter highlighter;
 
     /**
@@ -184,7 +204,8 @@ public class JHexViewer extends JComponent
     /**
      * The currently focused area, can only by a byte-area ({@link AreaId#HEX} and {@link AreaId#ASCII}).
      */
-    private AreaId focusedArea;
+    @NotNull
+    private AreaId focusedArea = AreaId.HEX;
 
     /**
      * The scroll pane which arranges the internal sub views.
@@ -239,8 +260,9 @@ public class JHexViewer extends JComponent
     /**
      * Returns the delegate which paints all three areas ({@link AreaId#OFFSET}, {@link AreaId#HEX} and {@link AreaId#ASCII}).
      *
-     * @return the current paint delegate or <code>null</code> if no delegate was set.
+     * @return the current paint delegate.
      */
+    @Nullable
     public IPaintDelegate getPaintDelegate()
     {
         return offsetRowsView.getPaintDelegate();
@@ -251,7 +273,7 @@ public class JHexViewer extends JComponent
      *
      * @param newDelegate the new delegate.
      */
-    public void setPaintDelegate(final IPaintDelegate newDelegate)
+    public void setPaintDelegate(@Nullable final IPaintDelegate newDelegate)
     {
         final IPaintDelegate oldDelegate = getPaintDelegate();
         if (oldDelegate != null)
@@ -275,9 +297,9 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_OFFSET_FORMATTER} is fired when formatter has changed.
      *
-     * @param newValue the new formatter, can be <code>null</code>.
+     * @param newValue the new formatter.
      */
-    public void setOffsetFormatter(final IOffsetValueFormatter newValue)
+    public void setOffsetFormatter(@Nullable final IOffsetValueFormatter newValue)
     {
         final IOffsetValueFormatter oldValue = offsetValueFormatter.getValue();
 
@@ -309,9 +331,9 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_HEX_FORMATTER} is fired when formatter has changed.
      *
-     * @param newValue the new formatter, can be <code>null</code>.
+     * @param newValue the new formatter.
      */
-    public void setHexFormatter(final IValueFormatter newValue)
+    public void setHexFormatter(@Nullable final IValueFormatter newValue)
     {
         final IValueFormatter oldValue = hexValueFormatter.getValue();
 
@@ -342,9 +364,9 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_ASCII_FORMATTER} is fired when formatter has changed.
      *
-     * @param newValue the new formatter, can be <code>null</code>.
+     * @param newValue the new formatter.
      */
-    public void setAsciiFormatter(final IValueFormatter newValue)
+    public void setAsciiFormatter(@Nullable final IValueFormatter newValue)
     {
         final IValueFormatter oldValue = asciiValueFormatter.getValue();
 
@@ -373,6 +395,7 @@ public class JHexViewer extends JComponent
      * Can't be <code>null</code>, even if no one was set in this case the default formatter provided by the
      * installed ui delegate will be returned.
      */
+    @NotNull
     public IOffsetValueFormatter getOffsetValueFormatter()
     {
         return offsetValueFormatter.getValue();
@@ -383,6 +406,7 @@ public class JHexViewer extends JComponent
      * Can't be <code>null</code>, even if no one was set in this case the default formatter provided by the
      * installed ui delegate will be returned.
      */
+    @NotNull
     public IValueFormatter getHexValueFormatter()
     {
         return hexValueFormatter.getValue();
@@ -393,6 +417,7 @@ public class JHexViewer extends JComponent
      * Can't be <code>null</code>, even if no one was set in this case the default formatter provided by the
      * installed ui delegate will be returned.
      */
+    @NotNull
     public IValueFormatter getAsciiValueFormatter()
     {
         return asciiValueFormatter.getValue();
@@ -410,6 +435,7 @@ public class JHexViewer extends JComponent
      * @see #getAsciiRowsView()
      * @see JComponent#scrollRectToVisible(Rectangle)
      */
+    @NotNull
     public ScrollableContainer getScrollableByteRowsContainer()
     {
         return byteRowsViewContainer;
@@ -442,8 +468,9 @@ public class JHexViewer extends JComponent
     /**
      * Returns the currently focused area, can only be a byte-area ({@link AreaId#HEX} or {@link AreaId#ASCII}).
      *
-     * @return the focused area, never <code>null</code>.
+     * @return the focused area.
      */
+    @NotNull
     public AreaId getFocusedArea()
     {
         return focusedArea;
@@ -458,15 +485,13 @@ public class JHexViewer extends JComponent
      * A PropertyChange event {@link JHexViewer#PROPERTY_FOCUSED_AREA} is fired when focused area has changed.
      *
      * @param id <code>AreaId.HEX</code> or <code>AreaId.ASCII</code>
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code> or not a focusable area.
+     * @throws IllegalArgumentException if <code>id</code> is not a focusable area.
      * @see IPaintDelegate
      * @see #setPaintDelegate(IPaintDelegate)
      * @see #getPaintDelegate()
      */
-    public void setFocusedArea(final AreaId id)
+    public void setFocusedArea(@NotNull final AreaId id)
     {
-        CheckUtils.checkNotNull(id);
-
         if (!isFocusableArea(id))
         {
             throw new IllegalArgumentException("The area '" + id + "' isn't a focusable area.");
@@ -494,14 +519,14 @@ public class JHexViewer extends JComponent
     }
 
     @Override
-    public void setBackground(final Color newBackground)
+    public void setBackground(@Nullable final Color newBackground)
     {
         super.setBackground(newBackground);
         scrollPane.setBackground(newBackground);
     }
 
     @Override
-    public void setFont(final Font font)
+    public void setFont(@Nullable final Font font)
     {
         final Font oldFont = getFont();
         super.setFont(font);
@@ -552,7 +577,7 @@ public class JHexViewer extends JComponent
      *
      * @param separator the new separator, this value can be <code>null</code> if no separator should be displayed.
      */
-    public void setOffsetSeparator(final Separator separator)
+    public void setOffsetSeparator(@Nullable final Separator separator)
     {
         final Component view = scrollPane.getRowHeader().getView();
         replaceSeparator(view, separator);
@@ -563,7 +588,7 @@ public class JHexViewer extends JComponent
      *
      * @param separator the new separator, this value can be <code>null</code> if no separator should be displayed.
      */
-    public void setByteViewsSeparator(final Separator separator)
+    public void setByteViewsSeparator(@Nullable final Separator separator)
     {
         final Component view = scrollPane.getViewport().getView();
         replaceSeparator(view, separator);
@@ -574,6 +599,7 @@ public class JHexViewer extends JComponent
      *
      * @return the component which displays the offset part.
      */
+    @NotNull
     public OffsetRowsView getOffsetRowsView()
     {
         return offsetRowsView;
@@ -584,6 +610,7 @@ public class JHexViewer extends JComponent
      *
      * @return the component which displays the hex part.
      */
+    @NotNull
     public ByteRowsView getHexRowsView()
     {
         return hexRowsView;
@@ -594,6 +621,7 @@ public class JHexViewer extends JComponent
      *
      * @return the component which displays the ascii part.
      */
+    @NotNull
     public ByteRowsView getAsciiRowsView()
     {
         return asciiRowsView;
@@ -604,10 +632,11 @@ public class JHexViewer extends JComponent
      *
      * @param id the id of the requested byte component.
      * @return the component which displays the content of the requested area.
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code> or not a byte area.
+     * @throws IllegalArgumentException if <code>id</code> is not a byte area.
      * @see #isByteArea(AreaId)
      */
-    public ByteRowsView getByteRowsView(final AreaId id)
+    @NotNull
+    public ByteRowsView getByteRowsView(@NotNull final AreaId id)
     {
         if (!isByteArea(id))
         {
@@ -621,12 +650,10 @@ public class JHexViewer extends JComponent
      *
      * @param id the id of the requested component.
      * @return the component which displays the content of the requested area.
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code> or not a byte area.
      */
-    public RowBasedView getRowsView(final AreaId id)
+    @NotNull
+    public RowBasedView getRowsView(@NotNull final AreaId id)
     {
-        CheckUtils.checkNotNull(id);
-
         if (AreaId.OFFSET.equals(id))
         {
             return offsetRowsView;
@@ -640,6 +667,7 @@ public class JHexViewer extends JComponent
      *
      * @return the row template for the area.
      */
+    @Nullable
     public IOffsetRowTemplate getOffsetRowTemplate()
     {
         return getOffsetRowsView().template();
@@ -650,10 +678,11 @@ public class JHexViewer extends JComponent
      *
      * @param id the id of the byte area for which the row template should be returned.
      * @return the row template for the area.
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code> or not a byte area.
+     * @throws IllegalArgumentException if <code>id</code> not a byte area.
      * @see #isByteArea(AreaId)
      */
-    public IByteRowTemplate getByteRowTemplate(final AreaId id)
+    @Nullable
+    public IByteRowTemplate getByteRowTemplate(@NotNull final AreaId id)
     {
         return getByteRowsView(id).template();
     }
@@ -664,6 +693,7 @@ public class JHexViewer extends JComponent
      * @return the delegate or <code>null</code> if no delegate was set.
      * @see #getScrollableByteRowsContainer()
      */
+    @Nullable
     public IScrollableDelegate getScrollableDelegate()
     {
         return byteRowsViewContainer.getScrollableDelegate();
@@ -677,7 +707,7 @@ public class JHexViewer extends JComponent
      *
      * @param newDelegate the new delegate, can be <code>null</code>.
      */
-    public void setScrollableDelegate(final IScrollableDelegate newDelegate)
+    public void setScrollableDelegate(@Nullable final IScrollableDelegate newDelegate)
     {
         final IScrollableDelegate oldDelegate = getScrollableDelegate();
 
@@ -701,9 +731,9 @@ public class JHexViewer extends JComponent
      * Sets the background color of the container which displays the content of the offset area.
      * If the new value is <code>null</code>, the component will be fully transparent.
      *
-     * @param newBackground the new color, can be <code>null</code>.
+     * @param newBackground the new color.
      */
-    public void setOffsetViewBackground(final Color newBackground)
+    public void setOffsetViewBackground(@Nullable final Color newBackground)
     {
         setComponentBackground(scrollPane.getRowHeader(), newBackground);
     }
@@ -712,9 +742,9 @@ public class JHexViewer extends JComponent
      * Sets the background color of the container which displays the byte area.
      * If the new value is <code>null</code>, the component will be fully transparent.
      *
-     * @param newBackground the new color, can be <code>null</code>.
+     * @param newBackground the new color.
      */
-    public void setByteViewBackground(final Color newBackground)
+    public void setByteViewBackground(@Nullable final Color newBackground)
     {
         setComponentBackground(scrollPane.getViewport(), newBackground);
     }
@@ -724,6 +754,7 @@ public class JHexViewer extends JComponent
      *
      * @return the current installed factory or <code>null</code> if no factory was set.
      */
+    @Nullable
     public IRowTemplateFactory getRowTemplateFactory()
     {
         return rowTemplateFactory;
@@ -738,7 +769,7 @@ public class JHexViewer extends JComponent
      *
      * @param newValue the new factory.
      */
-    public void setRowTemplateFactory(final IRowTemplateFactory newValue)
+    public void setRowTemplateFactory(@Nullable final IRowTemplateFactory newValue)
     {
         if (rowTemplateFactory != newValue)
         {
@@ -753,8 +784,10 @@ public class JHexViewer extends JComponent
      *
      * @return the current installed damager or <code>null</code> if no damager was set.
      */
+    @Nullable
     public IDamager getDamager()
     {
+        // TODO: always return a valid damager (NOPDamager?) so that this property is never null (fallbackValue)
         return damager;
     }
 
@@ -771,7 +804,7 @@ public class JHexViewer extends JComponent
      *
      * @param newValue the new damager.
      */
-    public void setDamager(final IDamager newValue)
+    public void setDamager(@Nullable final IDamager newValue)
     {
         final IDamager oldValue = damager;
         if (oldValue != null)
@@ -800,12 +833,9 @@ public class JHexViewer extends JComponent
      *
      * @param id          the id of the area for which the provider should be used.
      * @param newProvider the new provider, can be <code>null</code>.
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code>.
      */
-    public void setRowColorProvider(final AreaId id, final IRowColorProvider newProvider)
+    public void setRowColorProvider(@NotNull final AreaId id, @Nullable final IRowColorProvider newProvider)
     {
-        CheckUtils.checkNotNull(id);
-
         final IPaintDelegate delegate = getPaintDelegate();
         if (delegate != null)
         {
@@ -818,6 +848,7 @@ public class JHexViewer extends JComponent
      *
      * @return the installed highlighter or <code>null</code> if no delegate was set.
      */
+    @Nullable
     public IHighlighter getHighlighter()
     {
         return highlighter;
@@ -833,7 +864,7 @@ public class JHexViewer extends JComponent
      *
      * @param newHighlighter the new highlighter, can be <code>null</code>
      */
-    public void setHighlighter(final IHighlighter newHighlighter)
+    public void setHighlighter(@Nullable final IHighlighter newHighlighter)
     {
         final IHighlighter oldHighlighter = highlighter;
         if (oldHighlighter != null)
@@ -857,9 +888,8 @@ public class JHexViewer extends JComponent
      *
      * @param id the id of the area which should be checked.
      * @return <code>true</code> if focusable otherwise <code>false</code>
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code>.
      */
-    public boolean isFocusableArea(final AreaId id)
+    public boolean isFocusableArea(@NotNull final AreaId id)
     {
         return isByteArea(id);
     }
@@ -869,9 +899,8 @@ public class JHexViewer extends JComponent
      *
      * @param id the id of the area which should be checked.
      * @return <code>true</code> if byte area otherwise <code>false</code>
-     * @throws IllegalArgumentException if <code>id</code> is <code>null</code>.
      */
-    public boolean isByteArea(final AreaId id)
+    public boolean isByteArea(@NotNull final AreaId id)
     {
         CheckUtils.checkNotNull(id);
         return AreaId.HEX.equals(id) || AreaId.ASCII.equals(id);
@@ -882,6 +911,7 @@ public class JHexViewer extends JComponent
      *
      * @return the current factory or <code>null</code> if no factory was set.
      */
+    @Nullable
     public IContextMenuFactory getContextMenuFactory()
     {
         return contextMenuFactory;
@@ -897,17 +927,17 @@ public class JHexViewer extends JComponent
      *
      * @param factory the factory to be used, can be <code>null</code>.
      */
-    public void setContextMenuFactory(final IContextMenuFactory factory)
+    public void setContextMenuFactory(@Nullable final IContextMenuFactory factory)
     {
         this.contextMenuFactory = factory;
     }
 
     /**
      * The currently used data provider.
-     * The returned value can be <code>null</code>.
      *
      * @return the data provider.
      */
+    @Nullable
     public IDataModel getDataModel()
     {
         return dataModel;
@@ -924,9 +954,9 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_DATA_MODEL} is fired when a new model is installed.
      *
-     * @param newModel the data to be displayed, can be <code>null</code>.
+     * @param newModel the data to be displayed.
      */
-    public void setDataModel(final IDataModel newModel)
+    public void setDataModel(@Nullable final IDataModel newModel)
     {
         if (newModel != dataModel)
         {
@@ -980,8 +1010,10 @@ public class JHexViewer extends JComponent
      *
      * @return the caret if installed, otherwise <code>null</code>
      */
+    @Nullable
     public ICaret getCaret()
     {
+        // TODO: always return a valid caret (NOPCaret?) so that this property is never null (fallbackValue)
         return caret;
     }
 
@@ -993,7 +1025,7 @@ public class JHexViewer extends JComponent
      *
      * @param newCaret the caret used to select/navigate
      */
-    public void setCaret(final ICaret newCaret)
+    public void setCaret(@Nullable final ICaret newCaret)
     {
         if (newCaret != caret)
         {
@@ -1033,6 +1065,7 @@ public class JHexViewer extends JComponent
      *
      * @return the configuration.
      */
+    @NotNull
     public IRowTemplateConfiguration getRowTemplateConfiguration()
     {
         return rowTemplateConfiguration;
@@ -1043,12 +1076,9 @@ public class JHexViewer extends JComponent
      * The configuration will be used to create the internal row templates for the areas ({@link AreaId#OFFSET}, {@link AreaId#HEX} and {@link AreaId#ASCII}).
      *
      * @param newConfiguration the new configuration, this value can't be null.
-     * @throws IllegalArgumentException if <code>newConfiguration</code> is <code>null</code>
      */
-    public void setRowTemplateConfiguration(final IRowTemplateConfiguration newConfiguration)
+    public void setRowTemplateConfiguration(@NotNull final IRowTemplateConfiguration newConfiguration)
     {
-        CheckUtils.checkNotNull(newConfiguration);
-
         if (rowTemplateConfiguration != newConfiguration)
         {
             rowTemplateConfiguration = newConfiguration;
@@ -1228,6 +1258,7 @@ public class JHexViewer extends JComponent
      * Overwrite this method if a custom internal handler should be used.
      * @return the internal handler for the <code>{@link JHexViewer}</code>.
      */
+    @NotNull
     protected InternalHandler createInternalHandler()
     {
         return new InternalHandler();
@@ -1240,7 +1271,7 @@ public class JHexViewer extends JComponent
      * with the <code>hexRowsView</code> and <code>asciiRowsView</code> to handle mouse clicks.
      * @param handler the internal handler to register as listener.
      */
-    protected void registerInternalHandler(final InternalHandler handler)
+    protected void registerInternalHandler(@NotNull final InternalHandler handler)
     {
         CheckUtils.checkNotNull(handler);
 
@@ -1283,7 +1314,7 @@ public class JHexViewer extends JComponent
      * @param rowsView           the view in which the mouse click happened.
      * @param locationInRowsView the location of the mouse click inside the <code>rowsView</code>.
      */
-    protected void showContextMenu(final ByteRowsView rowsView, final Point locationInRowsView)
+    protected void showContextMenu(@NotNull final ByteRowsView rowsView, @NotNull final Point locationInRowsView)
     {
         if (contextMenuFactory != null)
         {
@@ -1313,7 +1344,7 @@ public class JHexViewer extends JComponent
      *
      * @param event the mouse event.
      */
-    protected void handleMouseEvent(final MouseEvent event)
+    protected void handleMouseEvent(@NotNull final MouseEvent event)
     {
         // Note: Popup menus are triggered differently on different systems.
         // Therefore, isPopupTrigger should be checked in both mousePressed and mouseReleased for
@@ -1463,7 +1494,7 @@ public class JHexViewer extends JComponent
      * @param container the container which contains the separator.
      * @param separator the new separator, can be <code>null</code>
      */
-    protected final void replaceSeparator(final Component container, final Separator separator)
+    protected final void replaceSeparator(@NotNull final Component container, @Nullable final Separator separator)
     {
         if (container instanceof JSeparatedView)
         {
@@ -1482,7 +1513,7 @@ public class JHexViewer extends JComponent
      * @param component     the component to modify.
      * @param newBackground the new background color, can be <code>null</code>.
      */
-    protected final void setComponentBackground(final JComponent component, final Color newBackground)
+    protected final void setComponentBackground(@Nullable final JComponent component, @Nullable final Color newBackground)
     {
         if (component != null)
         {

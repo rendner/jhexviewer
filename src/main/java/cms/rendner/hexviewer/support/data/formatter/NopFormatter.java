@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.support.data.formatter;
 
 import cms.rendner.hexviewer.core.formatter.IValueFormatter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Forwards a passed value unmodified.
@@ -9,6 +10,7 @@ import cms.rendner.hexviewer.core.formatter.IValueFormatter;
  */
 public class NopFormatter implements IValueFormatter
 {
+    @NotNull
     @Override
     public String format(final int value)
     {

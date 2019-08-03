@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.support.data.visitor.consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ToConsoleConsumer implements IConsumer
 {
     @Override
@@ -9,7 +11,7 @@ public class ToConsoleConsumer implements IConsumer
     }
 
     @Override
-    public void consume(String content)
+    public void consume(@NotNull final String content)
     {
         System.out.print(content);
     }

@@ -1,14 +1,17 @@
 package cms.rendner.hexviewer.core.view.highlight;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
+import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
+import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
 import cms.rendner.hexviewer.core.view.geom.Range;
-import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import cms.rendner.hexviewer.utils.RectangleUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -23,12 +26,14 @@ public class DefaultHighlighter extends AbstractHighlighter
      * A return value which is used to retrieve the horizontal dimension of all elements displayed in a row.
      * This instance be reused to minimize creation of new HorizontalDimension.
      */
+    @NotNull
     private final HorizontalDimension rvRowElementsDimension = new HorizontalDimension();
 
     /**
      * A return value which is used to retrieve the bounds of all elements displayed in a row.
      * This instance be reused to minimize creation of new Rectangle.
      */
+    @NotNull
     private final Rectangle rvRowElementsBounds = new Rectangle();
 
     /**
@@ -36,21 +41,24 @@ public class DefaultHighlighter extends AbstractHighlighter
      * defined by an highlight.
      * This instance be reused to minimize creation of new Range.
      */
+    @NotNull
     private final Range rvVisibleBytesIntersection = new Range();
 
     /**
      * A return value which is used to retrieve the range of the currently visible bytes.
      * This instance be reused to minimize creation of new Range.
      */
+    @NotNull
     private final Range rvVisibleBytes = new Range();
 
     /**
      * Default painter which is used if no custom painter has been defined for a highlight.
      */
+    @NotNull
     private IHighlightPainter defaultPainter = new DefaultHighlightPainter();
 
     @Override
-    public void setDefaultColor(final Color newColor)
+    public void setDefaultColor(@NotNull final Color newColor)
     {
         CheckUtils.checkNotNull(newColor);
 
@@ -66,6 +74,7 @@ public class DefaultHighlighter extends AbstractHighlighter
         }
     }
 
+    @NotNull
     @Override
     public IHighlight addHighlight(final int startByteIndex, final int endByteIndex)
     {
@@ -75,39 +84,35 @@ public class DefaultHighlighter extends AbstractHighlighter
         return info;
     }
 
+    @NotNull
     @Override
-    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex, final Color color)
+    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex, @NotNull final Color color)
     {
-        CheckUtils.checkNotNull(color);
         return addHighlight(startByteIndex, endByteIndex, new DefaultHighlightPainter(color));
     }
 
+    @NotNull
     @Override
-    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex, final IHighlightPainter painter)
+    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex, @NotNull final IHighlightPainter painter)
     {
-        CheckUtils.checkNotNull(painter);
-
         final HighlightInfo info = new HighlightInfo(startByteIndex, endByteIndex, painter);
         highlights.add(info);
         damageBytes(startByteIndex, endByteIndex);
         return info;
     }
 
+    @NotNull
     @Override
-    public IHighlight setSelectionHighlight(final int startByteIndex, final int endByteIndex, final IHighlightPainter painter)
+    public IHighlight setSelectionHighlight(final int startByteIndex, final int endByteIndex, @NotNull final IHighlightPainter painter)
     {
-        CheckUtils.checkNotNull(painter);
-
         selectionHighlight = new HighlightInfo(startByteIndex, endByteIndex, painter);
         damageBytes(startByteIndex, endByteIndex);
         return selectionHighlight;
     }
 
     @Override
-    public void changeHighlight(final IHighlight highlight, final int startByteIndex, final int endByteIndex)
+    public void changeHighlight(@NotNull final IHighlight highlight, final int startByteIndex, final int endByteIndex)
     {
-        CheckUtils.checkNotNull(highlight);
-
         if (highlight instanceof HighlightInfo)
         {
             final HighlightInfo info = (HighlightInfo) highlight;
@@ -118,7 +123,7 @@ public class DefaultHighlighter extends AbstractHighlighter
     }
 
     @Override
-    public void paint(final Graphics g, final ByteRowsView rowsView)
+    public void paint(@NotNull final Graphics g, @NotNull final ByteRowsView rowsView)
     {
         computeVisibleBytes(rowsView, rvVisibleBytes);
 
@@ -155,7 +160,7 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @param rowElementsDimension the horizontal dimension which covers all chars/bytes of a single row.
      *                             Used to know the min and max possible horizontal position for a highlight.
      */
-    protected void paintHighlight(final Graphics g, final IHighlight highlight, final ByteRowsView byteRowsView, final HorizontalDimension rowElementsDimension)
+    protected void paintHighlight(@NotNull final Graphics g, @NotNull final IHighlight highlight, @NotNull final ByteRowsView byteRowsView, final HorizontalDimension rowElementsDimension)
     {
         final int start = highlight.getStartOffset();
         final int end = highlight.getEndOffset();
@@ -177,7 +182,8 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @param returnValue the result is returned in this HorizontalDimension.
      * @return the adjusted <code>returnValue</code>
      */
-    protected HorizontalDimension computeRowElementsDimension(final ByteRowsView rowsView, final HorizontalDimension returnValue)
+    @NotNull
+    protected HorizontalDimension computeRowElementsDimension(@NotNull final ByteRowsView rowsView, @NotNull final HorizontalDimension returnValue)
     {
         final IRowTemplate rowTemplate = rowsView.template();
         rowTemplate.elementBounds(0, rowTemplate.elementCount() - 1, rvRowElementsBounds);
@@ -197,7 +203,8 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @param returnValue the object in which the result should be stored.
      * @return the adjusted <code>returnValue</code>
      */
-    protected Range computeVisibleBytes(final ByteRowsView rowsView, final Range returnValue)
+    @NotNull
+    protected Range computeVisibleBytes(@NotNull final ByteRowsView rowsView, @NotNull final Range returnValue)
     {
         final Rectangle rectangle = rowsView.getVisibleRect();
         rowsView.getRowRange(rectangle, returnValue);
@@ -224,7 +231,11 @@ public class DefaultHighlighter extends AbstractHighlighter
      */
     protected void damageChangedHighlight(final int oldStart, final int oldEnd, final int newStart, final int newEnd)
     {
-        hexViewer.getDamager().damageChangedHighlight(oldStart, oldEnd, newStart, newEnd);
+        final IDamager damager = hexViewer.getDamager();
+        if(damager != null)
+        {
+            damager.damageChangedHighlight(oldStart, oldEnd, newStart, newEnd);
+        }
     }
 
     /**
@@ -236,18 +247,21 @@ public class DefaultHighlighter extends AbstractHighlighter
         /**
          * Color used to fill the highlighted region.
          */
+        @NotNull
         private final Color color;
 
         /**
          * A return value which is used to retrieve the bounds of the start byte of the highlighted region.
          * This instance be reused to minimize creation of new rectangles.
          */
+        @NotNull
         private final Rectangle rvStartRect = new Rectangle();
 
         /**
          * A return value which is used to retrieve the bounds of the end byte of the highlighted region.
          * This instance be reused to minimize creation of new rectangles.
          */
+        @NotNull
         private final Rectangle rvEndRect = new Rectangle();
 
         /**
@@ -263,7 +277,7 @@ public class DefaultHighlighter extends AbstractHighlighter
          *
          * @param color the color to fill a highlighted region.
          */
-        public DefaultHighlightPainter(final Color color)
+        public DefaultHighlightPainter(@NotNull final Color color)
         {
             super();
             this.color = color;
@@ -276,13 +290,15 @@ public class DefaultHighlighter extends AbstractHighlighter
          * @param id        the id of the area to paint into.
          * @return the color to use to paint the highlight, can be <code>null</code>.
          */
-        protected Color getColor(final JHexViewer hexViewer, final AreaId id)
+        @Nullable
+        protected Color getColor(@NotNull final JHexViewer hexViewer, @NotNull final AreaId id)
         {
             return color;
         }
 
         @Override
-        public void paint(final Graphics g, final JHexViewer hexViewer, final ByteRowsView rowsView, final HorizontalDimension rowElementsDimension, final int byteStartIndex, final int byteEndIndex)
+        public void paint(@NotNull final Graphics g, @NotNull final JHexViewer hexViewer, @NotNull final ByteRowsView rowsView,
+                          @NotNull final HorizontalDimension rowElementsDimension, final int byteStartIndex, final int byteEndIndex)
         {
             final Color color = getColor(hexViewer, rowsView.getId());
 
@@ -328,6 +344,7 @@ public class DefaultHighlighter extends AbstractHighlighter
         /**
          * Painter to use to paint this highlight.
          */
+        @Nullable
         final IHighlighter.IHighlightPainter painter;
 
         /**
@@ -347,7 +364,7 @@ public class DefaultHighlighter extends AbstractHighlighter
          * @param end     the end offset for the highlight.
          * @param painter painter to use to paint this highlight.
          */
-        HighlightInfo(final int start, final int end, final IHighlighter.IHighlightPainter painter)
+        HighlightInfo(final int start, final int end, @Nullable final IHighlighter.IHighlightPainter painter)
         {
             super();
             this.start = start;
@@ -365,6 +382,7 @@ public class DefaultHighlighter extends AbstractHighlighter
             return end;
         }
 
+        @Nullable
         public IHighlighter.IHighlightPainter getPainter()
         {
             return painter;

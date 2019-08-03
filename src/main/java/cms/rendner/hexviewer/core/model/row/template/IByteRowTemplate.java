@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 /**
@@ -21,5 +23,6 @@ public interface IByteRowTemplate extends IRowTemplate
      * @return <code>returnValue</code> modified to specify the bounds
      * @throws IndexOutOfBoundsException if <code>byteIndex</code> is out of range (valid range: [0, getNumberOfBytes()-1])
      */
-    Rectangle caretBounds(int byteIndex, Rectangle returnValue);
+    @NotNull
+    Rectangle caretBounds(int byteIndex, @NotNull Rectangle returnValue);
 }

@@ -2,6 +2,7 @@ package example;
 
 import cms.rendner.hexviewer.core.model.data.DefaultDataModel;
 import cms.rendner.hexviewer.core.model.data.IDataModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -17,6 +18,7 @@ public class DataModelFactory
      *
      * @return the data model to use in the example.
      */
+    @NotNull
     public static IDataModel createRandomDataModel()
     {
         final String[] greetings = {

@@ -1,7 +1,8 @@
 package cms.rendner.hexviewer.core.uidelegate.damager;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A damager can be used to mark parts of the hex viewer for a repaint.
@@ -17,14 +18,14 @@ public interface IDamager
      *
      * @param hexViewer the hex viewer to install to.
      */
-    void install(JHexViewer hexViewer);
+    void install(@NotNull JHexViewer hexViewer);
 
     /**
      * Uninstalls the damager from the hex viewer.
      *
      * @param hexViewer the hex viewer to uninstall from.
      */
-    void uninstall(JHexViewer hexViewer);
+    void uninstall(@NotNull JHexViewer hexViewer);
 
     /**
      * Damages a row in all areas ({@link AreaId#OFFSET}, {@link AreaId#HEX} and {@link AreaId#ASCII}).
@@ -39,7 +40,7 @@ public interface IDamager
      * @param id       the id of the area.
      * @param rowIndex the index of the row which should be damaged.
      */
-    void damageRow(AreaId id, int rowIndex);
+    void damageRow(@NotNull AreaId id, int rowIndex);
 
     /**
      * Damages the position of the caret in all parts where the caret is displayed.
@@ -73,14 +74,14 @@ public interface IDamager
      * @param byteStartIndex the start of the byte range which should be damaged.
      * @param byteEndIndex   the end of the byte range which should be damaged.
      */
-    void damageBytes(AreaId id, int byteStartIndex, int byteEndIndex);
+    void damageBytes(@NotNull AreaId id, int byteStartIndex, int byteEndIndex);
 
     /**
      * Damages an area.
      *
      * @param id the id of the area.
      */
-    void damageArea(AreaId id);
+    void damageArea(@NotNull AreaId id);
 
     /**
      * Damages all areas.

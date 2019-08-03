@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.swing.scrollable;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -19,7 +20,7 @@ public interface IScrollableDelegate extends Scrollable
      *
      * @param hexViewer the JHexViewer component to install to.
      */
-    void install(JHexViewer hexViewer);
+    void install(@NotNull JHexViewer hexViewer);
 
     /**
      * Uninstalls the delegate from the JHexViewer.
@@ -29,5 +30,5 @@ public interface IScrollableDelegate extends Scrollable
      *
      * @param hexViewer the JHexViewer component to uninstall from.
      */
-    void uninstall(JHexViewer hexViewer);
+    void uninstall(@NotNull JHexViewer hexViewer);
 }

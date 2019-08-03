@@ -1,15 +1,17 @@
 package cms.rendner.hexviewer.core.view.caret;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.highlight.DefaultHighlighter;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
-import cms.rendner.hexviewer.utils.observer.Observable;
 import cms.rendner.hexviewer.utils.CheckUtils;
+import cms.rendner.hexviewer.utils.observer.Observable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
@@ -19,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 /**
  * An abstract implementation of ICaret. It can blink at the rate specified by the BlinkRate property.
@@ -36,11 +39,13 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     /**
      * The position of the dot.
      */
+    @NotNull
     protected final IndexPosition dotPosition = new IndexPosition();
 
     /**
      * The position of the mark.
      */
+    @NotNull
     protected final IndexPosition markPosition = new IndexPosition();
 
     /**
@@ -87,10 +92,11 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     /**
      * Internal listener used to observe the JHexViewer component.
      */
+    @Nullable
     protected InternalHandler internalHandler;
 
     @Override
-    public void install(final JHexViewer hexViewer)
+    public void install(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = hexViewer;
 
@@ -98,7 +104,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
         setSelectionPainter(new DefaultHighlighter.DefaultHighlightPainter()
         {
             @Override
-            protected Color getColor(final JHexViewer hexViewer, final AreaId id)
+            protected Color getColor(@NotNull final JHexViewer hexViewer, @NotNull final AreaId id)
             {
                 return colorProvider.getSelectionColor(id, hexViewer.getFocusedArea().equals(id));
             }
@@ -117,7 +123,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
         hexViewer.removePropertyChangeListener(internalHandler);
 
@@ -132,10 +138,8 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     @Override
-    public void setColorProvider(final ICaretColorProvider newColorProvider)
+    public void setColorProvider(@NotNull final ICaretColorProvider newColorProvider)
     {
-        CheckUtils.checkNotNull(newColorProvider);
-
         if (!newColorProvider.equals(colorProvider))
         {
             colorProvider = newColorProvider;
@@ -152,12 +156,14 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
         }
     }
 
+    @NotNull
     @Override
     public ICaretColorProvider getColorProvider()
     {
         return colorProvider;
     }
 
+    @NotNull
     @Override
     public IHighlighter.IHighlightPainter getSelectionPainter()
     {
@@ -165,9 +171,8 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     @Override
-    public void setSelectionPainter(final IHighlighter.IHighlightPainter selectionPainter)
+    public void setSelectionPainter(@NotNull final IHighlighter.IHighlightPainter selectionPainter)
     {
-        CheckUtils.checkNotNull(selectionPainter);
         this.selectionPainter = selectionPainter;
     }
 
@@ -201,6 +206,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
         setDot(newDot, IndexPosition.Bias.Forward);
     }
 
+    @NotNull
     @Override
     public IndexPosition.Bias getDotBias()
     {
@@ -208,14 +214,14 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     @Override
-    public void setDot(final int newDot, final IndexPosition.Bias newBias)
+    public void setDot(final int newDot, @NotNull final IndexPosition.Bias newBias)
     {
         final IndexPosition sanitizedDot = getSanitizedPosition(newDot, newBias);
         changeDotAndMark(sanitizedDot, sanitizedDot);
     }
 
     @Override
-    public void moveDot(final int newDot, final IndexPosition.Bias bias)
+    public void moveDot(final int newDot, @NotNull final IndexPosition.Bias bias)
     {
         final IndexPosition sanitizedDot = getSanitizedPosition(newDot, bias);
         changeDotAndMark(sanitizedDot, markPosition);
@@ -233,6 +239,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
         return markPosition.getIndex();
     }
 
+    @NotNull
     @Override
     public IndexPosition.Bias getMarkBias()
     {
@@ -339,7 +346,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      * @param dot  the new dot position.
      * @param mark the new mark position.
      */
-    protected void changeDotAndMark(final IndexPosition dot, final IndexPosition mark)
+    protected void changeDotAndMark(@NotNull final IndexPosition dot, @NotNull final IndexPosition mark)
     {
         if (!dot.equals(dotPosition) || !mark.equals(markPosition))
         {
@@ -374,6 +381,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      * @param index the index to sanitize.
      * @return a sanitized index position.
      */
+    @NotNull
     protected IndexPosition getSanitizedPosition(final int index)
     {
         return getSanitizedPosition(index, IndexPosition.Bias.Forward);
@@ -386,7 +394,8 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      * @param bias  the bias to toward to the next position when the index is ambiguous.
      * @return a sanitized index position.
      */
-    protected IndexPosition getSanitizedPosition(final int index, final IndexPosition.Bias bias)
+    @NotNull
+    protected IndexPosition getSanitizedPosition(final int index, @NotNull final IndexPosition.Bias bias)
     {
         final int sanitizedIndex = getSanitizedIndex(index);
         final IndexPosition.Bias sanitizedBias = sanitizedIndex == 0 ? IndexPosition.Bias.Forward : bias;
@@ -397,6 +406,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      * @return returns the bounds of the current caret (also for invisible carets).
      * The bounds is used to scroll automatically to the current caret position.
      */
+    @NotNull
     protected abstract Rectangle calculateVisibleRectForCaret();
 
     /**
@@ -405,7 +415,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void adjustSelectionHighlight()
     {
-        final IHighlighter highlighter = hexViewer.getHighlighter();
+        final IHighlighter highlighter = Objects.requireNonNull(hexViewer).getHighlighter();
 
         if (highlighter != null)
         {
@@ -439,7 +449,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void adjustCaretVisibility()
     {
-        hexViewer.getScrollableByteRowsContainer().scrollRectToVisible(calculateVisibleRectForCaret());
+        Objects.requireNonNull(hexViewer).getScrollableByteRowsContainer().scrollRectToVisible(calculateVisibleRectForCaret());
     }
 
     /**
@@ -452,20 +462,25 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     {
         return new ICaretColorProvider()
         {
+            @NotNull
             private final Color focusedCaretColor = new Color(0, 148, 200);
+            @NotNull
             private final Color caretColor = new Color(0, 148, 200, 100);
-
+            @NotNull
             private final Color focusedSelectionColor = new Color(0, 148, 200, 125);
+            @NotNull
             private final Color selectionColor = new Color(0, 148, 200, 55);
 
+            @NotNull
             @Override
-            public Color getCaretColor(final AreaId areaId, final boolean focused)
+            public Color getCaretColor(@NotNull final AreaId areaId, final boolean focused)
             {
                 return focused ? focusedCaretColor : caretColor;
             }
 
+            @NotNull
             @Override
-            public Color getSelectionColor(final AreaId areaId, final boolean focused)
+            public Color getSelectionColor(@NotNull final AreaId areaId, final boolean focused)
             {
                 return focused ? focusedSelectionColor : selectionColor;
             }
@@ -482,7 +497,11 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void damageCaret(final int oldIndex, final int newIndex)
     {
-        hexViewer.getDamager().damageCaret(oldIndex, newIndex);
+        final IDamager damager = Objects.requireNonNull(hexViewer).getDamager();
+        if(damager != null)
+        {
+            damager.damageCaret(oldIndex, newIndex);
+        }
     }
 
     /**
@@ -494,9 +513,12 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void damageSelection(final IndexPosition start, final IndexPosition end)
     {
-        final IDamager damager = hexViewer.getDamager();
-        damager.damageBytes(AreaId.HEX, start.getIndex(), end.getIndex());
-        damager.damageBytes(AreaId.ASCII, start.getIndex(), end.getIndex());
+        final IDamager damager = Objects.requireNonNull(hexViewer).getDamager();
+        if(damager != null)
+        {
+            damager.damageBytes(AreaId.HEX, start.getIndex(), end.getIndex());
+            damager.damageBytes(AreaId.ASCII, start.getIndex(), end.getIndex());
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.support.data.wrapper;
 
 import cms.rendner.hexviewer.core.model.data.IDataModel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Refers to data of a single row of the data model used in the {@link cms.rendner.hexviewer.core.JHexViewer}..
@@ -22,7 +23,7 @@ public class RowData extends DataPart implements IRowData
     /**
      * Number of bytes per row, used to calculate the bytes which belong to the specified row.
      */
-    protected int bytesPerRow;
+    protected final int bytesPerRow;
 
     /**
      * Creates a new instance which the specified properties.
@@ -30,7 +31,7 @@ public class RowData extends DataPart implements IRowData
      * @param dataModel   the data model which provides the bytes.
      * @param bytesPerRow the number of bytes per row.
      */
-    public RowData(final IDataModel dataModel, final int bytesPerRow)
+    public RowData(@NotNull final IDataModel dataModel, final int bytesPerRow)
     {
         super(dataModel, 0, bytesPerRow);
         this.bytesPerRow = bytesPerRow;

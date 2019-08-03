@@ -1,14 +1,16 @@
 package example.themes;
 
-import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
-import cms.rendner.hexviewer.support.themes.AbstractTheme;
-import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
-import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import cms.rendner.hexviewer.core.view.color.AbstractRowColorProvider;
+import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
+import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
+import cms.rendner.hexviewer.support.themes.AbstractTheme;
 import cms.rendner.hexviewer.swing.separator.Separator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -22,7 +24,7 @@ import java.awt.*;
 public class DarkTheme extends AbstractTheme
 {
     @Override
-    protected void customizeBackground(JHexViewer hexViewer)
+    protected void customizeBackground(@NotNull final JHexViewer hexViewer)
     {
         final Color color = Color.black;
         hexViewer.setBackground(color);
@@ -31,7 +33,7 @@ public class DarkTheme extends AbstractTheme
     }
 
     @Override
-    protected void applyBorders(JHexViewer hexViewer)
+    protected void applyBorders(@NotNull final JHexViewer hexViewer)
     {
         final int inset = 10;
         final Border outsideBorder = BorderFactory.createEmptyBorder(inset, inset, inset, inset);
@@ -44,13 +46,13 @@ public class DarkTheme extends AbstractTheme
     }
 
     @Override
-    protected void customizeHighlighter(final IHighlighter highlighter)
+    protected void customizeHighlighter(@NotNull final IHighlighter highlighter)
     {
         highlighter.setDefaultColor(new Color(0x0094C8));
     }
 
     @Override
-    protected void customizeCaret(final ICaret caret)
+    protected void customizeCaret(@NotNull final ICaret caret)
     {
         caret.setColorProvider(new ICaretColorProvider()
         {
@@ -60,14 +62,16 @@ public class DarkTheme extends AbstractTheme
             private final Color focusedSelectionColor = new Color(0x616B6E);
             private final Color selectionColor = new Color(0xA9616B6E, true);
 
+            @NotNull
             @Override
-            public Color getCaretColor(final AreaId areaId, final boolean focused)
+            public Color getCaretColor(@NotNull final AreaId areaId, final boolean focused)
             {
                 return focused ? focusedCaretColor : caretColor;
             }
 
+            @NotNull
             @Override
-            public Color getSelectionColor(final AreaId areaId, final boolean focused)
+            public Color getSelectionColor(@NotNull final AreaId areaId, final boolean focused)
             {
                 return focused ? focusedSelectionColor : selectionColor;
             }
@@ -75,26 +79,29 @@ public class DarkTheme extends AbstractTheme
     }
 
     @Override
-    protected void applyRowColorProvider(final JHexViewer hexViewer)
+    protected void applyRowColorProvider(@NotNull final JHexViewer hexViewer)
     {
         final IRowColorProvider byteAreaColors = new AbstractRowColorProvider()
         {
             private final Color rowElementForeground = new Color(0x9FD52B);
 
+            @NotNull
             @Override
-            public Color getRowBackground(JHexViewer hexViewer, AreaId areaId, int rowIndex)
+            public Color getRowBackground(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int rowIndex)
             {
                 return Color.black;
             }
 
+            @Nullable
             @Override
-            public Color getRowElementBackground(JHexViewer hexViewer, AreaId areaId, int rowIndex, int elementIndex)
+            public Color getRowElementBackground(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int rowIndex, final int elementIndex)
             {
                 return null;
             }
 
+            @NotNull
             @Override
-            public Color getRowElementForeground(JHexViewer hexViewer, AreaId areaId, int rowIndex, int elementIndex)
+            public Color getRowElementForeground(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int rowIndex, final int elementIndex)
             {
                 return rowElementForeground;
             }
@@ -104,20 +111,23 @@ public class DarkTheme extends AbstractTheme
             private final Color caretRowElementForeground = new Color(0xFFFFFF);
             private final Color rowElementForeground = new Color(0xABB6B9);
 
+            @NotNull
             @Override
-            public Color getRowBackground(JHexViewer hexViewer, AreaId areaId, int rowIndex)
+            public Color getRowBackground(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int rowIndex)
             {
                 return Color.black;
             }
 
+            @Nullable
             @Override
-            public Color getRowElementBackground(JHexViewer hexViewer, AreaId areaId, int rowIndex, int elementIndex)
+            public Color getRowElementBackground(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int rowIndex, final int elementIndex)
             {
                 return null;
             }
 
+            @NotNull
             @Override
-            public Color getRowElementForeground(JHexViewer hexViewer, AreaId areaId, int rowIndex, int elementIndex)
+            public Color getRowElementForeground(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int rowIndex, final int elementIndex)
             {
                 return hexViewer.isShowOffsetCaretIndicator() && isCaretRowIndex(hexViewer, rowIndex) ? caretRowElementForeground : rowElementForeground;
             }

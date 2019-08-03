@@ -3,6 +3,7 @@ package cms.rendner.hexviewer.core.model.row.template;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -25,10 +26,12 @@ public abstract class RowTemplate implements IRowTemplate
      * The elements of the row.
      * The number of minimum entries of this property is <code>1</code>.
      */
+    @NotNull
     protected final List<IElement> elements;
     /**
      * The dimension of the row.
      */
+    @NotNull
     private final IRowTemplate.IDimension dimension;
     /**
      * The ascent to center an element vertically if painted into a {@link Graphics} object.
@@ -40,29 +43,28 @@ public abstract class RowTemplate implements IRowTemplate
      *
      * @param dimension the dimension of the row.
      * @param elements  the elements of the row.
-     * @throws IllegalArgumentException if <code>dimension</code> or <code>elements</code> is <code>null</code>
-     *                                  or <code>elements</code> is empty.
+     * @throws IllegalArgumentException if <code>elements</code> is empty.
      */
-    public RowTemplate(final IRowTemplate.IDimension dimension, final List<IElement> elements)
+    public RowTemplate(@NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements)
     {
         super();
 
-        CheckUtils.checkNotNull(dimension);
-        CheckUtils.checkNotNull(elements);
         CheckUtils.checkMinValue(elements.size(), 1);
 
         this.dimension = dimension;
         this.elements = Collections.unmodifiableList(elements);
     }
 
+    @NotNull
     @Override
     public ElementHitInfo hitTest(final int xPosition)
     {
         return hitTest(xPosition, new ElementHitInfo());
     }
 
+    @NotNull
     @Override
-    public ElementHitInfo hitTest(final int xPosition, final ElementHitInfo returnValue)
+    public ElementHitInfo hitTest(final int xPosition, @NotNull final ElementHitInfo returnValue)
     {
         final int elementIndex = elementIndexForXPosition(xPosition);
         final IElement element = elements.get(elementIndex);
@@ -105,6 +107,7 @@ public abstract class RowTemplate implements IRowTemplate
         return elements.size();
     }
 
+    @NotNull
     @Override
     public IElement element(final int index)
     {
@@ -128,9 +131,8 @@ public abstract class RowTemplate implements IRowTemplate
     }
 
     @Override
-    public boolean contains(final Point position)
+    public boolean contains(@NotNull final Point position)
     {
-        CheckUtils.checkNotNull(position);
         return containsX(position.x) && containsY(position.y);
     }
 
@@ -146,8 +148,9 @@ public abstract class RowTemplate implements IRowTemplate
         return yPosition >= 0 && yPosition < height();
     }
 
+    @NotNull
     @Override
-    public Rectangle elementBounds(final int firstElementIndex, final int lastElementIndex, final Rectangle returnValue)
+    public Rectangle elementBounds(final int firstElementIndex, final int lastElementIndex, @NotNull final Rectangle returnValue)
     {
         final IElement firstElement = elements.get(firstElementIndex);
         final IElement lastElement = elements.get(lastElementIndex);

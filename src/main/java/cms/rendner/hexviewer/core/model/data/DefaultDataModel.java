@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.model.data;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +15,7 @@ public class DefaultDataModel implements IDataModel
     /**
      * The bytes of the string.
      */
+    @NotNull
     private final byte[] data;
 
     /**
@@ -32,7 +33,7 @@ public class DefaultDataModel implements IDataModel
      *
      * @param data the string to read from. The bytes of the string are encoded as utf-8.
      */
-    public DefaultDataModel(final String data)
+    public DefaultDataModel(@NotNull final String data)
     {
         this(data, StandardCharsets.UTF_8);
     }
@@ -43,13 +44,9 @@ public class DefaultDataModel implements IDataModel
      * @param data    the string to read from.
      * @param charset charset used to encode the bytes of the string.
      */
-    public DefaultDataModel(final String data, final Charset charset)
+    public DefaultDataModel(@NotNull final String data, @NotNull final Charset charset)
     {
         super();
-
-        CheckUtils.checkNotNull(data);
-        CheckUtils.checkNotNull(charset);
-
         this.data = data.getBytes(charset);
     }
 

@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.model.row.template.elements;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -14,10 +14,12 @@ public class Element implements IElement
     /**
      * The dimension of the element.
      */
+    @NotNull
     private final IDimension dimension;
     /**
      * The position of the element.
      */
+    @NotNull
     private final IPosition position;
 
     /**
@@ -26,19 +28,16 @@ public class Element implements IElement
      * @param dimension the dimension of the element.
      * @param position  the position of the element.
      */
-    public Element(final IDimension dimension, final IPosition position)
+    public Element(@NotNull final IDimension dimension, @NotNull final IPosition position)
     {
         super();
-
-        CheckUtils.checkNotNull(dimension);
-        CheckUtils.checkNotNull(position);
-
         this.dimension = dimension;
         this.position = position;
     }
 
+    @NotNull
     @Override
-    public Rectangle toRectangle(final Rectangle returnValue)
+    public Rectangle toRectangle(@NotNull final Rectangle returnValue)
     {
         returnValue.x = position.x();
         returnValue.y = position.y();
@@ -49,12 +48,14 @@ public class Element implements IElement
         return returnValue;
     }
 
+    @NotNull
     @Override
     public IPosition position()
     {
         return position;
     }
 
+    @NotNull
     @Override
     public IDimension dimension()
     {
@@ -98,9 +99,8 @@ public class Element implements IElement
     }
 
     @Override
-    public boolean contains(final Point position)
+    public boolean contains(@NotNull final Point position)
     {
-        CheckUtils.checkNotNull(position);
         return containsX(position.x) && containsY(position.y);
     }
 

@@ -2,6 +2,7 @@ package cms.rendner.hexviewer.core.model.row.template;
 
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -49,9 +50,8 @@ public interface IRowTemplate
      *
      * @param position the position to check.
      * @return <code>true</code> if inside, otherwise false.
-     * @throws IllegalArgumentException if <code>position</code> is <code>null</code>
      */
-    boolean contains(Point position);
+    boolean contains(@NotNull Point position);
 
     /**
      * Checks if the x coordinate is inside the row.
@@ -77,6 +77,7 @@ public interface IRowTemplate
      * @throws IndexOutOfBoundsException if the index is out of range
      *                                   (<code>index &lt; 0 || index &gt;= elementCount()</code>)
      */
+    @NotNull
     IElement element(int index);
 
     /**
@@ -103,6 +104,7 @@ public interface IRowTemplate
      * @param xPosition the x position to check.
      * @return an info object which describes which element was hit.
      */
+    @NotNull
     ElementHitInfo hitTest(int xPosition);
 
     /**
@@ -116,7 +118,8 @@ public interface IRowTemplate
      * @param returnValue the object in which the result should be stored.
      * @return the <code>returnValue</code> object.
      */
-    ElementHitInfo hitTest(int xPosition, ElementHitInfo returnValue);
+    @NotNull
+    ElementHitInfo hitTest(int xPosition, @NotNull ElementHitInfo returnValue);
 
     /**
      * Computes an union of the bounds of the elements in range of [<code>firstElementIndex</code>, <code>lastElementIndex</code>].
@@ -127,7 +130,8 @@ public interface IRowTemplate
      * @return <code>returnValue</code> modified to specify the bounds
      * @throws IndexOutOfBoundsException if <code>firstElementIndex</code> or <code>lastElementIndex</code> is out of range ([0, elementCount()-1])
      */
-    Rectangle elementBounds(int firstElementIndex, int lastElementIndex, Rectangle returnValue);
+    @NotNull
+    Rectangle elementBounds(int firstElementIndex, int lastElementIndex, @NotNull Rectangle returnValue);
 
     /**
      * The dimension of a row.

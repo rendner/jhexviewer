@@ -1,9 +1,10 @@
 package cms.rendner.hexviewer.core.uidelegate.scrollable.delegate;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -18,6 +19,7 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
      * A return value which is used to retrieve the bounds of a row.
      * This instance be reused to minimize creation of new rectangles.
      */
+    @NotNull
     private final Rectangle rvRect = new Rectangle();
 
     /**
@@ -26,14 +28,14 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
     private VirtualBytesRow virtualBytesRow;
 
     @Override
-    public void install(final JHexViewer hexViewer)
+    public void install(@NotNull final JHexViewer hexViewer)
     {
         super.install(hexViewer);
         virtualBytesRow = new VirtualBytesRow(hexViewer);
     }
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
         virtualBytesRow = null;
         super.uninstall(hexViewer);

@@ -1,10 +1,10 @@
 package cms.rendner.hexviewer.support.data.walker;
 
+import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.support.data.visitor.IByteVisitor;
 import cms.rendner.hexviewer.support.data.wrapper.DataPart;
-import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.support.data.wrapper.IDataPart;
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Iterates over a specified range of bytes of the data model used by the {@link cms.rendner.hexviewer.core.JHexViewer}.
@@ -16,18 +16,17 @@ public class ByteWalker
     /**
      * Provides the data that is iterated over.
      */
+    @NotNull
     protected final IDataModel dataModel;
 
     /**
      * Creates a new instance.
      *
-     * @param dataModel the data to iterate over. Cant be <code>null</code>.
+     * @param dataModel the data to iterate over.
      */
-    public ByteWalker(final IDataModel dataModel)
+    public ByteWalker(@NotNull final IDataModel dataModel)
     {
         super();
-
-        CheckUtils.checkNotNull(dataModel);
 
         this.dataModel = dataModel;
     }
@@ -39,7 +38,7 @@ public class ByteWalker
      * @param start   the start index of the byte, included in the range.
      * @param end     the end index of the byte, included in the range.
      */
-    public void walk(final IByteVisitor visitor, final int start, final int end)
+    public void walk(@NotNull final IByteVisitor visitor, final int start, final int end)
     {
         final IDataPart data = createDataPart(start, end);
 
@@ -60,6 +59,7 @@ public class ByteWalker
      * @param end   the end index of the byte, included in the range.
      * @return the part which only contains the bytes of the specified range.
      */
+    @NotNull
     protected IDataPart createDataPart(final int start, final int end)
     {
         final int size = end - start + 1;

@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.formatter.offset;
 
 import cms.rendner.hexviewer.core.formatter.IValueFormatter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Formatter to format offset addresses.
@@ -18,6 +19,7 @@ public interface IOffsetValueFormatter extends IValueFormatter
      * @param offsetAddress the offset address to format.
      * @return the formatted value.
      */
+    @NotNull
     String format(int numberOfChars, int offsetAddress);
 
     /**

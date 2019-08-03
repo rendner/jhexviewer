@@ -1,13 +1,14 @@
 package cms.rendner.hexviewer.core.view.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
-import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.utils.observer.IObservable;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.Graphics;
+import java.awt.*;
 
 /**
  * A place within a byte view that represents where a selection can be started. A caret has a position referred to as a dot.
@@ -32,7 +33,7 @@ public interface ICaret extends IObservable<Void>
      *
      * @param hexViewer the JHexViewer component to install to.
      */
-    void install(JHexViewer hexViewer);
+    void install(@NotNull JHexViewer hexViewer);
 
     /**
      * Uninstalls the caret from the JHexViewer.
@@ -42,7 +43,7 @@ public interface ICaret extends IObservable<Void>
      *
      * @param hexViewer the JHexViewer component to uninstall from.
      */
-    void uninstall(JHexViewer hexViewer);
+    void uninstall(@NotNull JHexViewer hexViewer);
 
     /**
      * Automatically called to render the caret.
@@ -50,7 +51,7 @@ public interface ICaret extends IObservable<Void>
      * @param g        the graphics context to draw to.
      * @param rowsView the view to draw into.
      */
-    void paint(Graphics g, ByteRowsView rowsView);
+    void paint(@NotNull Graphics g, @NotNull ByteRowsView rowsView);
 
     /**
      * Returns the current position of the caret.
@@ -80,9 +81,10 @@ public interface ICaret extends IObservable<Void>
      * @param dot  the new position to set the caret to.
      * @param bias the bias to toward to the next position when the dot position is ambiguous.
      */
-    void setDot(int dot, IndexPosition.Bias bias);
+    void setDot(int dot, @NotNull IndexPosition.Bias bias);
 
     // todo: add comment
+    @NotNull
     IndexPosition.Bias getDotBias();
 
     /**
@@ -106,7 +108,7 @@ public interface ICaret extends IObservable<Void>
      * @param dot  the new position to move the caret to.
      * @param bias the bias to toward to the next position when the dot position is ambiguous.
      */
-    void moveDot(int dot, IndexPosition.Bias bias);
+    void moveDot(int dot, @NotNull IndexPosition.Bias bias);
 
 
     /**
@@ -118,6 +120,7 @@ public interface ICaret extends IObservable<Void>
     int getMark();
 
     // todo: add comment
+    @NotNull
     IndexPosition.Bias getMarkBias();
 
     /**
@@ -127,18 +130,20 @@ public interface ICaret extends IObservable<Void>
      * The provider is used during the paint process to determine which color should be used to render the caret
      * or the selection.
      *
-     * @param colorProvider the new color provider, can't be <code>null</code>.
+     * @param colorProvider the new color provider.
      */
-    void setColorProvider(ICaretColorProvider colorProvider);
+    void setColorProvider(@NotNull ICaretColorProvider colorProvider);
 
     /**
-     * @return the current color provider, never <code>null</code>.
+     * @return the current color provider.
      */
+    @NotNull
     ICaretColorProvider getColorProvider();
 
     /**
-     * @return painter used to render the selection, never <code>null</code>.
+     * @return painter used to render the selection.
      */
+    @NotNull
     IHighlighter.IHighlightPainter getSelectionPainter();
 
     /**
@@ -146,9 +151,9 @@ public interface ICaret extends IObservable<Void>
      * <p/>
      * If possible the selection painter should respect the colors provided by the current installed ICaretColorProvider.
      *
-     * @param selectionPainter the painter to render the caret/selection, can't be <code>null</code>
+     * @param selectionPainter the painter to render the caret/selection.
      */
-    void setSelectionPainter(IHighlighter.IHighlightPainter selectionPainter);
+    void setSelectionPainter(@NotNull IHighlighter.IHighlightPainter selectionPainter);
 
     /**
      * Gets the caret blink rate.

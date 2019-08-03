@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.view.geom;
 
 import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A IndexPosition indicates a location between two bytes. The bias can be used to indicate an interest
@@ -33,9 +34,9 @@ public class IndexPosition
      *
      * @param index the index of the byte to which this position refers.
      * @param bias  the interest in one of the two possible directions.
-     * @throws IllegalArgumentException if index is &lt;0 or bias is <code>null</code>.
+     * @throws IllegalArgumentException if index is &lt;0.
      */
-    public IndexPosition(final int index, final Bias bias)
+    public IndexPosition(final int index, @NotNull final Bias bias)
     {
         super();
 
@@ -47,12 +48,9 @@ public class IndexPosition
      * Copies the index and bias from another IndexPosition instance.
      *
      * @param source the source to copy from.
-     * @throws IllegalArgumentException if source is <code>null</code>.
      */
-    public void copyFrom(final IndexPosition source)
+    public void copyFrom(@NotNull final IndexPosition source)
     {
-        CheckUtils.checkNotNull(source);
-
         setIndex(source.index);
         setBias(source.bias);
     }
@@ -61,12 +59,9 @@ public class IndexPosition
      * Copies the index and bias to another IndexPosition instance.
      *
      * @param target the target to copy to.
-     * @throws IllegalArgumentException if target is <code>null</code>.
      */
-    public void copyTo(final IndexPosition target)
+    public void copyTo(@NotNull final IndexPosition target)
     {
-        CheckUtils.checkNotNull(target);
-
         target.setIndex(index);
         target.setBias(bias);
     }
@@ -94,6 +89,7 @@ public class IndexPosition
     /**
      * @return the interest in one of the two possible directions.
      */
+    @NotNull
     public Bias getBias()
     {
         return bias;
@@ -103,11 +99,9 @@ public class IndexPosition
      * Sets the bias.
      *
      * @param bias the bias to toward to the next byte when the index is ambiguous.
-     * @throws IllegalArgumentException if bias is <code>null</code>.
      */
-    public void setBias(final Bias bias)
+    public void setBias(@NotNull final Bias bias)
     {
-        CheckUtils.checkNotNull(bias);
         this.bias = bias;
     }
 

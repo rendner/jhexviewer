@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.core.formatter;
 
 import cms.rendner.hexviewer.core.formatter.lookup.ILookupTable;
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Formatter which uses a lookup table to convert values.
@@ -13,21 +13,21 @@ public class LookupValueFormatter implements IValueFormatter
     /**
      * The table used to convert values.
      */
+    @NotNull
     private final ILookupTable table;
 
     /**
      * Creates a new instance.
      *
-     * @param table the lookup table to be used (can't be null).
+     * @param table the lookup table to be used.
      */
-    public LookupValueFormatter(final ILookupTable table)
+    public LookupValueFormatter(@NotNull final ILookupTable table)
     {
         super();
-
-        CheckUtils.checkNotNull(table);
         this.table = table;
     }
 
+    @NotNull
     @Override
     public String format(final int value)
     {

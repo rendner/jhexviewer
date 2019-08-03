@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.formatter.lookup;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -14,6 +14,7 @@ public class LookupTable implements ILookupTable
     /**
      * Array of precalculated strings.
      */
+    @NotNull
     private final String[] table;
 
     /**
@@ -27,20 +28,19 @@ public class LookupTable implements ILookupTable
      * @param table   array of precalculated strings.
      * @param bitMask used to "calculate" the index in the char-table.
      *                The index is calculated by <code>index = aIntValue & bitMask</code>
-     * @throws IllegalArgumentException if <code>table</code> is <code>null</code> or the size of the table is less than
-     *                                  <code>Integer.MAX_VALUE & bitMask</code>.
+     * @throws IllegalArgumentException if the size of the table is less than <code>Integer.MAX_VALUE & bitMask</code>.
      */
-    public LookupTable(final String[] table, final int bitMask)
+    public LookupTable(@NotNull final String[] table, final int bitMask)
     {
         super();
 
-        CheckUtils.checkNotNull(table);
         checkValidBitMask(table.length, bitMask);
 
         this.table = Arrays.copyOf(table, table.length);
         this.bitMask = bitMask;
     }
 
+    @NotNull
     @Override
     public String mappedValue(final int value)
     {

@@ -1,10 +1,11 @@
 package cms.rendner.hexviewer.core.uidelegate.scrollable.delegate;
 
+import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -26,19 +27,21 @@ public class VirtualBytesRow
      * A return value which is used to retrieve the result of a row hit test.
      * This instance be reused to minimize creation of new ElementHitInfo.
      */
+    @NotNull
     private final ElementHitInfo rvHitInfo = new ElementHitInfo();
 
     /**
      * The JHexViewer component.
      */
-    private JHexViewer hexViewer;
+    @NotNull
+    private final JHexViewer hexViewer;
 
     /**
      * Creates a new instance.
      *
      * @param hexViewer the JHexViewer component, to get access to the internal areas.
      */
-    public VirtualBytesRow(final JHexViewer hexViewer)
+    public VirtualBytesRow(@NotNull final JHexViewer hexViewer)
     {
         super();
         this.hexViewer = hexViewer;
@@ -51,7 +54,8 @@ public class VirtualBytesRow
      * @param returnValue      this rect will be filled with the result.
      * @return the <code>returnValue</code> object.
      */
-    public Rectangle getByteRect(final int virtualByteIndex, final Rectangle returnValue)
+    @NotNull
+    public Rectangle getByteRect(final int virtualByteIndex, @NotNull final Rectangle returnValue)
     {
         final AreaId id = virtualByteIndexToAreaId(virtualByteIndex);
         final int indexInArea = virtualByteIndexToByteIndexInArea(id, virtualByteIndex);
@@ -69,6 +73,7 @@ public class VirtualBytesRow
      * @param virtualByteIndex the index of the byte in the virtual row. The value has to be &gt;= 0.
      * @return the id of the area.
      */
+    @NotNull
     public AreaId virtualByteIndexToAreaId(final int virtualByteIndex)
     {
         return virtualByteIndex < hexViewer.bytesPerRow() ? AreaId.HEX : AreaId.ASCII;
@@ -81,7 +86,7 @@ public class VirtualBytesRow
      * @param virtualByteIndex the index of the byte in the virtual row. The value has to be &gt;= 0.
      * @return the byte index inside the area.
      */
-    public int virtualByteIndexToByteIndexInArea(final AreaId id, final int virtualByteIndex)
+    public int virtualByteIndexToByteIndexInArea(@NotNull final AreaId id, final int virtualByteIndex)
     {
         return AreaId.HEX.equals(id) ? virtualByteIndex : virtualByteIndex - hexViewer.bytesPerRow();
     }
@@ -95,6 +100,7 @@ public class VirtualBytesRow
      * @param virtualXLocation the x location in the virtual row.
      * @return the id of the area which contains this x location.
      */
+    @NotNull
     public AreaId virtualXLocationToArea(final int virtualXLocation)
     {
         final ByteRowsView asciiRowsView = hexViewer.getAsciiRowsView();
@@ -136,12 +142,19 @@ public class VirtualBytesRow
      *
      * @param id               the id of the area which contains the byte virtualByteIndex points to.
      * @param virtualXLocation the x location in the virtual row.
-     * @return the element index which intersects with the virtual location.
+     * @return the element index which intersects with the virtual location, or <code>-1</code> if no intersection can be
+     * found.
      */
-    private int virtualXLocationToElementIndex(final AreaId id, final int virtualXLocation)
+    private int virtualXLocationToElementIndex(@NotNull final AreaId id, final int virtualXLocation)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
         final IByteRowTemplate rowTemplate = rowsView.template();
+
+        if (rowTemplate == null)
+        {
+            return INVALID_INDEX;
+        }
+
         final int xInRowTemplate = virtualXLocation - rowsView.getX();
         rowTemplate.hitTest(xInRowTemplate, rvHitInfo);
         return rvHitInfo.index();

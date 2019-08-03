@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.model.data.file;
 
 import cms.rendner.hexviewer.core.model.data.IDataModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class FileData implements IDataModel
     /**
      * The bytes of the loaded file.
      */
+    @NotNull
     private final byte[] data;
 
     /**
@@ -29,7 +31,7 @@ public class FileData implements IDataModel
      * @param file the file which provides the data.
      * @throws IOException if reading content from the file fails.
      */
-    public FileData(final File file) throws IOException
+    public FileData(@NotNull final File file) throws IOException
     {
         data = readContent(file);
     }
@@ -37,22 +39,18 @@ public class FileData implements IDataModel
     @Override
     public int size()
     {
-        return data == null ? 0 : data.length;
+        return data.length;
     }
 
     @Override
     public boolean isEmpty()
     {
-        return data == null || data.length == 0;
+        return data.length == 0;
     }
 
     @Override
     public int getByte(final int offset) throws IndexOutOfBoundsException
     {
-        if (data == null)
-        {
-            throw new IndexOutOfBoundsException("Index '" + offset + "' is out of bounds.");
-        }
         return data[offset];
     }
 
@@ -63,7 +61,7 @@ public class FileData implements IDataModel
      * @return the data of the file.
      * @throws IOException if reading content from the file fails.
      */
-    protected byte[] readContent(final File file) throws IOException
+    protected byte[] readContent(@NotNull final File file) throws IOException
     {
         final Path path = Paths.get(file.getAbsolutePath());
         return Files.readAllBytes(path);

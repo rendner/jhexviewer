@@ -2,6 +2,8 @@ package cms.rendner.hexviewer.core.view;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -22,5 +24,6 @@ public interface IContextMenuFactory
      * @param byteIndex the offset of the byte of the right-click.
      * @return a popup menu or <code>null</code> if no popup menu should be shown.
      */
-    JPopupMenu create(JHexViewer hexViewer, AreaId areaId, int byteIndex);
+    @Nullable
+    JPopupMenu create(@NotNull JHexViewer hexViewer, @NotNull AreaId areaId, int byteIndex);
 }

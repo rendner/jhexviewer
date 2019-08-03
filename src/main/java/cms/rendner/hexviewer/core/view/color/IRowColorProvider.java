@@ -2,6 +2,8 @@ package cms.rendner.hexviewer.core.view.color;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -24,9 +26,10 @@ public interface IRowColorProvider
      * @param hexViewer the {@link JHexViewer} component.
      * @param areaId    the id of the area to be rendered.
      * @param rowIndex  the index of the row to draw.
-     * @return the color to use, can be <code>null</code>.
+     * @return the color to use.
      */
-    Color getRowBackground(JHexViewer hexViewer, AreaId areaId, int rowIndex);
+    @Nullable
+    Color getRowBackground(@NotNull JHexViewer hexViewer, @NotNull AreaId areaId, int rowIndex);
 
     /**
      * Returns the color to use for the element background.
@@ -35,9 +38,10 @@ public interface IRowColorProvider
      * @param areaId       the id of the area to be rendered.
      * @param rowIndex     the index of the row to draw.
      * @param elementIndex the index of the element to draw.
-     * @return the color to use, can be <code>null</code>.
+     * @return the color to use.
      */
-    Color getRowElementBackground(JHexViewer hexViewer, AreaId areaId, int rowIndex, int elementIndex);
+    @Nullable
+    Color getRowElementBackground(@NotNull JHexViewer hexViewer, @NotNull AreaId areaId, int rowIndex, int elementIndex);
 
     /**
      * Returns the color to use for the element foreground.
@@ -46,7 +50,8 @@ public interface IRowColorProvider
      * @param areaId       the id of the area to be rendered.
      * @param rowIndex     the index of the row to draw.
      * @param elementIndex the index of the element to draw.
-     * @return the color to use, can be <code>null</code>.
+     * @return the color to use.
      */
-    Color getRowElementForeground(JHexViewer hexViewer, AreaId areaId, int rowIndex, int elementIndex);
+    @Nullable
+    Color getRowElementForeground(@NotNull JHexViewer hexViewer, @NotNull AreaId areaId, int rowIndex, int elementIndex);
 }

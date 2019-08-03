@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 /**
@@ -18,7 +20,8 @@ public class RectangleUtils
      *                 of the two rectangles is applied to this rectangle
      * @return the <code>rvSecond</code> <code>Rectangle</code>
      */
-    public static Rectangle computeUnion(final Rectangle first, final Rectangle rvSecond)
+    @NotNull
+    public static Rectangle computeUnion(@NotNull final Rectangle first, @NotNull final Rectangle rvSecond)
     {
         final int x1 = (first.x < rvSecond.x) ? first.x : rvSecond.x;
         final int x2 = ((first.x + first.width) > (rvSecond.x + rvSecond.width)) ? (first.x + first.width) : (rvSecond.x + rvSecond.width);
@@ -38,7 +41,7 @@ public class RectangleUtils
      *
      * @param r the rectangle to reset.
      */
-    public static void setEmpty(final Rectangle r)
+    public static void setEmpty(@NotNull final Rectangle r)
     {
         r.x = r.y = r.width = r.height = 0;
     }

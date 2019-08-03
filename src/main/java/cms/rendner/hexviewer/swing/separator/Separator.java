@@ -1,5 +1,9 @@
 package cms.rendner.hexviewer.swing.separator;
 
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 
 /**
@@ -13,6 +17,7 @@ public class Separator
     /**
      * The solid color of this separator.
      */
+    @Nullable
     private final Color color;
 
     /**
@@ -23,10 +28,10 @@ public class Separator
     /**
      * Creates a new instance with the specified arguments.
      *
-     * @param color     the solid color of this separator.
+     * @param color     the solid color of this separator, if <code>null</code> a fully transparent separator is "painted".
      * @param thickness the thickness of this separator.
      */
-    public Separator(final Color color, final int thickness)
+    public Separator(@Nullable final Color color, final int thickness)
     {
         super();
         this.color = color;
@@ -41,7 +46,7 @@ public class Separator
      * @param y      the x position where to paint.
      * @param height the required height for the separator.
      */
-    public void paint(final Graphics g, final int x, final int y, final int height)
+    public void paint(@NotNull final Graphics g, final int x, final int y, final int height)
     {
         if (color != null)
         {

@@ -1,8 +1,10 @@
 package cms.rendner.hexviewer.core.view.highlight;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -27,7 +29,7 @@ public interface IHighlighter
      *
      * @param hexViewer the hex viewer component to install to.
      */
-    void install(JHexViewer hexViewer);
+    void install(@NotNull JHexViewer hexViewer);
 
     /**
      * Uninstalls the highlighter from the JHexViewer.
@@ -37,14 +39,14 @@ public interface IHighlighter
      *
      * @param hexViewer the hex viewer component to uninstall from.
      */
-    void uninstall(JHexViewer hexViewer);
+    void uninstall(@NotNull JHexViewer hexViewer);
 
     /**
      * Sets the color which is used to paint highlights if they don't have a custom painter assigned.
      *
      * @param newColor the new default color.
      */
-    void setDefaultColor(Color newColor);
+    void setDefaultColor(@NotNull Color newColor);
 
     /**
      * Renders the highlights.
@@ -52,7 +54,7 @@ public interface IHighlighter
      * @param g            the Graphics context in which to paint.
      * @param byteRowsView
      */
-    void paint(Graphics g, ByteRowsView byteRowsView);
+    void paint(@NotNull Graphics g, @NotNull ByteRowsView byteRowsView);
 
     /**
      * Adds a highlight to the view.
@@ -63,7 +65,8 @@ public interface IHighlighter
      * @param painter        the painter to use for the highlighting
      * @return an object that refers to the added highlight
      */
-    IHighlight addHighlight(int startByteIndex, int endByteIndex, IHighlightPainter painter);
+    @NotNull
+    IHighlight addHighlight(int startByteIndex, int endByteIndex, @NotNull IHighlightPainter painter);
 
     /**
      * Adds a highlight to the view.
@@ -73,6 +76,7 @@ public interface IHighlighter
      * @param endByteIndex   the end of the range &gt;= startByteIndex
      * @return an object that refers to the added highlight
      */
+    @NotNull
     IHighlight addHighlight(int startByteIndex, int endByteIndex);
 
     /**
@@ -84,7 +88,8 @@ public interface IHighlighter
      * @param color          the color to use to paint the highlight
      * @return an object that refers to the added highlight
      */
-    IHighlight addHighlight(int startByteIndex, int endByteIndex, Color color);
+    @NotNull
+    IHighlight addHighlight(int startByteIndex, int endByteIndex, @NotNull Color color);
 
     /**
      * Sets the highlight which is used to paint the selection of the view.
@@ -95,21 +100,22 @@ public interface IHighlighter
      * @param painter        the painter to use for the actual highlighting
      * @return an object that refers to the highlight
      */
-    IHighlight setSelectionHighlight(int startByteIndex, int endByteIndex, IHighlightPainter painter);
+    @NotNull
+    IHighlight setSelectionHighlight(int startByteIndex, int endByteIndex, @NotNull IHighlightPainter painter);
 
     /**
      * Removes a highlight from the view.
      *
      * @param highlight which highlight to remove
      */
-    void removeHighlight(IHighlight highlight);
+    void removeHighlight(@NotNull IHighlight highlight);
 
     /**
      * Removes a list of highlights from the view.
      *
      * @param highlights list of highlights to be removed
      */
-    void removeHighlights(List<IHighlight> highlights);
+    void removeHighlights(@NotNull List<IHighlight> highlights);
 
     /**
      * Removes all highlights this highlighter is responsible for.
@@ -124,7 +130,7 @@ public interface IHighlighter
      * @param startByteIndex the beginning of the range &gt;= 0
      * @param endByteIndex   the end of the range &gt;= startByteIndex
      */
-    void changeHighlight(IHighlight highlight, int startByteIndex, int endByteIndex);
+    void changeHighlight(@NotNull IHighlight highlight, int startByteIndex, int endByteIndex);
 
     /**
      * @return the number of highlights, excluding the selection highlight.
@@ -134,6 +140,7 @@ public interface IHighlighter
     /**
      * @return all highlights, excluding the selection highlight.
      */
+    @NotNull
     List<IHighlight> getHighlights();
 
     /**
@@ -167,7 +174,8 @@ public interface IHighlighter
          * @param byteStartIndex       the starting offset in the configuration &gt;= 0
          * @param byteEndIndex         the ending offset in the configuration &gt;= byteStartIndex
          */
-        void paint(Graphics g, JHexViewer hexViewer, ByteRowsView rowsView, final HorizontalDimension rowElementsDimension, int byteStartIndex, int byteEndIndex);
+        void paint(@NotNull Graphics g, @NotNull JHexViewer hexViewer,@NotNull  ByteRowsView rowsView,
+                   @NotNull final HorizontalDimension rowElementsDimension, int byteStartIndex, int byteEndIndex);
 
     }
 
@@ -194,8 +202,9 @@ public interface IHighlighter
         /**
          * Gets the painter for the highlighter.
          *
-         * @return the painter, can be <code>null</code>.
+         * @return the painter.
          */
+        @Nullable
         IHighlightPainter getPainter();
     }
 }

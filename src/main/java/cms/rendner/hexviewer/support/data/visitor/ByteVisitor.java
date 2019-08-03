@@ -1,9 +1,11 @@
 package cms.rendner.hexviewer.support.data.visitor;
 
+import cms.rendner.hexviewer.core.formatter.IValueFormatter;
 import cms.rendner.hexviewer.support.data.formatter.NopFormatter;
 import cms.rendner.hexviewer.support.data.visitor.consumer.IConsumer;
 import cms.rendner.hexviewer.support.data.visitor.consumer.ToConsoleConsumer;
-import cms.rendner.hexviewer.core.formatter.IValueFormatter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Byte visitor which uses a {@link IValueFormatter} and a {@link IConsumer} to forward formatted byte values to a
@@ -16,11 +18,13 @@ public class ByteVisitor implements IByteVisitor
     /**
      * Used to format visited bytes before passing them to the consumer.
      */
+    @NotNull
     protected final IValueFormatter formatter;
 
     /**
      * Used to consume the formatted value of the visited bytes.
      */
+    @NotNull
     protected final IConsumer consumer;
 
     /**
@@ -29,7 +33,7 @@ public class ByteVisitor implements IByteVisitor
      * @param formatter to format the byte values before they are written to the consumer, if <code>null</code> no
      *                  formatting will take place.
      */
-    public ByteVisitor(final IValueFormatter formatter)
+    public ByteVisitor(@Nullable final IValueFormatter formatter)
     {
         this(null, formatter);
     }
@@ -39,7 +43,7 @@ public class ByteVisitor implements IByteVisitor
      *
      * @param consumer the consumer to write to, if <code>null</code> a ToConsoleConsumer will be used to write to.
      */
-    public ByteVisitor(final IConsumer consumer)
+    public ByteVisitor(@Nullable final IConsumer consumer)
     {
         this(consumer, null);
     }
@@ -51,7 +55,7 @@ public class ByteVisitor implements IByteVisitor
      * @param formatter to format the byte values before they are written to the consumer, if <code>null</code> no
      *                  formatting will take place.
      */
-    public ByteVisitor(final IConsumer consumer, final IValueFormatter formatter)
+    public ByteVisitor(@Nullable final IConsumer consumer, @Nullable final IValueFormatter formatter)
     {
         super();
         this.consumer = consumer == null ? new ToConsoleConsumer() : consumer;

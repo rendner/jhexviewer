@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.formatter;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Formatter which uses a format-string to format a value.
@@ -15,6 +15,7 @@ public class StringValueFormatter implements IValueFormatter
     /**
      * The format string used to format a value.
      */
+    @NotNull
     private final String format;
 
     /**
@@ -28,16 +29,15 @@ public class StringValueFormatter implements IValueFormatter
     /**
      * Creates a new instance with a specified format-string.
      *
-     * @param format the format-string to be used to format the values (can't be null).
+     * @param format the format-string to be used to format the values.
      */
-    public StringValueFormatter(final String format)
+    public StringValueFormatter(@NotNull final String format)
     {
         super();
-
-        CheckUtils.checkNotNull(format);
         this.format = format;
     }
 
+    @NotNull
     @Override
     public String format(final int value)
     {
@@ -51,7 +51,8 @@ public class StringValueFormatter implements IValueFormatter
      * @param value  the value to be formatted.
      * @return the formatted value.
      */
-    protected String format(final String format, final int value)
+    @NotNull
+    protected String format(@NotNull final String format, final int value)
     {
         return String.format(format, value);
     }

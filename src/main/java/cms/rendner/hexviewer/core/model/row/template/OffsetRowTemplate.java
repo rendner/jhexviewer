@@ -2,6 +2,7 @@ package cms.rendner.hexviewer.core.model.row.template;
 
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -33,7 +34,10 @@ public class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
      * @throws IllegalArgumentException if <code>dimension</code> or <code>elements</code> is <code>null</code>
      *                                  or <code>elements</code> contains less or more than <code>1</code> entry.
      */
-    public OffsetRowTemplate(final IRowTemplate.IDimension dimension, final List<IElement> elements, final int totalCharsCount, final int onlyDigitsCount)
+    public OffsetRowTemplate(@NotNull final IRowTemplate.IDimension dimension,
+                             @NotNull final List<IElement> elements,
+                             final int totalCharsCount,
+                             final int onlyDigitsCount)
     {
         super(dimension, elements);
 

@@ -2,8 +2,9 @@ package cms.rendner.hexviewer.core.view.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import cms.rendner.hexviewer.core.view.geom.IndexPosition;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,7 @@ public class DefaultCaret extends AbstractCaret
      * A placeholder value which is used to work with the x,y coordinates of the mouse events.
      * This instance be reused to minimize creation of new points.
      */
+    @NotNull
     protected final Point rvPoint = new Point();
 
     /**
@@ -30,16 +32,16 @@ public class DefaultCaret extends AbstractCaret
     protected ByteRowsView activeRowsView;
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
-        this.hexViewer.getHexRowsView().removeMouseMotionListener(internalHandler);
-        this.hexViewer.getAsciiRowsView().removeMouseMotionListener(internalHandler);
+        hexViewer.getHexRowsView().removeMouseMotionListener(internalHandler);
+        hexViewer.getAsciiRowsView().removeMouseMotionListener(internalHandler);
 
         super.uninstall(hexViewer);
     }
 
     @Override
-    public void paint(final Graphics g, final ByteRowsView rowsView)
+    public void paint(@NotNull final Graphics g, @NotNull final ByteRowsView rowsView)
     {
         if (caretIsVisible && isSelectionEmpty())
         {
@@ -51,6 +53,7 @@ public class DefaultCaret extends AbstractCaret
         }
     }
 
+    @NotNull
     @Override
     protected Rectangle calculateVisibleRectForCaret()
     {

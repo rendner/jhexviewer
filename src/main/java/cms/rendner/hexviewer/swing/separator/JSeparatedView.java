@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.swing.separator;
 
 import cms.rendner.hexviewer.swing.BorderlessJComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class JSeparatedView extends BorderlessJComponent
     /**
      * List of placeholders.
      */
+    @NotNull
     private final List<VSeparatorPlaceholder> placeholders = new ArrayList<>();
 
     /**

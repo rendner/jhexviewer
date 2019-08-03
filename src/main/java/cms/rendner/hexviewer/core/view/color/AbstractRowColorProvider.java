@@ -2,6 +2,7 @@ package cms.rendner.hexviewer.core.view.color;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides utility methods for custom color provider implementations.
@@ -42,7 +43,7 @@ public abstract class AbstractRowColorProvider implements IRowColorProvider
      * @param rowIndex index to check.
      * @return <code>true</code> if caret is in the checked row otherwise <code>false</code>
      */
-    protected boolean isCaretRowIndex(final JHexViewer hexViewer, final int rowIndex)
+    protected boolean isCaretRowIndex(@NotNull final JHexViewer hexViewer, final int rowIndex)
     {
         final ICaret caret = hexViewer.getCaret();
         return caret != null && rowIndex == hexViewer.byteIndexToRowIndex(caret.getDot());

@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
@@ -29,17 +30,17 @@ public class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
      * @param dimension  the dimension of the row.
      * @param elements   the elements which describe the position and bounds of the bytes of the row.
      * @param caretWidth the width of the caret which can be placed between the bytes of the row.
-     * @throws IllegalArgumentException if <code>dimension</code> or <code>elements</code> is <code>null</code>
-     *                                  Or <code>elements</code> is empty..
+     * @throws IllegalArgumentException if <code>elements</code> is empty.
      */
-    public ByteRowTemplate(final IRowTemplate.IDimension dimension, final List<IElement> elements, final int caretWidth)
+    public ByteRowTemplate(@NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements, final int caretWidth)
     {
         super(dimension, elements);
         this.caretWidth = caretWidth;
     }
 
+    @NotNull
     @Override
-    public Rectangle caretBounds(final int byteIndex, final Rectangle returnValue)
+    public Rectangle caretBounds(final int byteIndex, @NotNull final Rectangle returnValue)
     {
         final IElement byteAfterCaret = elements.get(byteIndex);
         returnValue.x = byteAfterCaret.x() - caretWidth;

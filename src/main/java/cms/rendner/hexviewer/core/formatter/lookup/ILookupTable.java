@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.formatter.lookup;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Contains precalculated strings mapped by an index.
  *
@@ -20,5 +22,6 @@ public interface ILookupTable
      * @param value the value which specifies which char should be returned.
      * @return the char for the value.
      */
+    @NotNull
     String mappedValue(int value);
 }

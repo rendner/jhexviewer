@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.view.color;
 
 import cms.rendner.hexviewer.core.view.areas.AreaId;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -19,7 +20,8 @@ public interface ICaretColorProvider
      * @param focused <code>true</code> if the target area is focused.
      * @return the color to user, never <code>null</code>
      */
-    Color getCaretColor(AreaId areaId, boolean focused);
+    @NotNull
+    Color getCaretColor(@NotNull AreaId areaId, boolean focused);
 
     /**
      * Provides the color to use to paint the selection.
@@ -28,5 +30,6 @@ public interface ICaretColorProvider
      * @param focused <code>true</code> if the target area is focused.
      * @return the color to user, never <code>null</code>
      */
-    Color getSelectionColor(AreaId areaId, boolean focused);
+    @NotNull
+    Color getSelectionColor(@NotNull AreaId areaId, boolean focused);
 }

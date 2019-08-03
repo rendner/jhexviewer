@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.formatter.offset;
 
 import cms.rendner.hexviewer.core.formatter.StringValueFormatter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Formats offset addresses into a hex representation.
@@ -19,6 +20,7 @@ public class OffsetFormatter extends StringValueFormatter implements IOffsetValu
     /**
      * The digit used for padding.
      */
+    @NotNull
     protected String padDigit = "0";
 
     /**
@@ -27,11 +29,13 @@ public class OffsetFormatter extends StringValueFormatter implements IOffsetValu
      *
      * @see String#format(String, Object...)
      */
+    @NotNull
     protected String valueFormat = "X";
 
     /**
      * The suffix which gets added to each formatted address.
      */
+    @NotNull
     protected String valueSuffix = "h";
 
     /**
@@ -46,12 +50,14 @@ public class OffsetFormatter extends StringValueFormatter implements IOffsetValu
         this.minNumberOfChars = minNumberOfChars;
     }
 
+    @NotNull
     @Override
     public String format(final int numberOfChars, final int offsetAddress)
     {
         return format("%" + padDigit + numberOfChars + valueFormat + valueSuffix, offsetAddress);
     }
 
+    @NotNull
     @Override
     public String format(final int offsetAddress)
     {

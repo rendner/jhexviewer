@@ -3,6 +3,8 @@ package cms.rendner.hexviewer.core.model.data.file;
 import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.core.model.data.IDisposableModel;
 import cms.rendner.hexviewer.utils.ByteSizeConstants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.File;
@@ -55,7 +57,7 @@ public class MappedFileData implements IDisposableModel, IDataModel
      * @param file the file which provides the data.
      * @throws IOException if reading content from the file fails.
      */
-    public MappedFileData(final File file) throws IOException
+    public MappedFileData(@NotNull final File file) throws IOException
     {
         mapFileContent(file);
     }
@@ -88,7 +90,7 @@ public class MappedFileData implements IDisposableModel, IDataModel
      * @param file the file to read.
      * @throws IOException if reading content from the file fails.
      */
-    private void mapFileContent(final File file) throws IOException
+    private void mapFileContent(@NotNull final File file) throws IOException
     {
         try
         {
@@ -124,7 +126,7 @@ public class MappedFileData implements IDisposableModel, IDataModel
      *
      * @param closeable the objects to close, may be <code>null</code> or already closed.
      */
-    private void closeQuietly(final Closeable closeable)
+    private void closeQuietly(@Nullable final Closeable closeable)
     {
         if (closeable != null)
         {

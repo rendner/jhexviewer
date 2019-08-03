@@ -6,9 +6,10 @@ import cms.rendner.hexviewer.core.view.areas.properties.Property;
 import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
 import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.swing.BorderlessJComponent;
-import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.observer.IObservable;
 import cms.rendner.hexviewer.utils.observer.IObserver;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -51,6 +52,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * The id of the area to which is rendered by this view component.
      */
+    @NotNull
     protected final AreaId id;
 
     /**
@@ -72,7 +74,8 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * Used by the {@link cms.rendner.hexviewer.core.JHexViewer} to forward properties which
      * should not be accessible outside of this component.
      */
-    private ProtectedPropertiesProvider propertiesProvider;
+    @NotNull
+    private final ProtectedPropertiesProvider propertiesProvider;
 
     /**
      * Creates a new instance with the specified values.
@@ -81,7 +84,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * @param propertiesProvider used by the {@link cms.rendner.hexviewer.core.JHexViewer} to forward properties which
      *                           should not be accessible outside of this component.
      */
-    public RowBasedView(final AreaId id, final ProtectedPropertiesProvider propertiesProvider)
+    public RowBasedView(@NotNull final AreaId id, @NotNull final ProtectedPropertiesProvider propertiesProvider)
     {
         super();
         this.id = id;
@@ -107,6 +110,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * @return the id of the area to which is rendered by this view component.
      */
+    @NotNull
     public AreaId getId()
     {
         return id;
@@ -115,6 +119,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * @return the row template used to align the bytes in rows, may be temporarily <code>null</code>.
      */
+    @Nullable
     public T template()
     {
         return rowTemplate;
@@ -143,6 +148,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      *
      * @return the current paint delegate or <code>null</code> if no delegate was set.
      */
+    @Nullable
     public IPaintDelegate getPaintDelegate()
     {
         return paintDelegate;
@@ -154,6 +160,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * @param rowIndex the index of the row.
      * @return a rectangle with the bounds of the specified row.
      */
+    @NotNull
     public Rectangle getRowRect(final int rowIndex)
     {
         return getRowRect(rowIndex, new Rectangle());
@@ -163,13 +170,12 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * Returns the bounds of a row.
      *
      * @param rowIndex the index of the row.
-     * @param result   the result is applied to this rectangle, can't be <code>null</code>.
+     * @param result   the result is applied to this rectangle.
      * @return the modified result which contains the bounds of the specified row.
      */
-    public Rectangle getRowRect(final int rowIndex, final Rectangle result)
+    @NotNull
+    public Rectangle getRowRect(final int rowIndex, @NotNull final Rectangle result)
     {
-        CheckUtils.checkNotNull(result);
-
         final int rowHeight = rowHeight();
 
         result.x = 0;
@@ -185,9 +191,9 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      *
      * @param rectangle the rectangle to determine the intersecting rows.
      * @return a range of intersection rows.
-     * @throws IllegalArgumentException if rectangle is <code>null</code>.
      */
-    public Range getRowRange(final Rectangle rectangle)
+    @NotNull
+    public Range getRowRange(@NotNull final Rectangle rectangle)
     {
         return getRowRange(rectangle, new Range());
     }
@@ -196,15 +202,12 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * Returns a range of rows that intersect a rectangle.
      *
      * @param rectangle the rectangle to determine the intersecting rows.
-     * @param result    the result is applied to this rectangle, can't be <code>null</code>.
+     * @param result    the result is applied to this rectangle.
      * @return the modified result which reports the intersection rows.
-     * @throws IllegalArgumentException if rectangle or result is <code>null</code>.
      */
-    public Range getRowRange(final Rectangle rectangle, final Range result)
+    @NotNull
+    public Range getRowRange(@NotNull final Rectangle rectangle, @NotNull final Range result)
     {
-        CheckUtils.checkNotNull(rectangle);
-        CheckUtils.checkNotNull(result);
-
         result.invalidate();
 
         if (!rectangle.isEmpty())
@@ -260,6 +263,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
         return rowTemplate != null ? Math.max(1, rowTemplate.height()) : DUMMY_ROW_HEIGHT;
     }
 
+    @NotNull
     @Override
     public Dimension getPreferredSize()
     {
@@ -279,7 +283,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     @Override
-    protected void paintChildren(final Graphics g)
+    protected void paintChildren(@NotNull final Graphics g)
     {
         super.paintChildren(g);
 
@@ -291,11 +295,11 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
     /**
      * Sets the row template.
-     * Setting a template results in a complete repaint.
+     * Setting this property results in a complete repaint.
      *
      * @param rowTemplate the template to use to align the bytes in rows, can be <code>null</code>.
      */
-    protected void setRowTemplate(final T rowTemplate)
+    protected void setRowTemplate(@Nullable final T rowTemplate)
     {
         this.rowTemplate = rowTemplate;
         revalidate();
@@ -304,7 +308,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
     /**
      * Set the number of total rows.
-     * Setting a template results in a complete repaint.
+     * Setting this property in a complete repaint.
      *
      * @param newRowCount the number of total rows.
      */
@@ -325,7 +329,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      *
      * @param newPaintDelegate the new delegate, can be <code>null</code>.
      */
-    protected void setPaintDelegate(final IPaintDelegate newPaintDelegate)
+    protected void setPaintDelegate(@Nullable final IPaintDelegate newPaintDelegate)
     {
         if (paintDelegate != newPaintDelegate)
         {
@@ -339,7 +343,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      *
      * @param changedDependency a changed property forwarded from the {@link cms.rendner.hexviewer.core.JHexViewer}.
      */
-    protected void handleProtectedProperty(final Property changedDependency)
+    protected void handleProtectedProperty(@NotNull final Property changedDependency)
     {
         switch (changedDependency.getName())
         {
@@ -371,7 +375,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     private class InternalHandler implements IObserver<Property>
     {
         @Override
-        public void update(final IObservable<Property> observable, final Property property)
+        public void update(@NotNull final IObservable<Property> observable, @NotNull final Property property)
         {
             if (propertiesProvider == observable)
             {

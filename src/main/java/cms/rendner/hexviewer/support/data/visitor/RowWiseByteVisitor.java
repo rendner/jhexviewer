@@ -1,10 +1,11 @@
 package cms.rendner.hexviewer.support.data.visitor;
 
-import cms.rendner.hexviewer.support.data.visitor.consumer.IConsumer;
 import cms.rendner.hexviewer.support.data.formatter.IRowWiseByteFormatter;
+import cms.rendner.hexviewer.support.data.visitor.consumer.IConsumer;
 import cms.rendner.hexviewer.support.data.visitor.consumer.ToConsoleConsumer;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Byte visitor which uses a {@link IRowWiseByteFormatter} and a {@link IConsumer} to forward
@@ -18,12 +19,14 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * Used to format visited rows of bytes.
      * The formatted result will be forwarded to the consumer.
      */
-    private IRowWiseByteFormatter formatter;
+    @NotNull
+    private final IRowWiseByteFormatter formatter;
 
     /**
      * Used to consume the formatted value of the visited rows of bytes.
      */
-    private IConsumer consumer;
+    @NotNull
+    private final IConsumer consumer;
 
     /**
      * Used to build a row which includes the three areas of the
@@ -62,9 +65,9 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     /**
      * Creates a new instance.
      *
-     * @param formatter to format byte values ​​row-based before they are written to the consumer. Can't be <code>null</code>.
+     * @param formatter to format byte values ​​row-based before they are written to the consumer.
      */
-    public RowWiseByteVisitor(final IRowWiseByteFormatter formatter)
+    public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter)
     {
         this(formatter, null);
     }
@@ -75,11 +78,9 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param consumer  the consumer to write to, if <code>null</code> a ToConsoleConsumer will be used to write to.
      * @param formatter to format byte values ​​row-based before they are written to the consumer. Can't be <code>null</code>.
      */
-    public RowWiseByteVisitor(final IRowWiseByteFormatter formatter, final IConsumer consumer)
+    public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter, @Nullable final IConsumer consumer)
     {
         super();
-
-        CheckUtils.checkNotNull(formatter);
 
         this.formatter = formatter;
         this.consumer = consumer == null ? new ToConsoleConsumer() : consumer;
@@ -126,7 +127,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     @Override
-    public void visitRow(final IRowData rowData)
+    public void visitRow(@NotNull final IRowData rowData)
     {
         int lastVisitedByteIndexInRow = rowData.excludedLeadingBytes();
 
@@ -158,19 +159,20 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param rowData the row data already used to format the bytes
      * @return a string which represents the formatted row, including the enabled areas.
      */
-    protected String buildRow(final IRowData rowData)
+    @NotNull
+    protected String buildRow(@NotNull final IRowData rowData)
     {
         rowBuilder.append(formatter.formatRowOffset(rowData.rowIndex(), rowData.offset()));
 
         if (includeHexArea)
         {
-            appendIfNotNull(rowBuilder, formatter.offsetHexSeparator());
+            rowBuilder.append(formatter.offsetHexSeparator());
             rowBuilder.append(hexAreaBuilder);
         }
 
         if (includeAsciiArea)
         {
-            appendIfNotNull(rowBuilder, formatter.hexAsciiSeparator());
+            rowBuilder.append(formatter.hexAsciiSeparator());
             rowBuilder.append(asciiAreaBuilder);
         }
 
@@ -202,8 +204,8 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     {
         if (includeHexArea)
         {
-            appendIfNotNull(hexAreaBuilder, formatter.hexByteSeparator(byteIndexInRow));
-            appendIfNotNull(hexAreaBuilder, formatter.formatHexByte(value));
+            hexAreaBuilder.append(formatter.hexByteSeparator(byteIndexInRow));
+            hexAreaBuilder.append(formatter.formatHexByte(value));
         }
     }
 
@@ -218,8 +220,8 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     {
         if (includeAsciiArea)
         {
-            appendIfNotNull(asciiAreaBuilder, formatter.asciiByteSeparator(byteIndexInRow));
-            appendIfNotNull(asciiAreaBuilder, formatter.formatAsciiByte(value));
+            asciiAreaBuilder.append(formatter.asciiByteSeparator(byteIndexInRow));
+            asciiAreaBuilder.append(formatter.formatAsciiByte(value));
         }
     }
 
@@ -249,8 +251,8 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
         {
             for (int i = indexInRow; i < indexInRow + repeats; i++)
             {
-                appendIfNotNull(hexAreaBuilder, formatter.hexByteSeparator(i));
-                appendIfNotNull(hexAreaBuilder, formatter.hexBytePlaceholder(i));
+                hexAreaBuilder.append(formatter.hexByteSeparator(i));
+                hexAreaBuilder.append(formatter.hexBytePlaceholder(i));
             }
         }
     }
@@ -268,23 +270,9 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
         {
             for (int i = indexInRow; i < indexInRow + repeats; i++)
             {
-                appendIfNotNull(asciiAreaBuilder, formatter.asciiByteSeparator(i));
-                appendIfNotNull(asciiAreaBuilder, formatter.asciiBytePlaceholder(i));
+                asciiAreaBuilder.append(formatter.asciiByteSeparator(i));
+                asciiAreaBuilder.append(formatter.asciiBytePlaceholder(i));
             }
-        }
-    }
-
-    /**
-     * Appends a string if not <code>null</code>.
-     *
-     * @param sb      builder to append content.
-     * @param content the content to append.
-     */
-    protected void appendIfNotNull(final StringBuilder sb, final String content)
-    {
-        if (content != null)
-        {
-            sb.append(content);
         }
     }
 }

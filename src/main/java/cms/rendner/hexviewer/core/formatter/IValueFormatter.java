@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.formatter;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A formatter formats a given value e.g a byte value into a string representation.
  *
@@ -13,5 +15,6 @@ public interface IValueFormatter
      * @param value the value to be converted.
      * @return the converted result.
      */
+    @NotNull
     String format(int value);
 }

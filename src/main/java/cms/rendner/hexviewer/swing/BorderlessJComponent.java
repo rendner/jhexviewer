@@ -1,5 +1,8 @@
 package cms.rendner.hexviewer.swing;
 
+
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -18,7 +21,7 @@ public class BorderlessJComponent extends JComponent
      * @param border the <code>Border</code> to set
      * @throws IllegalArgumentException this method is not implemented
      */
-    public final void setBorder(final Border border)
+    public final void setBorder(@Nullable final Border border)
     {
         if (border != null)
         {

@@ -1,10 +1,12 @@
 package cms.rendner.hexviewer.core.uidelegate.actions;
 
-import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.core.JHexViewer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 
 /**
  * // todo: add comment
@@ -12,21 +14,22 @@ import java.awt.event.ActionEvent;
  */
 public abstract class AbstractHexViewerAction extends AbstractAction implements IHexViewerAction
 {
+    @Nullable
     private IActionTypeId typeId;
 
+    @NotNull
     public IActionTypeId getTypeId()
     {
-        return typeId;
+        return Objects.requireNonNull(typeId);
     }
 
-    public void setTypeId(final IActionTypeId typeId)
+    public void setTypeId(@NotNull final IActionTypeId typeId)
     {
+        // todo: get rid of this strange workaround
         if (this.typeId != null)
         {
             throw new IllegalStateException("Type can't be overwritten.");
         }
-
-        CheckUtils.checkNotNull(typeId);
 
         this.typeId = typeId;
     }
@@ -39,15 +42,13 @@ public abstract class AbstractHexViewerAction extends AbstractAction implements 
      * @param event the ActionEvent
      * @return the component
      */
-    protected final JHexViewer getHexViewer(final ActionEvent event)
+    @Nullable
+    protected final JHexViewer getHexViewer(@NotNull final ActionEvent event)
     {
-        if (event != null)
+        final Object source = event.getSource();
+        if (source instanceof JHexViewer)
         {
-            final Object source = event.getSource();
-            if (source instanceof JHexViewer)
-            {
-                return (JHexViewer) source;
-            }
+            return (JHexViewer) source;
         }
         return null;
     }

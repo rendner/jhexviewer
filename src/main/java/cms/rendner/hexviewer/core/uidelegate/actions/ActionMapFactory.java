@@ -1,13 +1,14 @@
 package cms.rendner.hexviewer.core.uidelegate.actions;
 
-import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import cms.rendner.hexviewer.core.uidelegate.actions.caret.*;
 import cms.rendner.hexviewer.core.uidelegate.actions.font.DecreaseFontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.font.FontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.font.IncreaseFontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.others.OthersAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.others.SwitchAreaFocusAction;
+import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -17,6 +18,7 @@ import javax.swing.*;
  */
 public class ActionMapFactory
 {
+    @NotNull
     public static ActionMap createActionMap()
     {
         final ActionMap result = new ActionMap();
@@ -39,7 +41,7 @@ public class ActionMapFactory
         return result;
     }
 
-    protected static void addAction(final ActionMap actionMap, final IActionTypeId actionTypeId)
+    protected static void addAction(@NotNull final ActionMap actionMap, @NotNull final IActionTypeId actionTypeId)
     {
         CheckUtils.checkNotNull(actionTypeId);
 
@@ -67,7 +69,8 @@ public class ActionMapFactory
         }
     }
 
-    private static AbstractHexViewerAction createOthersAction(final OthersAction actionType)
+    @NotNull
+    private static AbstractHexViewerAction createOthersAction(@NotNull final OthersAction actionType)
     {
         switch (actionType)
         {
@@ -82,7 +85,8 @@ public class ActionMapFactory
         }
     }
 
-    private static AbstractHexViewerAction createFontAction(final FontAction actionType)
+    @NotNull
+    private static AbstractHexViewerAction createFontAction(@NotNull final FontAction actionType)
     {
         switch (actionType)
         {
@@ -101,7 +105,8 @@ public class ActionMapFactory
         }
     }
 
-    private static AbstractHexViewerAction createCaretAction(final CaretAction actionType)
+    @NotNull
+    private static AbstractHexViewerAction createCaretAction(@NotNull final CaretAction actionType)
     {
         switch (actionType)
         {

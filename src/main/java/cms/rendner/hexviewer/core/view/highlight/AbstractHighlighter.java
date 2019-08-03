@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.core.view.highlight;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.utils.CheckUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ public abstract class AbstractHighlighter implements IHighlighter
     /**
      * List of highlights.
      */
+    @NotNull
     protected List<IHighlight> highlights = new ArrayList<>();
 
     /**
@@ -34,13 +35,13 @@ public abstract class AbstractHighlighter implements IHighlighter
     protected JHexViewer hexViewer;
 
     @Override
-    public void install(final JHexViewer hexViewer)
+    public void install(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = hexViewer;
     }
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
         removeAllHighlights();
         this.hexViewer = null;
@@ -67,10 +68,8 @@ public abstract class AbstractHighlighter implements IHighlighter
     }
 
     @Override
-    public void removeHighlight(final IHighlight highlight)
+    public void removeHighlight(@NotNull final IHighlight highlight)
     {
-        CheckUtils.checkNotNull(highlight);
-
         if (highlight.equals(selectionHighlight))
         {
             selectionHighlight = null;
@@ -84,10 +83,8 @@ public abstract class AbstractHighlighter implements IHighlighter
     }
 
     @Override
-    public void removeHighlights(final List<IHighlight> highlightsToRemove)
+    public void removeHighlights(@NotNull final List<IHighlight> highlightsToRemove)
     {
-        CheckUtils.checkNotNull(highlightsToRemove);
-
         for (final IHighlight highlight : highlightsToRemove)
         {
             removeHighlight(highlight);
@@ -118,6 +115,7 @@ public abstract class AbstractHighlighter implements IHighlighter
         return highlights.size();
     }
 
+    @NotNull
     @Override
     public List<IHighlight> getHighlights()
     {

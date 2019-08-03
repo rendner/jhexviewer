@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.utils;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Allows to specify a fallback value which is returned if no valid preferred value was set.
  *
@@ -10,11 +12,13 @@ public class FallbackValue<T>
     /**
      * The preferred value.
      */
+    @Nullable
     private T preferredValue;
 
     /**
      * The fallback value.
      */
+    @Nullable
     private T fallbackValue;
 
     /**
@@ -30,7 +34,7 @@ public class FallbackValue<T>
      *
      * @param fallbackValue the fallback value to use if no value is set.
      */
-    public FallbackValue(final T fallbackValue)
+    public FallbackValue(@Nullable final T fallbackValue)
     {
         super();
         this.fallbackValue = fallbackValue;
@@ -39,16 +43,17 @@ public class FallbackValue<T>
     /**
      * Sets the fallback value.
      *
-     * @param fallbackValue the fallback value to set, can be <code>null</code>.
+     * @param fallbackValue the fallback value to set.
      */
-    public void setFallbackValue(final T fallbackValue)
+    public void setFallbackValue(@Nullable final T fallbackValue)
     {
         this.fallbackValue = fallbackValue;
     }
 
     /**
-     * @return the preferred value if not <code>null</code> otherwise the fallback value. Can be <code>null</code>.
+     * @return the preferred value if not <code>null</code> otherwise the fallback value.
      */
+    @Nullable
     public T getValue()
     {
         return preferredValue != null ? preferredValue : fallbackValue;
@@ -57,16 +62,17 @@ public class FallbackValue<T>
     /**
      * Sets the value which is preferred over the fallback value.
      *
-     * @param preferredValue value to set, can be <code>null</code>.
+     * @param preferredValue value to set.
      */
-    public void setPreferredValue(final T preferredValue)
+    public void setPreferredValue(@Nullable final T preferredValue)
     {
         this.preferredValue = preferredValue;
     }
 
     /**
-     * @return the preferred value which "overwrites" the internal fallback value, can be <code>null</code>.
+     * @return the preferred value which "overwrites" the internal fallback value.
      */
+    @Nullable
     public T getPreferredValue()
     {
         return preferredValue;

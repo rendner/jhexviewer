@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 /**
@@ -16,6 +18,7 @@ public class FontUtils
      *
      * @return a monospaced font name.
      */
+    @NotNull
     public static String getMonospacedFontName()
     {
         final String courierNew = "Courier New";

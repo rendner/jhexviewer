@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.support.data.visitor.consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A consumer consumes content, e.g. writes the content to a console or file.
  *
@@ -17,7 +19,7 @@ public interface IConsumer
      * Consumes a string.
      * @param content the content to be consumed.
      */
-    void consume(String content);
+    void consume(@NotNull String content);
 
     /**
      * Notifies the consumer that all content is consumed.

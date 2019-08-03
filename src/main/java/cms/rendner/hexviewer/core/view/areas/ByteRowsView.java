@@ -3,12 +3,14 @@ package cms.rendner.hexviewer.core.view.areas;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.areas.properties.Property;
 import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
+import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import cms.rendner.hexviewer.utils.RectangleUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -36,7 +38,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @param propertiesProvider used by the {@link cms.rendner.hexviewer.core.JHexViewer} to forward properties which
      *                           should not be accessible outside of this component.
      */
-    public ByteRowsView(final AreaId id, final ProtectedPropertiesProvider propertiesProvider)
+    public ByteRowsView(@NotNull final AreaId id, @NotNull final ProtectedPropertiesProvider propertiesProvider)
     {
         super(id, propertiesProvider);
 
@@ -76,11 +78,9 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      *                      The result is returned in this Rectangle.
      * @return the adjusted elementBounds parameter.
      */
-    public Rectangle translateIntoViewCoordinates(final int rowIndex, final Rectangle elementBounds)
+    @NotNull
+    public Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull final Rectangle elementBounds)
     {
-        CheckUtils.checkMinValue(rowIndex, 0);
-        CheckUtils.checkNotNull(elementBounds);
-
         final Rectangle rowRect = getRowRect(rowIndex);
         elementBounds.x += rowRect.x;
         elementBounds.y += rowRect.y;
@@ -95,6 +95,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @return the bounds in the view, never <code>null</code>.
      * @thows IllegalArgumentException if byteIndex is smaller than 0.
      */
+    @NotNull
     public Rectangle getByteRect(final int byteIndex)
     {
         return getByteRect(byteIndex, new Rectangle());
@@ -107,20 +108,17 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @param byteIndex   the index of the byte in the view. The value has to be &gt;= 0.
      * @param returnValue this rect will be filled with the result.
      * @return the <code>returnValue</code> object.
-     * @thows IllegalArgumentException if byteIndex is smaller than 0 or returnValue is <code>null</code>.
+     * @thows IllegalArgumentException if byteIndex is smaller than 0.
      */
-    public Rectangle getByteRect(final int byteIndex, final Rectangle returnValue)
+    @NotNull
+    public Rectangle getByteRect(final int byteIndex, @NotNull final Rectangle returnValue)
     {
-        CheckUtils.checkNotNull(returnValue);
-
         if (rowTemplate == null)
         {
             RectangleUtils.setEmpty(returnValue);
         }
         else
         {
-            CheckUtils.checkMinValue(byteIndex, 0);
-
             final int bytesPerRow = bytesPerRow();
             final int rowIndex = IndexUtils.byteIndexToRowIndex(byteIndex, bytesPerRow);
             final int indexInRow = IndexUtils.byteIndexToIndexInRow(byteIndex, bytesPerRow);
@@ -147,6 +145,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @return the bounds in the view, never <code>null</code>.
      * @thows IllegalArgumentException if caretIndex is smaller than 0.
      */
+    @NotNull
     public Rectangle getCaretRect(final int caretIndex)
     {
         return getCaretRect(caretIndex, new Rectangle());
@@ -159,9 +158,10 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @param caretIndex  the index of the caret in the view. The value has to be &gt;= 0.
      * @param returnValue this rect will be filled with the result.
      * @return the <code>returnValue</code> object.
-     * @thows IllegalArgumentException if caretIndex is smaller than 0 or returnValue is <code>null</code>.
+     * @thows IllegalArgumentException if caretIndex is smaller than 0.
      */
-    public Rectangle getCaretRect(final int caretIndex, final Rectangle returnValue)
+    @NotNull
+    public Rectangle getCaretRect(final int caretIndex, @NotNull final Rectangle returnValue)
     {
         if (rowTemplate == null)
         {
@@ -188,6 +188,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @return a hit info instance if there was a byte under the position, or <code>null</code> if the position
      * wasn't valid (outside of the view).
      */
+    @Nullable
     public ByteHitInfo locationToByteHit(final int x, final int y)
     {
         if (rowTemplate != null)
@@ -213,7 +214,8 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @param offsetForFirstByteInRow the offset for the first byte of the row which was tested.
      * @return the hit info for the byte, never <code>null</code>.
      */
-    protected ByteHitInfo convert(final ElementHitInfo templateHitInfo, final IByteRowTemplate rowTemplate, final int offsetForFirstByteInRow)
+    @NotNull
+    protected ByteHitInfo convert(@NotNull final ElementHitInfo templateHitInfo, @NotNull final IByteRowTemplate rowTemplate, final int offsetForFirstByteInRow)
     {
         final IndexPosition.Bias bias = templateHitInfo.insertionIndex() >= rowTemplate.elementCount() ? IndexPosition.Bias.Backward : IndexPosition.Bias.Forward;
         final IndexPosition position = new IndexPosition(templateHitInfo.insertionIndex() + offsetForFirstByteInRow, bias);
@@ -221,7 +223,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
     }
 
     @Override
-    protected void handleProtectedProperty(final Property changedDependency)
+    protected void handleProtectedProperty(@NotNull final Property changedDependency)
     {
         super.handleProtectedProperty(changedDependency);
 
@@ -245,6 +247,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
         /**
          * Describes if the hit was before the byte or after the byte.
          */
+        @NotNull
         private final IndexPosition insertionPosition;
 
         /**
@@ -253,7 +256,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
          * @param index             the index of the byte in the view.
          * @param insertionPosition describes where the caret should be inserted (before or after the byte).
          */
-        public ByteHitInfo(final int index, final IndexPosition insertionPosition)
+        public ByteHitInfo(final int index, @NotNull final IndexPosition insertionPosition)
         {
             super();
             this.index = index;
@@ -263,6 +266,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
         /**
          * @return the position where the caret should be placed.
          */
+        @NotNull
         public IndexPosition getInsertionPosition()
         {
             return insertionPosition;

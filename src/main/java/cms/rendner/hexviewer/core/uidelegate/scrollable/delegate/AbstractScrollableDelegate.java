@@ -3,6 +3,7 @@ package cms.rendner.hexviewer.core.uidelegate.scrollable.delegate;
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.swing.scrollable.IScrollableDelegate;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,14 +30,14 @@ public abstract class AbstractScrollableDelegate implements IScrollableDelegate
     protected ScrollableContainer viewToScroll;
 
     @Override
-    public void install(final JHexViewer hexViewer)
+    public void install(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = hexViewer;
         this.viewToScroll = hexViewer.getScrollableByteRowsContainer();
     }
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = null;
         this.viewToScroll = null;

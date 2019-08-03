@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.support.data.visitor.consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Consumes all content into a single string.
  *
@@ -15,7 +17,7 @@ public class ToStringConsumer implements IConsumer
     /**
      * The final result.
      */
-    protected String result;
+    protected String result = "";
 
     @Override
     public void start()
@@ -24,7 +26,7 @@ public class ToStringConsumer implements IConsumer
     }
 
     @Override
-    public void consume(final String content)
+    public void consume(@NotNull final String content)
     {
         resultBuilder.append(content);
     }
@@ -39,6 +41,7 @@ public class ToStringConsumer implements IConsumer
     /**
      * @return a concatenated string of the consumed content.
      */
+    @NotNull
     public String content()
     {
         return result;

@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.support.data.formatter;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Allows a full customization of how a row (including all three areas of the {@link cms.rendner.hexviewer.core.JHexViewer}
  * ​​should be formatted to get a printable representation.
@@ -14,6 +16,7 @@ public interface IRowWiseByteFormatter
      * @param value byte to format.
      * @return the ASCII character of the byte.
      */
+    @NotNull
     String formatAsciiByte(int value);
 
     /**
@@ -22,6 +25,7 @@ public interface IRowWiseByteFormatter
      * @param value byte to format.
      * @return the hex character of the byte.
      */
+    @NotNull
     String formatHexByte(int value);
 
     /**
@@ -31,11 +35,13 @@ public interface IRowWiseByteFormatter
      * @param byteOffset the offset to format.
      * @return a printable representation of the offset.
      */
+    @NotNull
     String formatRowOffset(int rowIndex, int byteOffset);
 
     /**
      * @return Returns the row separator string. Usually this is the line separator.
      */
+    @NotNull
     String rowSeparator();
 
     /**
@@ -44,6 +50,7 @@ public interface IRowWiseByteFormatter
      * @param indexOfByteInRow index of the hex byte to print.
      * @return the separator,
      */
+    @NotNull
     String hexByteSeparator(int indexOfByteInRow);
 
     /**
@@ -52,6 +59,7 @@ public interface IRowWiseByteFormatter
      * @param indexOfByteInRow index of the ASCII byte to print.
      * @return the separator,
      */
+    @NotNull
     String asciiByteSeparator(int indexOfByteInRow);
 
     /**
@@ -60,6 +68,7 @@ public interface IRowWiseByteFormatter
      * @param indexInRow the index of the byte to omit.
      * @return the placeholder (e.g. a " ").
      */
+    @NotNull
     String hexBytePlaceholder(int indexInRow);
 
     /**
@@ -68,15 +77,18 @@ public interface IRowWiseByteFormatter
      * @param indexInRow the index of the byte to omit.
      * @return the placeholder (e.g. a ".").
      */
+    @NotNull
     String asciiBytePlaceholder(int indexInRow);
 
     /**
      * @return the separator to visually separate the hex area from the offset area (e.g. a "|").
      */
+    @NotNull
     String offsetHexSeparator();
 
     /**
      * @return the separator to visually separate the ascii area from the hex area (e.g. a "|").
      */
+    @NotNull
     String hexAsciiSeparator();
 }

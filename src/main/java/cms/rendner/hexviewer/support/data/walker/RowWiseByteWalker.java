@@ -1,11 +1,11 @@
 package cms.rendner.hexviewer.support.data.walker;
 
-import cms.rendner.hexviewer.support.data.visitor.IRowWiseByteVisitor;
 import cms.rendner.hexviewer.core.model.data.IDataModel;
+import cms.rendner.hexviewer.support.data.visitor.IRowWiseByteVisitor;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 import cms.rendner.hexviewer.support.data.wrapper.RowData;
-import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Iterates row-wise over a specified range of bytes of the data model used by the {@link cms.rendner.hexviewer.core.JHexViewer}.
@@ -17,6 +17,7 @@ public class RowWiseByteWalker
     /**
      * Provides the data that is iterated over.
      */
+    @NotNull
     protected final IDataModel dataModel;
 
     /**
@@ -27,14 +28,12 @@ public class RowWiseByteWalker
     /**
      * Creates a new instance.
      *
-     * @param dataModel   the data to iterate over. Cant be <code>null</code>.
+     * @param dataModel   the data to iterate over.
      * @param bytesPerRow the number of bytes displayed in one row
      */
-    public RowWiseByteWalker(final IDataModel dataModel, final int bytesPerRow)
+    public RowWiseByteWalker(@NotNull final IDataModel dataModel, final int bytesPerRow)
     {
         super();
-
-        CheckUtils.checkNotNull(dataModel);
 
         this.dataModel = dataModel;
         this.bytesPerRow = bytesPerRow;
@@ -47,7 +46,7 @@ public class RowWiseByteWalker
      * @param start   the start index of the byte, included in the range.
      * @param end     the end index of the byte, included in the range.
      */
-    public void walk(final IRowWiseByteVisitor visitor, final int start, final int end)
+    public void walk(@NotNull final IRowWiseByteVisitor visitor, final int start, final int end)
     {
         visitor.start();
 
@@ -70,6 +69,7 @@ public class RowWiseByteWalker
      * @param end   the end index of the byte, included in the range.
      * @return the part which only contains the bytes of the specified range.
      */
+    @NotNull
     protected IRowData createRowData(final int start, final int end)
     {
         final int offsetInRow = IndexUtils.byteIndexToIndexInRow(start, bytesPerRow);
