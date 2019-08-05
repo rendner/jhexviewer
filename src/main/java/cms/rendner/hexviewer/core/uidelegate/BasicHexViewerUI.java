@@ -155,7 +155,10 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setCaret(null);
         }
 
-        // todo: uninstall damager
+        if (hexViewer.getDamager().orElse(null) instanceof UIResource)
+        {
+            hexViewer.setDamager(null);
+        }
 
         if (hexViewer.getHighlighter() instanceof UIResource)
         {
