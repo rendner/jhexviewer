@@ -1,8 +1,6 @@
 package cms.rendner.hexviewer.core.uidelegate.rows;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
-import cms.rendner.hexviewer.support.data.wrapper.RowData;
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
@@ -11,16 +9,20 @@ import cms.rendner.hexviewer.core.uidelegate.rows.renderer.ByteRowRenderer;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.IRowRenderer;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.OffsetRowRenderer;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.RendererContext;
-import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
+import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
+import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
 import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
-import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
-import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
-import cms.rendner.hexviewer.core.view.areas.RowBasedView;
-import cms.rendner.hexviewer.utils.FallbackValue;
+import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import cms.rendner.hexviewer.utils.CheckUtils;
+import cms.rendner.hexviewer.utils.FallbackValue;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -47,22 +49,26 @@ public class DefaultPaintDelegate implements IPaintDelegate
      * Rectangle instance used to store temporary the height of a single row.
      * This instance is reused.
      */
+    @NotNull
     protected final Rectangle rvRowRect = new Rectangle();
 
     /**
      * Range instance used to store temporary the range of the dirty rows.
      * This instance is reused.
      */
+    @NotNull
     protected final Range rvDirtyRows = new Range();
 
     /**
      * Contains for each of the three areas a rowColorProvider to be used to color the rows of the area.
      */
+    @NotNull
     protected final Map<AreaId, FallbackValue<IRowColorProvider>> rowColorProviderMap = new HashMap<>();
 
     /**
      * Contains for each of the three areas a rowRenderer to be used to render the rows of the area.
      */
+    @NotNull
     protected final Map<AreaId, FallbackValue<IRowRenderer<? extends IRowTemplate>>> rowRendererMap = new HashMap<>();
 
     /**
@@ -73,60 +79,43 @@ public class DefaultPaintDelegate implements IPaintDelegate
     /**
      * The context which is required by the IRowRenderer instances to paint the rows of the areas.
      */
-    protected RendererContext context = new RendererContext();
+    @NotNull
+    protected final RendererContext context = new RendererContext();
 
 
     @Override
-    public void install(final JHexViewer hexViewer)
+    public void install(@NotNull final JHexViewer hexViewer)
     {
-        CheckUtils.checkNotNull(hexViewer);
-
         this.hexViewer = hexViewer;
         context.setHexViewer(hexViewer);
 
         addDefaultRowRenderer(rowRendererMap);
         addDefaultRowColorProvider(rowColorProviderMap);
 
-        if (this.hexViewer.getDamager() != null)
-        {
-            this.hexViewer.getDamager().damageAllAreas();
-        }
+        hexViewer.getDamager().ifPresent(damager -> damager.damageAllAreas());
     }
 
     @Override
-    public void uninstall(final JHexViewer hexViewer)
+    public void uninstall(@NotNull final JHexViewer hexViewer)
     {
-        CheckUtils.checkNotNull(hexViewer);
-
-        if (this.hexViewer != null)
-        {
-            if (this.hexViewer.getDamager() != null)
-            {
-                this.hexViewer.getDamager().damageAllAreas();
-            }
-
-            this.hexViewer = null;
-        }
-
         context.setHexViewer(null);
         rowRendererMap.clear();
         rowColorProviderMap.clear();
+        this.hexViewer = null;
+
+        hexViewer.getDamager().ifPresent(damager -> damager.damageAllAreas());
     }
 
     @Override
-    public void setRowColorProvider(final AreaId id, final IRowColorProvider newColorProvider)
+    public void setRowColorProvider(@NotNull final AreaId id, @Nullable final IRowColorProvider newColorProvider)
     {
         CheckUtils.checkNotNull(id);
         rowColorProviderMap.get(id).setPreferredValue(newColorProvider);
-
-        if (hexViewer.getDamager() != null)
-        {
-            hexViewer.getDamager().damageArea(id);
-        }
+        hexViewer.getDamager().ifPresent(damager -> damager.damageArea(id));
     }
 
     @Override
-    public void paint(final Graphics g, final RowBasedView rowsView)
+    public void paint(@NotNull final Graphics g, @NotNull final RowBasedView rowsView)
     {
         if (rowsView.hasTemplate())
         {

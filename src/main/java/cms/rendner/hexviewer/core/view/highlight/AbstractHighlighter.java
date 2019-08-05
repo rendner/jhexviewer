@@ -130,6 +130,6 @@ public abstract class AbstractHighlighter implements IHighlighter
      */
     protected void damageBytes(final int start, final int end)
     {
-        hexViewer.getDamager().damageBytes(start, end);
+        hexViewer.getDamager().ifPresent(damager -> damager.damageBytes(start, end));
     }
 }

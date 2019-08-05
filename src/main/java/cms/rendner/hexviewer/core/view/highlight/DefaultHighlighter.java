@@ -2,7 +2,6 @@ package cms.rendner.hexviewer.core.view.highlight;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
-import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
@@ -231,11 +230,7 @@ public class DefaultHighlighter extends AbstractHighlighter
      */
     protected void damageChangedHighlight(final int oldStart, final int oldEnd, final int newStart, final int newEnd)
     {
-        final IDamager damager = hexViewer.getDamager();
-        if(damager != null)
-        {
-            damager.damageChangedHighlight(oldStart, oldEnd, newStart, newEnd);
-        }
+        hexViewer.getDamager().ifPresent(damager -> damager.damageChangedHighlight(oldStart, oldEnd, newStart, newEnd));
     }
 
     /**

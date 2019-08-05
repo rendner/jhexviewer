@@ -43,6 +43,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Optional;
 
 /**
  * A very basic hex viewer component which supports easy modification of the ui and internals.
@@ -253,7 +254,7 @@ public class JHexViewer extends JComponent
         if (showOffsetCaretIndicator != newValue)
         {
             showOffsetCaretIndicator = newValue;
-            damager.damageArea(AreaId.OFFSET);
+            getDamager().ifPresent(damager -> damager.damageArea(AreaId.OFFSET));
         }
     }
 
@@ -782,13 +783,12 @@ public class JHexViewer extends JComponent
     /**
      * Returns the current installed damager, which is used to request repaints inside the component.
      *
-     * @return the current installed damager or <code>null</code> if no damager was set.
+     * @return the current installed damager.
      */
-    @Nullable
-    public IDamager getDamager()
+    @NotNull
+    public Optional<IDamager> getDamager()
     {
-        // TODO: always return a valid damager (NOPDamager?) so that this property is never null (fallbackValue)
-        return damager;
+        return Optional.ofNullable(damager);
     }
 
     /**
@@ -807,20 +807,23 @@ public class JHexViewer extends JComponent
     public void setDamager(@Nullable final IDamager newValue)
     {
         final IDamager oldValue = damager;
-        if (oldValue != null)
+
+        if(oldValue != newValue)
         {
-            oldValue.uninstall(this);
+            if (oldValue != null)
+            {
+                oldValue.uninstall(this);
+            }
+
+            if (newValue != null)
+            {
+                newValue.install(this);
+            }
+
+            damager = newValue;
+            firePropertyChange(PROPERTY_DAMAGER, oldValue, damager);
+            repaint();
         }
-
-        damager = newValue;
-
-        if (damager != null)
-        {
-            damager.install(this);
-        }
-
-        firePropertyChange(PROPERTY_DAMAGER, oldValue, newValue);
-        repaint();
     }
 
     /**
@@ -879,8 +882,10 @@ public class JHexViewer extends JComponent
 
         highlighter = newHighlighter;
         firePropertyChange(PROPERTY_HIGHLIGHTER, oldHighlighter, newHighlighter);
-        damager.damageArea(AreaId.HEX);
-        damager.damageArea(AreaId.ASCII);
+        getDamager().ifPresent(damager -> {
+            damager.damageArea(AreaId.HEX);
+            damager.damageArea(AreaId.ASCII);
+        });
     }
 
     /**
@@ -997,10 +1002,7 @@ public class JHexViewer extends JComponent
             }
 
             invalidate();
-            if (damager != null)
-            {
-                damager.damageAllAreas();
-            }
+            getDamager().ifPresent(damager -> damager.damageAllAreas());
         }
     }
 
@@ -1055,8 +1057,10 @@ public class JHexViewer extends JComponent
             //
             // to simplify this we always damage the whole area, which is more than required,
             // but this method is normally called rarely
-            damager.damageArea(AreaId.HEX);
-            damager.damageArea(AreaId.ASCII);
+            getDamager().ifPresent(damager -> {
+                damager.damageArea(AreaId.HEX);
+                damager.damageArea(AreaId.ASCII);
+            });
         }
     }
 
@@ -1209,7 +1213,6 @@ public class JHexViewer extends JComponent
 
         createSubComponents();
         createDefaultModels();
-        setFocusedArea(AreaId.HEX);
 
         registerInternalHandler(internalHandler);
 

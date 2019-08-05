@@ -1,10 +1,12 @@
 package cms.rendner.hexviewer.core.uidelegate.rows;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
+import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
+import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -36,7 +38,7 @@ public interface IPaintDelegate
      *
      * @param hexViewer the component where this paint delegate is being installed. Can't be <code>null</code>.
      */
-    void install(JHexViewer hexViewer);
+    void install(@NotNull JHexViewer hexViewer);
 
     /**
      * This method is automatically invoked when this paint delegate instance is being removed for the specified component.
@@ -47,7 +49,7 @@ public interface IPaintDelegate
      *                  but might be used if the paint delegate is stateless and shared by multiple components.
      *                  Can't be <code>null</code>.
      */
-    void uninstall(JHexViewer hexViewer);
+    void uninstall(@NotNull JHexViewer hexViewer);
 
     /**
      * Paints the specified view which represents an area in the hexViewer.
@@ -56,7 +58,7 @@ public interface IPaintDelegate
      * @param g        the Graphics context in which to paint.
      * @param rowsView the component being painted.
      */
-    void paint(Graphics g, RowBasedView<? extends IRowTemplate> rowsView);
+    void paint(@NotNull Graphics g, @NotNull RowBasedView<? extends IRowTemplate> rowsView);
 
     /**
      * Sets a color provider to be used to color the rows of a view.
@@ -64,7 +66,7 @@ public interface IPaintDelegate
      * or background. The provider can be set to <code>null</code> to force the delegate to use default colors.
      *
      * @param id               the id of the area for which the provider should be used.
-     * @param newColorProvider the new provider, can be <code>null</code>.
+     * @param newColorProvider the new provider.
      */
-    void setRowColorProvider(AreaId id, IRowColorProvider newColorProvider);
+    void setRowColorProvider(@NotNull AreaId id, @Nullable IRowColorProvider newColorProvider);
 }

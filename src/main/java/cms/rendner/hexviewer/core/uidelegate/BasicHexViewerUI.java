@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.core.uidelegate;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.uidelegate.damager.DefaultDamager;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.datatransfer.FileTransferHandler;
@@ -8,7 +9,6 @@ import cms.rendner.hexviewer.core.uidelegate.row.template.factory.IRowTemplateFa
 import cms.rendner.hexviewer.core.uidelegate.rows.DefaultPaintDelegate;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
 import cms.rendner.hexviewer.core.uidelegate.scrollable.delegate.DefaultScrollableDelegate;
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.caret.DefaultCaret;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
 import cms.rendner.hexviewer.core.view.highlight.DefaultHighlighter;
@@ -87,7 +87,7 @@ public class BasicHexViewerUI extends HexViewerUI
         final String fontName = FontUtils.getMonospacedFontName();
         hexViewer.setFont(new Font(fontName, Font.PLAIN, 14));
 
-        final IDamager damager = hexViewer.getDamager();
+        final IDamager damager = hexViewer.getDamager().orElse(null);
         if (damager == null || damager instanceof UIResource)
         {
             hexViewer.setDamager(createDamager());

@@ -1,7 +1,6 @@
 package cms.rendner.hexviewer.core.view.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
@@ -497,11 +496,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void damageCaret(final int oldIndex, final int newIndex)
     {
-        final IDamager damager = Objects.requireNonNull(hexViewer).getDamager();
-        if(damager != null)
-        {
-            damager.damageCaret(oldIndex, newIndex);
-        }
+        hexViewer.getDamager().ifPresent(damager -> damager.damageCaret(oldIndex, newIndex));
     }
 
     /**
@@ -513,12 +508,10 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void damageSelection(final IndexPosition start, final IndexPosition end)
     {
-        final IDamager damager = Objects.requireNonNull(hexViewer).getDamager();
-        if(damager != null)
-        {
+        hexViewer.getDamager().ifPresent(damager -> {
             damager.damageBytes(AreaId.HEX, start.getIndex(), end.getIndex());
             damager.damageBytes(AreaId.ASCII, start.getIndex(), end.getIndex());
-        }
+        });
     }
 
     /**
