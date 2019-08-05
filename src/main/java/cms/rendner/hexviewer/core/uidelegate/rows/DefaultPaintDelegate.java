@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,13 +63,13 @@ public class DefaultPaintDelegate implements IPaintDelegate
      * Contains for each of the three areas a rowColorProvider to be used to color the rows of the area.
      */
     @NotNull
-    protected final Map<AreaId, FallbackValue<IRowColorProvider>> rowColorProviderMap = new HashMap<>();
+    protected final Map<AreaId, FallbackValue<IRowColorProvider>> rowColorProviderMap = new EnumMap<>(AreaId.class);
 
     /**
      * Contains for each of the three areas a rowRenderer to be used to render the rows of the area.
      */
     @NotNull
-    protected final Map<AreaId, FallbackValue<IRowRenderer<? extends IRowTemplate>>> rowRendererMap = new HashMap<>();
+    protected final Map<AreaId, FallbackValue<IRowRenderer<? extends IRowTemplate>>> rowRendererMap = new EnumMap<>(AreaId.class);
 
     /**
      * The instance which are served by the paint delegate.
