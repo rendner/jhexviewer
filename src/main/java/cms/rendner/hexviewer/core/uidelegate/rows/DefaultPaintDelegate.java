@@ -4,6 +4,7 @@ import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
+import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.rows.color.DefaultRowColorProvider;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.ByteRowRenderer;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.IRowRenderer;
@@ -13,7 +14,6 @@ import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
-import cms.rendner.hexviewer.core.view.caret.ICaret;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
 import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
@@ -92,7 +92,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
         addDefaultRowRenderer(rowRendererMap);
         addDefaultRowColorProvider(rowColorProviderMap);
 
-        hexViewer.getDamager().ifPresent(damager -> damager.damageAllAreas());
+        hexViewer.getDamager().ifPresent(IDamager::damageAllAreas);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
         rowColorProviderMap.clear();
         this.hexViewer = null;
 
-        hexViewer.getDamager().ifPresent(damager -> damager.damageAllAreas());
+        hexViewer.getDamager().ifPresent(IDamager::damageAllAreas);
     }
 
     @Override
@@ -265,11 +265,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
             highlighter.paint(g, rowsView);
         }
 
-        final ICaret caret = hexViewer.getCaret();
-        if (caret != null)
-        {
-            caret.paint(g, rowsView);
-        }
+        hexViewer.getCaret().ifPresent(caret -> caret.paint(g, rowsView));
 
         for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
         {

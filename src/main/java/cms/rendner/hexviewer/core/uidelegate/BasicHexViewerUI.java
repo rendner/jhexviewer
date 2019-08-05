@@ -105,7 +105,7 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setTransferHandler(createTransferHandler());
         }
 
-        final ICaret caret = hexViewer.getCaret();
+        final ICaret caret = hexViewer.getCaret().orElse(null);
         if (caret == null || caret instanceof UIResource)
         {
             hexViewer.setCaret(createCaret());
@@ -150,10 +150,12 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setRowTemplateFactory(null);
         }
 
-        if (hexViewer.getCaret() instanceof UIResource)
+        if (hexViewer.getCaret().orElse(null) instanceof UIResource)
         {
             hexViewer.setCaret(null);
         }
+
+        // todo: uninstall damager
 
         if (hexViewer.getHighlighter() instanceof UIResource)
         {

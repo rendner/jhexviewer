@@ -252,6 +252,12 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     @Override
+    public boolean hasSelection()
+    {
+        return !isSelectionEmpty();
+    }
+
+    @Override
     public int getSelectionStart()
     {
         return Math.min(dotPosition.getIndex(), markPosition.getIndex());

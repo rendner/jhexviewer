@@ -1,7 +1,6 @@
 package cms.rendner.hexviewer.core.view.color;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.view.caret.ICaret;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,7 +44,6 @@ public abstract class AbstractRowColorProvider implements IRowColorProvider
      */
     protected boolean isCaretRowIndex(@NotNull final JHexViewer hexViewer, final int rowIndex)
     {
-        final ICaret caret = hexViewer.getCaret();
-        return caret != null && rowIndex == hexViewer.byteIndexToRowIndex(caret.getDot());
+        return hexViewer.getCaret().filter(caret -> rowIndex == hexViewer.byteIndexToRowIndex(caret.getDot())).isPresent();
     }
 }

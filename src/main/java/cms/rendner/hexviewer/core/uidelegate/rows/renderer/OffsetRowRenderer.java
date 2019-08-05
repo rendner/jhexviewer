@@ -1,12 +1,11 @@
 package cms.rendner.hexviewer.core.uidelegate.rows.renderer;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.formatter.offset.IOffsetValueFormatter;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
-import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.view.caret.ICaret;
+import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 
 import java.awt.*;
 
@@ -58,13 +57,12 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
     {
         if (hexViewer.isShowOffsetCaretIndicator())
         {
-            final ICaret caret = hexViewer.getCaret();
-            if (caret != null)
+            hexViewer.getCaret().map(caret ->
             {
                 final int caretIndex = caret.getDot();
                 final int caretRowIndex = hexViewer.byteIndexToRowIndex(caretIndex);
                 return rowData.rowIndex() == caretRowIndex ? caretIndex : rowData.offset();
-            }
+            });
         }
 
         return rowData.offset();

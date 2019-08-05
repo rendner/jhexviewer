@@ -22,11 +22,7 @@ public abstract class AbstractTheme implements ITheme
         applyBorders(hexViewer);
         applyRowColorProvider(hexViewer);
 
-        final ICaret caret = hexViewer.getCaret();
-        if (caret != null)
-        {
-            customizeCaret(caret);
-        }
+        hexViewer.getCaret().ifPresent(this::customizeCaret);
 
         final IHighlighter highlighter = hexViewer.getHighlighter();
         if (highlighter != null)

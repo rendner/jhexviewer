@@ -171,11 +171,14 @@ public interface ICaret extends IObservable<Void>
     void setBlinkRate(int rate);
 
     /**
-     * Returns true if no bytes are selected.
-     *
-     * @return
+     * @return <code>true</code> if no bytes are selected.
      */
     boolean isSelectionEmpty();
+
+    /**
+     * @return <code>true</code> if one or more bytes are selected.
+     */
+    boolean hasSelection();
 
     /**
      * @return the index of the first selected byte.

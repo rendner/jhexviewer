@@ -1,12 +1,11 @@
 package cms.rendner.hexviewer.core.uidelegate.actions.caret;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
-import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.view.caret.ICaret;
-import cms.rendner.hexviewer.core.view.geom.Range;
+import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import cms.rendner.hexviewer.core.view.geom.Range;
+import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
 import cms.rendner.hexviewer.utils.IndexUtils;
 
@@ -36,33 +35,31 @@ public class VerticalPageAction extends AbstractHexViewerAction
         final JHexViewer hexViewer = getHexViewer(event);
         if (hexViewer != null)
         {
-            final ICaret caret = hexViewer.getCaret();
+            hexViewer.getCaret().ifPresent(
+                    caret -> {
+                        final AreaId id = hexViewer.getFocusedArea();
+                        final ScrollableContainer scrollableByteRowsContainer = hexViewer.getScrollableByteRowsContainer();
+                        final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
 
-            if (caret != null)
-            {
-                final AreaId id = hexViewer.getFocusedArea();
-                final ScrollableContainer scrollableByteRowsContainer = hexViewer.getScrollableByteRowsContainer();
-                final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
+                        final Rectangle visibleRect = scrollableByteRowsContainer.getVisibleRect();
+                        final Rectangle newVisibleRect = getNewVisibleRect(scrollableByteRowsContainer, visibleRect);
+                        final int newCaretPosition = getNewCaretIndex(hexViewer, rowsView, visibleRect, newVisibleRect);
 
-                final Rectangle visibleRect = scrollableByteRowsContainer.getVisibleRect();
-                final Rectangle newVisibleRect = getNewVisibleRect(scrollableByteRowsContainer, visibleRect);
-                final int newCaretPosition = getNewCaretIndex(hexViewer, rowsView, visibleRect, newVisibleRect);
+                        snapToRow(rowsView, newVisibleRect, newCaretPosition);
 
-                snapToRow(rowsView, newVisibleRect, newCaretPosition);
+                        // setting the new caret position results in scrolling automatically to the new caret position
+                        if (select)
+                        {
+                            caret.moveDot(newCaretPosition);
+                        }
+                        else
+                        {
+                            caret.setDot(newCaretPosition);
+                        }
 
-                // setting the new caret position results in scrolling automatically to the new caret position
-                if (select)
-                {
-                    caret.moveDot(newCaretPosition);
-                }
-                else
-                {
-                    caret.setDot(newCaretPosition);
-                }
-
-                // scroll to newVisibleRect to overwrite the automatic scrolling of the caret
-                scrollableByteRowsContainer.scrollRectToVisible(newVisibleRect);
-            }
+                        // scroll to newVisibleRect to overwrite the automatic scrolling of the caret
+                        scrollableByteRowsContainer.scrollRectToVisible(newVisibleRect);
+            });
         }
     }
 
@@ -92,39 +89,40 @@ public class VerticalPageAction extends AbstractHexViewerAction
 
     private int getNewCaretIndex(final JHexViewer hexViewer, final ByteRowsView rowsView, final Rectangle visibleRect, final Rectangle newVisibleRect)
     {
-        final ICaret caret = hexViewer.getCaret();
-        final int caretIndex = caret.getDot();
-        final int rowIndexOfCaret = hexViewer.byteIndexToRowIndex(caretIndex);
-        final int caretIndexInRow = hexViewer.byteIndexToIndexInRow(caretIndex);
+        return hexViewer.getCaret().map(caret -> {
+            final int caretIndex = caret.getDot();
+            final int rowIndexOfCaret = hexViewer.byteIndexToRowIndex(caretIndex);
+            final int caretIndexInRow = hexViewer.byteIndexToIndexInRow(caretIndex);
 
-        final Range visibleRows = rowsView.getRowRange(visibleRect);
+            final Range visibleRows = rowsView.getRowRange(visibleRect);
 
-        if (visibleRows.isValid() && visibleRows.contains(rowIndexOfCaret))
-        {
-            final int rowDelta = (rowIndexOfCaret - visibleRows.getStart());
-            final int caretOffset = (rowDelta * rowsView.bytesPerRow()) + caretIndexInRow;
-            final int rowIndexOfNewLeadingRow = rowsView.verticalLocationToRowIndex(newVisibleRect.y);
-            final int byteIndexOfNewLeadingRow = hexViewer.rowIndexToByteIndex(rowIndexOfNewLeadingRow);
-            return Math.min(hexViewer.lastPossibleCaretIndex(), Math.max(0, byteIndexOfNewLeadingRow + caretOffset));
-        }
-        else
-        {
-            // caret isn't visible
-            if (ScrollDirection.UP == direction)
+            if (visibleRows.isValid() && visibleRows.contains(rowIndexOfCaret))
             {
-                // place in first row
+                final int rowDelta = (rowIndexOfCaret - visibleRows.getStart());
+                final int caretOffset = (rowDelta * rowsView.bytesPerRow()) + caretIndexInRow;
                 final int rowIndexOfNewLeadingRow = rowsView.verticalLocationToRowIndex(newVisibleRect.y);
                 final int byteIndexOfNewLeadingRow = hexViewer.rowIndexToByteIndex(rowIndexOfNewLeadingRow);
-                return Math.min(hexViewer.lastPossibleCaretIndex(), Math.max(0, byteIndexOfNewLeadingRow + caretIndexInRow));
+                return Math.min(hexViewer.lastPossibleCaretIndex(), Math.max(0, byteIndexOfNewLeadingRow + caretOffset));
             }
             else
             {
-                // place in last row
-                final int rowIndexOfNewTrailingRow = rowsView.verticalLocationToRowIndex(newVisibleRect.y + newVisibleRect.height - 1);
-                final int byteIndexOfNewTrailingRow = hexViewer.rowIndexToByteIndex(rowIndexOfNewTrailingRow);
-                return Math.min(hexViewer.lastPossibleCaretIndex(), Math.max(0, byteIndexOfNewTrailingRow + caretIndexInRow));
+                // caret isn't visible
+                if (ScrollDirection.UP == direction)
+                {
+                    // place in first row
+                    final int rowIndexOfNewLeadingRow = rowsView.verticalLocationToRowIndex(newVisibleRect.y);
+                    final int byteIndexOfNewLeadingRow = hexViewer.rowIndexToByteIndex(rowIndexOfNewLeadingRow);
+                    return Math.min(hexViewer.lastPossibleCaretIndex(), Math.max(0, byteIndexOfNewLeadingRow + caretIndexInRow));
+                }
+                else
+                {
+                    // place in last row
+                    final int rowIndexOfNewTrailingRow = rowsView.verticalLocationToRowIndex(newVisibleRect.y + newVisibleRect.height - 1);
+                    final int byteIndexOfNewTrailingRow = hexViewer.rowIndexToByteIndex(rowIndexOfNewTrailingRow);
+                    return Math.min(hexViewer.lastPossibleCaretIndex(), Math.max(0, byteIndexOfNewTrailingRow + caretIndexInRow));
+                }
             }
-        }
+        }).get();
     }
 
     private Rectangle getNewVisibleRect(final ScrollableContainer scrollableByteRowsContainer, final Rectangle visibleRect)

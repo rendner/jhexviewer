@@ -45,6 +45,7 @@ public abstract class AbstractHexViewerAction extends AbstractAction implements 
     @Nullable
     protected final JHexViewer getHexViewer(@NotNull final ActionEvent event)
     {
+        // todo: return optional
         final Object source = event.getSource();
         if (source instanceof JHexViewer)
         {

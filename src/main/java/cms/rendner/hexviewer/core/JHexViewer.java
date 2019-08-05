@@ -1002,7 +1002,7 @@ public class JHexViewer extends JComponent
             }
 
             invalidate();
-            getDamager().ifPresent(damager -> damager.damageAllAreas());
+            getDamager().ifPresent(IDamager::damageAllAreas);
         }
     }
 
@@ -1010,13 +1010,12 @@ public class JHexViewer extends JComponent
      * Returns the caret that allows text-oriented navigation over
      * the view.
      *
-     * @return the caret if installed, otherwise <code>null</code>
+     * @return the installed caret.
      */
-    @Nullable
-    public ICaret getCaret()
+    @NotNull
+    public Optional<ICaret> getCaret()
     {
-        // TODO: always return a valid caret (NOPCaret?) so that this property is never null (fallbackValue)
-        return caret;
+        return Optional.ofNullable(caret);
     }
 
     /**
