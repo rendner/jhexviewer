@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -18,23 +19,15 @@ public class FallbackValue<T>
     /**
      * The fallback value.
      */
-    @Nullable
+    @NotNull
     private T fallbackValue;
-
-    /**
-     * Creates an empty instance and sets the fallback value to <code>null</code>.
-     */
-    public FallbackValue()
-    {
-        this(null);
-    }
 
     /**
      * Creates an instance with the specified fallback value.
      *
      * @param fallbackValue the fallback value to use if no value is set.
      */
-    public FallbackValue(@Nullable final T fallbackValue)
+    public FallbackValue(@NotNull final T fallbackValue)
     {
         super();
         this.fallbackValue = fallbackValue;
@@ -45,7 +38,7 @@ public class FallbackValue<T>
      *
      * @param fallbackValue the fallback value to set.
      */
-    public void setFallbackValue(@Nullable final T fallbackValue)
+    public void setFallbackValue(@NotNull final T fallbackValue)
     {
         this.fallbackValue = fallbackValue;
     }
@@ -53,7 +46,7 @@ public class FallbackValue<T>
     /**
      * @return the preferred value if not <code>null</code> otherwise the fallback value.
      */
-    @Nullable
+    @NotNull
     public T getValue()
     {
         return preferredValue != null ? preferredValue : fallbackValue;

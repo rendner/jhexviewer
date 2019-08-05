@@ -43,6 +43,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -105,30 +107,13 @@ public class JHexViewer extends JComponent
     @NotNull
     private static final String uiClassID = "HexViewerUI";
 
-
     /**
-     * The value formatter to format the values displayed by the offset area.
+     * Stores the value formatter to format the text content displayed by the areas.
      * Even if no one was set directly by the user, a default formatter is available which was set by the
-     * installed ui delegate.
+     * hexViewer during the initialisation phase.
      */
     @NotNull
-    protected final FallbackValue<IOffsetValueFormatter> offsetValueFormatter = new FallbackValue<>();
-
-    /**
-     * The value formatter to format the bytes displayed by the hex area.
-     * Even if no one was set directly by the user, a default formatter is available which was set by the
-     * installed ui delegate.
-     */
-    @NotNull
-    protected final FallbackValue<IValueFormatter> hexValueFormatter = new FallbackValue<>();
-
-    /**
-     * The value formatter to format the bytes displayed by the ascii area.
-     * Even if no one was set directly by the user, a default formatter is available which was set by the
-     * installed ui delegate.
-     */
-    @NotNull
-    protected final FallbackValue<IValueFormatter> asciiValueFormatter = new FallbackValue<>();
+    protected final Map<AreaId, FallbackValue<IValueFormatter>> valueFormatterMap = new EnumMap<>(AreaId.class);
 
     /**
      * Internal callback handler to hide the public callback methods.
@@ -298,30 +283,19 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_OFFSET_FORMATTER} is fired when formatter has changed.
      *
-     * @param newValue the new formatter.
+     * @param newValue the new formatter, passing <code>null</code> will activate the default formatter.
      */
     public void setOffsetFormatter(@Nullable final IOffsetValueFormatter newValue)
     {
-        final IOffsetValueFormatter oldValue = offsetValueFormatter.getValue();
+        final FallbackValue<IValueFormatter> formatter = valueFormatterMap.get(AreaId.OFFSET);
+        final IValueFormatter oldValue = formatter.getPreferredValue();
 
-        if (newValue == null)
+        if(newValue != oldValue)
         {
-            if (offsetValueFormatter.getPreferredValue() == null)
-            {
-                return;
-            }
-        }
-
-        if (oldValue != newValue)
-        {
-            offsetValueFormatter.setPreferredValue(newValue);
+            formatter.setPreferredValue(newValue);
             recreateOffsetRowTemplate();
-            firePropertyChange(PROPERTY_OFFSET_FORMATTER, oldValue, offsetValueFormatter.getValue());
-
-            if (damager != null)
-            {
-                damager.damageArea(AreaId.OFFSET);
-            }
+            firePropertyChange(PROPERTY_OFFSET_FORMATTER, oldValue, formatter.getValue());
+            getDamager().ifPresent(damager -> damager.damageArea(AreaId.OFFSET));
         }
     }
 
@@ -332,29 +306,18 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_HEX_FORMATTER} is fired when formatter has changed.
      *
-     * @param newValue the new formatter.
+     * @param newValue the new formatter, passing <code>null</code> will activate the default formatter.
      */
     public void setHexFormatter(@Nullable final IValueFormatter newValue)
     {
-        final IValueFormatter oldValue = hexValueFormatter.getValue();
+        final FallbackValue<IValueFormatter> formatter = valueFormatterMap.get(AreaId.HEX);
+        final IValueFormatter oldValue = formatter.getPreferredValue();
 
-        if (newValue == null)
+        if(newValue != oldValue)
         {
-            if (hexValueFormatter.getPreferredValue() == null)
-            {
-                return;
-            }
-        }
-
-        if (oldValue != newValue)
-        {
-            hexValueFormatter.setPreferredValue(newValue);
-            firePropertyChange(PROPERTY_HEX_FORMATTER, oldValue, hexValueFormatter.getValue());
-
-            if (damager != null)
-            {
-                damager.damageArea(AreaId.HEX);
-            }
+            formatter.setPreferredValue(newValue);
+            firePropertyChange(PROPERTY_HEX_FORMATTER, oldValue, formatter.getValue());
+            getDamager().ifPresent(damager -> damager.damageArea(AreaId.HEX));
         }
     }
 
@@ -365,63 +328,49 @@ public class JHexViewer extends JComponent
      * <p/>
      * A PropertyChange event {@link JHexViewer#PROPERTY_ASCII_FORMATTER} is fired when formatter has changed.
      *
-     * @param newValue the new formatter.
+     * @param newValue the new formatter, passing <code>null</code> will activate the default formatter.
      */
     public void setAsciiFormatter(@Nullable final IValueFormatter newValue)
     {
-        final IValueFormatter oldValue = asciiValueFormatter.getValue();
+        final FallbackValue<IValueFormatter> formatter = valueFormatterMap.get(AreaId.ASCII);
+        final IValueFormatter oldValue = formatter.getPreferredValue();
 
-        if (newValue == null)
+        if(newValue != oldValue)
         {
-            if (asciiValueFormatter.getPreferredValue() == null)
-            {
-                return;
-            }
-        }
-
-        if (oldValue != newValue)
-        {
-            asciiValueFormatter.setPreferredValue(newValue);
-            firePropertyChange(PROPERTY_ASCII_FORMATTER, oldValue, asciiValueFormatter.getValue());
-
-            if (damager != null)
-            {
-                damager.damageArea(AreaId.ASCII);
-            }
+            formatter.setPreferredValue(newValue);
+            firePropertyChange(PROPERTY_ASCII_FORMATTER, oldValue, formatter.getValue());
+            getDamager().ifPresent(damager -> damager.damageArea(AreaId.ASCII));
         }
     }
 
     /**
      * @return the current used formatter to format the displayed values of the offset area.
-     * Can't be <code>null</code>, even if no one was set in this case the default formatter provided by the
-     * installed ui delegate will be returned.
+     * Can't be <code>null</code>, even if no one was set in this case a default formatter will be returned.
      */
     @NotNull
     public IOffsetValueFormatter getOffsetValueFormatter()
     {
-        return offsetValueFormatter.getValue();
+        return (IOffsetValueFormatter) valueFormatterMap.get(AreaId.OFFSET).getValue();
     }
 
     /**
      * @return the current used formatter to format the displayed bytes of the hex area.
-     * Can't be <code>null</code>, even if no one was set in this case the default formatter provided by the
-     * installed ui delegate will be returned.
+     * Can't be <code>null</code>, even if no one was set in this case a default formatter will be returned.
      */
     @NotNull
     public IValueFormatter getHexValueFormatter()
     {
-        return hexValueFormatter.getValue();
+        return valueFormatterMap.get(AreaId.HEX).getValue();
     }
 
     /**
      * @return the current used formatter to format the displayed bytes of the ascii area.
-     * Can't be <code>null</code>, even if no one was set in this case the default formatter provided by the
-     * installed ui delegate will be returned.
+     * Can't be <code>null</code>, even if no one was set in this case a default formatter will be returned.
      */
     @NotNull
     public IValueFormatter getAsciiValueFormatter()
     {
-        return asciiValueFormatter.getValue();
+        return valueFormatterMap.get(AreaId.ASCII).getValue();
     }
 
     /**
@@ -1207,6 +1156,7 @@ public class JHexViewer extends JComponent
     {
         setLayout(new BorderLayout());
         setFocusTraversalKeysEnabled(false);
+        setupValueFormatterMap(valueFormatterMap);
 
         internalHandler = createInternalHandler();
 
@@ -1288,12 +1238,21 @@ public class JHexViewer extends JComponent
      */
     protected void createDefaultModels()
     {
-        offsetValueFormatter.setFallbackValue(new OffsetFormatter(4));
-        hexValueFormatter.setFallbackValue(new LookupValueFormatter(LookupTableFactory.createHexTable()));
-        asciiValueFormatter.setFallbackValue(new LookupValueFormatter(LookupTableFactory.createAsciiTable()));
-
         setRowTemplateConfiguration(DefaultRowTemplateConfiguration.newBuilder().build());
         setDataModel(new DefaultDataModel());
+    }
+
+    /**
+     * This method should add for each area a FallbackValue which provides a valid fallback value provider.
+     * This fallback provider will be used if no additional provider was set by the user.
+     *
+     * @param map the map to fill with the fallback instances.
+     */
+    protected void setupValueFormatterMap(@NotNull final Map<AreaId, FallbackValue<IValueFormatter>> map)
+    {
+        map.put(AreaId.OFFSET, new FallbackValue<>(new OffsetFormatter(4)));
+        map.put(AreaId.HEX, new FallbackValue<>(new LookupValueFormatter(LookupTableFactory.createHexTable())));
+        map.put(AreaId.ASCII, new FallbackValue<>(new LookupValueFormatter(LookupTableFactory.createAsciiTable())));
     }
 
     /**
