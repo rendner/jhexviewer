@@ -212,6 +212,8 @@ public class DefaultPaintDelegate implements IPaintDelegate
     {
         final AreaId areaId = rowsView.getId();
         final IOffsetRowTemplate rowTemplate = rowsView.template();
+
+        @SuppressWarnings("unchecked")
         final IRowRenderer<IOffsetRowTemplate> renderer = (IRowRenderer<IOffsetRowTemplate>) rowRendererMap.get(areaId).getValue();
 
         prepareContextForArea(areaId);
@@ -247,6 +249,8 @@ public class DefaultPaintDelegate implements IPaintDelegate
     {
         final AreaId areaId = rowsView.getId();
         final IByteRowTemplate rowTemplate = rowsView.template();
+
+        @SuppressWarnings("unchecked")
         final IRowRenderer<IByteRowTemplate> renderer = (IRowRenderer<IByteRowTemplate>) rowRendererMap.get(areaId).getValue();
 
         prepareContextForArea(areaId);
