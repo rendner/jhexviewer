@@ -1,7 +1,6 @@
 package example;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.core.view.IContextMenuFactory;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
@@ -28,7 +27,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -328,20 +326,22 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
 
     private void visitSelectedBytes(@NotNull final JHexViewer hexViewer, @NotNull final IRowWiseByteVisitor visitor)
     {
-        hexViewer.getCaret().ifPresent(caret -> {
-            final IDataModel bytes = Objects.requireNonNull(hexViewer.getDataModel());
-            final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.bytesPerRow());
-            walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
-        });
+        hexViewer.getDataModel().ifPresent(bytes ->
+                hexViewer.getCaret().ifPresent(caret -> {
+                    final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.bytesPerRow());
+                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                })
+        );
     }
 
     private void visitSelectedBytes(@NotNull final JHexViewer hexViewer, @NotNull final IByteVisitor visitor)
     {
-        hexViewer.getCaret().ifPresent(caret -> {
-            final IDataModel bytes = Objects.requireNonNull(hexViewer.getDataModel());
-            final ByteWalker walker = new ByteWalker(bytes);
-            walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
-        });
+        hexViewer.getDataModel().ifPresent(bytes ->
+                hexViewer.getCaret().ifPresent(caret -> {
+                    final ByteWalker walker = new ByteWalker(bytes);
+                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                })
+        );
     }
 
     private void copyToClipboard(@NotNull final String content)

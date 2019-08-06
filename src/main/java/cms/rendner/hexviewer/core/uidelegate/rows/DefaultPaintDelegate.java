@@ -25,10 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Default implementation which paints the rows of the three areas of the {@link JHexViewer}.
@@ -139,7 +137,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *
      * @param rowRendererMap the map to fill.
      */
-    protected void addDefaultRowRenderer(final Map<AreaId, FallbackValue<IRowRenderer<? extends IRowTemplate>>> rowRendererMap)
+    protected void addDefaultRowRenderer(@NotNull final Map<AreaId, FallbackValue<IRowRenderer<? extends IRowTemplate>>> rowRendererMap)
     {
         rowRendererMap.put(AreaId.OFFSET, new FallbackValue<>(new OffsetRowRenderer()));
         rowRendererMap.put(AreaId.HEX, new FallbackValue<>(new ByteRowRenderer()));
@@ -153,7 +151,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *
      * @param rowColorProviderMap the map to fill.
      */
-    protected void addDefaultRowColorProvider(final Map<AreaId, FallbackValue<IRowColorProvider>> rowColorProviderMap)
+    protected void addDefaultRowColorProvider(@NotNull final Map<AreaId, FallbackValue<IRowColorProvider>> rowColorProviderMap)
     {
         final IRowColorProvider defaultProvider = new DefaultRowColorProvider();
         rowColorProviderMap.put(AreaId.OFFSET, new FallbackValue<>(defaultProvider));
@@ -171,7 +169,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      * @param rowsView        the component being painted.
      */
 
-    protected void paintDirtyRows(final Graphics g, final List<RowGraphicsAndData> rowGraphicsAndDataList, final RowBasedView rowsView)
+    protected void paintDirtyRows(@NotNull final Graphics g, @NotNull final List<RowGraphicsAndData> rowGraphicsAndDataList, @NotNull final RowBasedView rowsView)
     {
         try
         {
@@ -210,7 +208,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *                        to be repainted.
      * @param rowsView        the component being painted.
      */
-    protected void paintOffsetRows(final List<RowGraphicsAndData> rowGraphicsAndDataList, final OffsetRowsView rowsView)
+    protected void paintOffsetRows(@NotNull final List<RowGraphicsAndData> rowGraphicsAndDataList, @NotNull final OffsetRowsView rowsView)
     {
         final AreaId areaId = rowsView.getId();
         final IOffsetRowTemplate rowTemplate = rowsView.template();
@@ -245,7 +243,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *                        to be repainted.
      * @param rowsView        the component being painted.
      */
-    protected void paintByteRows(final Graphics g, final List<RowGraphicsAndData> rowGraphicsAndDataList, final ByteRowsView rowsView)
+    protected void paintByteRows(@NotNull final Graphics g, @NotNull final List<RowGraphicsAndData> rowGraphicsAndDataList, @NotNull final ByteRowsView rowsView)
     {
         final AreaId areaId = rowsView.getId();
         final IByteRowTemplate rowTemplate = rowsView.template();
@@ -279,7 +277,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *
      * @param id the area to paint.
      */
-    protected void prepareContextForArea(final AreaId id)
+    protected void prepareContextForArea(@NotNull final AreaId id)
     {
         context.setAreaId(id);
         context.setColorProvider(rowColorProviderMap.get(id).getValue());
@@ -293,7 +291,8 @@ public class DefaultPaintDelegate implements IPaintDelegate
      * @param rowsView  the component being painted.
      * @return list of RowGraphicsAndData which provide the data used to repaint a row.
      */
-    protected List<RowGraphicsAndData> createRowGraphicsAndData(final Graphics g, final Range dirtyRows, final RowBasedView rowsView)
+    @NotNull
+    protected List<RowGraphicsAndData> createRowGraphicsAndData(@NotNull final Graphics g, @NotNull final Range dirtyRows, @NotNull final RowBasedView rowsView)
     {
         final List<RowGraphicsAndData> result = new ArrayList<>(dirtyRows.getLength());
 
@@ -301,9 +300,10 @@ public class DefaultPaintDelegate implements IPaintDelegate
 
         for (int rowIndex = dirtyRows.getStart(); rowIndex <= dirtyRows.getEnd(); rowIndex++)
         {
-            final Graphics rowGraphics = g.create(rvRowRect.x, rvRowRect.y, rvRowRect.width, rvRowRect.height);
-            final IRowData rowData = getRowData(rowIndex);
-            result.add(new RowGraphicsAndData(rowGraphics, rowData));
+            getRowData(rowIndex).ifPresent(rowData -> {
+                final Graphics rowGraphics = g.create(rvRowRect.x, rvRowRect.y, rvRowRect.width, rvRowRect.height);
+                result.add(new RowGraphicsAndData(rowGraphics, rowData));
+            });
 
             rvRowRect.y += rvRowRect.height;
         }
@@ -317,11 +317,14 @@ public class DefaultPaintDelegate implements IPaintDelegate
      * @param rowIndex the index of the row.
      * @return the bytes of the specified row, never <code>null</code>.
      */
-    protected IRowData getRowData(final int rowIndex)
+    @NotNull
+    protected Optional<IRowData> getRowData(final int rowIndex)
     {
-        final RowData result = new RowData(hexViewer.getDataModel(), hexViewer.bytesPerRow());
-        result.setRowIndex(rowIndex);
-        return result;
+        return hexViewer.getDataModel().map(data -> {
+            final RowData result = new RowData(data, hexViewer.bytesPerRow());
+            result.setRowIndex(rowIndex);
+            return result;
+        });
     }
 
     /**
@@ -329,7 +332,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *
      * @param rowsView the view component to adjust.
      */
-    protected void copyHexViewerFontInto(final RowBasedView rowsView)
+    protected void copyHexViewerFontInto(@NotNull final RowBasedView rowsView)
     {
         rowsView.setFont(hexViewer.getFont());
     }
@@ -339,7 +342,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      *
      * @param rowGraphicsAndDataList list to dispose.
      */
-    protected void disposeRowGraphics(final List<RowGraphicsAndData> rowGraphicsAndDataList)
+    protected void disposeRowGraphics(@NotNull final List<RowGraphicsAndData> rowGraphicsAndDataList)
     {
         for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
         {
@@ -356,11 +359,13 @@ public class DefaultPaintDelegate implements IPaintDelegate
         /**
          * The Graphics instance with the dimension and coordinates of the specified row.
          */
+        @NotNull
         final Graphics g;
 
         /**
          * The data to render for the row.
          */
+        @NotNull
         final IRowData rowData;
 
         /**
@@ -369,7 +374,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
          * @param g     the Graphics instance used to repaint the row.
          * @param rowData the data to render for the row.
          */
-        public RowGraphicsAndData(final Graphics g, final IRowData rowData)
+        public RowGraphicsAndData(@NotNull final Graphics g, @NotNull final IRowData rowData)
         {
             super();
 

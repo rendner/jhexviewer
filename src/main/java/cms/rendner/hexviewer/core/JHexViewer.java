@@ -891,10 +891,10 @@ public class JHexViewer extends JComponent
      *
      * @return the data provider.
      */
-    @Nullable
-    public IDataModel getDataModel()
+    @NotNull
+    public Optional<IDataModel> getDataModel()
     {
-        return dataModel;
+        return Optional.ofNullable(dataModel);
     }
 
     /**
@@ -1099,12 +1099,7 @@ public class JHexViewer extends JComponent
      */
     public int lastPossibleByteIndex()
     {
-        if (hasData())
-        {
-            return Math.max(0, dataModel.size() - 1);
-        }
-
-        return 0;
+        return getDataModel().map(data -> Math.max(0, data.size() - 1)).orElse(0);
     }
 
     /**
@@ -1118,12 +1113,7 @@ public class JHexViewer extends JComponent
      */
     public int lastPossibleCaretIndex()
     {
-        if (hasData())
-        {
-            return dataModel.size();
-        }
-
-        return 0;
+        return getDataModel().map(IDataModel::size).orElse(0);
     }
 
     /**
@@ -1137,16 +1127,6 @@ public class JHexViewer extends JComponent
     public int rowHeight()
     {
         return hexRowsView.rowHeight();
-    }
-
-    /**
-     * Checks if a data model is set and if this contains data.
-     *
-     * @return <code>true</code> if a data model is set and isn't empty.
-     */
-    public boolean hasData()
-    {
-        return dataModel != null && !dataModel.isEmpty();
     }
 
     /**
