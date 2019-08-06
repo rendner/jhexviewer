@@ -89,24 +89,6 @@ public class JHexViewer extends JComponent
      */
     @NotNull
     public static final String PROPERTY_ROW_TEMPLATE_CONFIGURATION = "rowTemplateConfiguration";
-    /**
-     * Constant used to determine when the offset <code>formatter</code> property has changed.
-     * Note that either value (old and new) can also be null.
-     */
-    @NotNull
-    private static final String PROPERTY_OFFSET_FORMATTER = "offsetFormatter";
-    /**
-     * Constant used to determine when the hex <code>formatter</code> property has changed.
-     * Note that either value (old and new) can also be null.
-     */
-    @NotNull
-    private static final String PROPERTY_HEX_FORMATTER = "hexFormatter";
-    /**
-     * Constant used to determine when the ascii <code>formatter</code> property has changed.
-     * Note that either value (old and new) can also be null.
-     */
-    @NotNull
-    private static final String PROPERTY_ASCII_FORMATTER = "asciiFormatter";
 
     /**
      * @see #getUIClassID
@@ -287,8 +269,6 @@ public class JHexViewer extends JComponent
      * <p/>
      * Changing the formatter results in a recreation of the internal row template used by the offset area
      * which depends on the used formatter. And a complete repainting of the offset area.
-     * <p/>
-     * A PropertyChange event {@link JHexViewer#PROPERTY_OFFSET_FORMATTER} is fired when formatter has changed.
      *
      * @param newValue the new formatter, passing <code>null</code> will activate the default formatter.
      */
@@ -301,7 +281,6 @@ public class JHexViewer extends JComponent
         {
             formatter.setPreferredValue(newValue);
             recreateOffsetRowTemplate(createRowTemplateFactoryContext());
-            firePropertyChange(PROPERTY_OFFSET_FORMATTER, oldValue, formatter.getValue());
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.OFFSET));
         }
     }
@@ -310,8 +289,6 @@ public class JHexViewer extends JComponent
      * Sets the new formatter to format the bytes displayed by the hex area.
      * <p/>
      * Changing the formatter results in a complete repainting of the hex area.
-     * <p/>
-     * A PropertyChange event {@link JHexViewer#PROPERTY_HEX_FORMATTER} is fired when formatter has changed.
      *
      * @param newValue the new formatter, passing <code>null</code> will activate the default formatter.
      */
@@ -323,7 +300,6 @@ public class JHexViewer extends JComponent
         if(newValue != oldValue)
         {
             formatter.setPreferredValue(newValue);
-            firePropertyChange(PROPERTY_HEX_FORMATTER, oldValue, formatter.getValue());
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.HEX));
         }
     }
@@ -332,8 +308,6 @@ public class JHexViewer extends JComponent
      * Sets the new formatter to format the bytes displayed by the hex ascii.
      * <p/>
      * Changing the formatter results in a complete repainting of the ascii area.
-     * <p/>
-     * A PropertyChange event {@link JHexViewer#PROPERTY_ASCII_FORMATTER} is fired when formatter has changed.
      *
      * @param newValue the new formatter, passing <code>null</code> will activate the default formatter.
      */
@@ -345,7 +319,6 @@ public class JHexViewer extends JComponent
         if(newValue != oldValue)
         {
             formatter.setPreferredValue(newValue);
-            firePropertyChange(PROPERTY_ASCII_FORMATTER, oldValue, formatter.getValue());
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.ASCII));
         }
     }
