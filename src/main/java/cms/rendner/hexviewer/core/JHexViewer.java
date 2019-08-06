@@ -593,31 +593,6 @@ public class JHexViewer extends JComponent
     }
 
     /**
-     * Returns the row template to be used to render a row of the offset area.
-     *
-     * @return the row template for the area.
-     */
-    @Nullable
-    public IOffsetRowTemplate getOffsetRowTemplate()
-    {
-        return getOffsetRowsView().template();
-    }
-
-    /**
-     * Returns the row template to be used to render a row of a byte area.
-     *
-     * @param id the id of the byte area for which the row template should be returned.
-     * @return the row template for the area.
-     * @throws IllegalArgumentException if <code>id</code> not a byte area.
-     * @see #isByteArea(AreaId)
-     */
-    @Nullable
-    public IByteRowTemplate getByteRowTemplate(@NotNull final AreaId id)
-    {
-        return getByteRowsView(id).template();
-    }
-
-    /**
      * Returns the scroll delegate to be used to scroll the internal <code>byteRowsViewContainer</code>.
      *
      * @return the delegate or <code>null</code> if no delegate was set.
@@ -1411,16 +1386,12 @@ public class JHexViewer extends JComponent
      */
     protected boolean shouldOffsetRowTemplateRecreated()
     {
-        final IOffsetRowTemplate rowTemplate = getOffsetRowTemplate();
-        if (rowTemplate != null)
-        {
+        return offsetRowsView.template().map(rowTemplate -> {
             final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
             final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
             return (rowTemplate.onlyDigitsCount() != digitOffsetCharCount ||
                     rowTemplate.totalCharsCount() != totalOffsetCharCount);
-        }
-
-        return true;
+        }).orElse(Boolean.TRUE);
     }
 
     /**

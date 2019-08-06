@@ -210,20 +210,20 @@ public class DefaultPaintDelegate implements IPaintDelegate
      */
     protected void paintOffsetRows(@NotNull final List<RowGraphicsAndData> rowGraphicsAndDataList, @NotNull final OffsetRowsView rowsView)
     {
-        final AreaId areaId = rowsView.getId();
-        final IOffsetRowTemplate rowTemplate = rowsView.template();
+        rowsView.template().ifPresent(rowTemplate -> {
+            final AreaId areaId = rowsView.getId();
+            @SuppressWarnings("unchecked")
+            final IRowRenderer<IOffsetRowTemplate> renderer = (IRowRenderer<IOffsetRowTemplate>) rowRendererMap.get(areaId).getValue();
 
-        @SuppressWarnings("unchecked")
-        final IRowRenderer<IOffsetRowTemplate> renderer = (IRowRenderer<IOffsetRowTemplate>) rowRendererMap.get(areaId).getValue();
+            prepareContextForArea(areaId);
 
-        prepareContextForArea(areaId);
-
-        for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
-        {
-            context.setRowData(rowGraphicsAndData.rowData);
-            renderer.paintBackground(rowGraphicsAndData.g, rowTemplate, context);
-            renderer.paintForeground(rowGraphicsAndData.g, rowTemplate, context);
-        }
+            for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
+            {
+                context.setRowData(rowGraphicsAndData.rowData);
+                renderer.paintBackground(rowGraphicsAndData.g, rowTemplate, context);
+                renderer.paintForeground(rowGraphicsAndData.g, rowTemplate, context);
+            }
+        });
     }
 
     /**
@@ -247,33 +247,33 @@ public class DefaultPaintDelegate implements IPaintDelegate
      */
     protected void paintByteRows(@NotNull final Graphics g, @NotNull final List<RowGraphicsAndData> rowGraphicsAndDataList, @NotNull final ByteRowsView rowsView)
     {
-        final AreaId areaId = rowsView.getId();
-        final IByteRowTemplate rowTemplate = rowsView.template();
+        rowsView.template().ifPresent(rowTemplate -> {
+            final AreaId areaId = rowsView.getId();
+            @SuppressWarnings("unchecked")
+            final IRowRenderer<IByteRowTemplate> renderer = (IRowRenderer<IByteRowTemplate>) rowRendererMap.get(areaId).getValue();
 
-        @SuppressWarnings("unchecked")
-        final IRowRenderer<IByteRowTemplate> renderer = (IRowRenderer<IByteRowTemplate>) rowRendererMap.get(areaId).getValue();
+            prepareContextForArea(areaId);
 
-        prepareContextForArea(areaId);
+            for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
+            {
+                context.setRowData(rowGraphicsAndData.rowData);
+                renderer.paintBackground(rowGraphicsAndData.g, rowTemplate, context);
+            }
 
-        for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
-        {
-            context.setRowData(rowGraphicsAndData.rowData);
-            renderer.paintBackground(rowGraphicsAndData.g, rowTemplate, context);
-        }
+            final IHighlighter highlighter = hexViewer.getHighlighter();
+            if (highlighter != null)
+            {
+                highlighter.paint(g, rowsView);
+            }
 
-        final IHighlighter highlighter = hexViewer.getHighlighter();
-        if (highlighter != null)
-        {
-            highlighter.paint(g, rowsView);
-        }
+            hexViewer.getCaret().ifPresent(caret -> caret.paint(g, rowsView));
 
-        hexViewer.getCaret().ifPresent(caret -> caret.paint(g, rowsView));
-
-        for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
-        {
-            context.setRowData(rowGraphicsAndData.rowData);
-            renderer.paintForeground(rowGraphicsAndData.g, rowTemplate, context);
-        }
+            for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)
+            {
+                context.setRowData(rowGraphicsAndData.rowData);
+                renderer.paintForeground(rowGraphicsAndData.g, rowTemplate, context);
+            }
+        });
     }
 
     /**

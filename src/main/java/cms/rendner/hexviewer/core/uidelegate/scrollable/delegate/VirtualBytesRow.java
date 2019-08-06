@@ -1,7 +1,6 @@
 package cms.rendner.hexviewer.core.uidelegate.scrollable.delegate;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
@@ -148,15 +147,12 @@ public class VirtualBytesRow
     private int virtualXLocationToElementIndex(@NotNull final AreaId id, final int virtualXLocation)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
-        final IByteRowTemplate rowTemplate = rowsView.template();
 
-        if (rowTemplate == null)
+        return rowsView.template().map(rowTemplate ->
         {
-            return INVALID_INDEX;
-        }
-
-        final int xInRowTemplate = virtualXLocation - rowsView.getX();
-        rowTemplate.hitTest(xInRowTemplate, rvHitInfo);
-        return rvHitInfo.index();
+            final int xInRowTemplate = virtualXLocation - rowsView.getX();
+            rowTemplate.hitTest(xInRowTemplate, rvHitInfo);
+            return rvHitInfo.index();
+        }).orElse(INVALID_INDEX);
     }
 }

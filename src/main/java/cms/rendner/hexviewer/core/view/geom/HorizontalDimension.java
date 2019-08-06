@@ -91,6 +91,14 @@ public class HorizontalDimension
         return width;
     }
 
+    /**
+     * Sets all properties to <code>0</code>.
+     */
+    public void clear()
+    {
+        x = width = 0;
+    }
+
     @Override
     public boolean equals(Object o)
     {

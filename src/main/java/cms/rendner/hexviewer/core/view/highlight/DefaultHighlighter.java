@@ -1,7 +1,6 @@
 package cms.rendner.hexviewer.core.view.highlight;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
@@ -184,11 +183,13 @@ public class DefaultHighlighter extends AbstractHighlighter
     @NotNull
     protected HorizontalDimension computeRowElementsDimension(@NotNull final ByteRowsView rowsView, @NotNull final HorizontalDimension returnValue)
     {
-        final IRowTemplate rowTemplate = rowsView.template();
-        rowTemplate.elementBounds(0, rowTemplate.elementCount() - 1, rvRowElementsBounds);
-        returnValue.setX(rvRowElementsBounds.x);
-        returnValue.setWidth(rvRowElementsBounds.width);
-        return returnValue;
+        returnValue.clear();
+        return rowsView.template().map(rowTemplate -> {
+            rowTemplate.elementBounds(0, rowTemplate.elementCount() - 1, rvRowElementsBounds);
+            returnValue.setX(rvRowElementsBounds.x);
+            returnValue.setWidth(rvRowElementsBounds.width);
+            return returnValue;
+        }).orElse(returnValue);
     }
 
     /**

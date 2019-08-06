@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Optional;
 
 /**
  * View component which displays the rows of an area of the JHexViewer.
@@ -58,6 +59,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * The template to use to render the bytes in rows.
      */
+    @Nullable
     protected T rowTemplate;
 
     /**
@@ -117,12 +119,12 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return the row template used to align the bytes in rows, may be temporarily <code>null</code>.
+     * @return the row template used to align the bytes in rows.
      */
-    @Nullable
-    public T template()
+    @NotNull
+    public Optional<T> template()
     {
-        return rowTemplate;
+        return Optional.ofNullable(rowTemplate);
     }
 
     /**
