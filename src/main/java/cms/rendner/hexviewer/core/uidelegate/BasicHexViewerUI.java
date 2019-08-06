@@ -93,7 +93,7 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setDamager(createDamager());
         }
 
-        final IRowTemplateFactory rowTemplateFactory = hexViewer.getRowTemplateFactory();
+        final IRowTemplateFactory rowTemplateFactory = hexViewer.getRowTemplateFactory().orElse(null);
         if (rowTemplateFactory == null || rowTemplateFactory instanceof UIResource)
         {
             hexViewer.setRowTemplateFactory(createRowTemplateFactory());
@@ -145,7 +145,7 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setTransferHandler(null);
         }
 
-        if (hexViewer.getRowTemplateFactory() instanceof UIResource)
+        if (hexViewer.getRowTemplateFactory().orElse(null) instanceof UIResource)
         {
             hexViewer.setRowTemplateFactory(null);
         }

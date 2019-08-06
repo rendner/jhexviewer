@@ -1,6 +1,5 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.FixedValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
@@ -21,9 +20,9 @@ import java.util.List;
 public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
 {
     /**
-     * Context.
+     * The temporary context which is used during the creation of row templates.
      */
-    protected Context context;
+    protected TemplateFactoryContext context;
 
     /**
      * Computes the width of a char.
@@ -124,19 +123,5 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
         }
 
         return (int) Math.round(result);
-    }
-
-    /**
-     * Initializes the temporary context which is used during the creation of row templates.
-     * The context has to be recreated whenever a new row template has to be created to ensure that no outdated values
-     * are used.
-     *
-     * @param hexViewer reference to the {@link JHexViewer} component.
-     * @return the actual context.
-     */
-    @NotNull
-    protected Context createFreshContext(@NotNull final JHexViewer hexViewer)
-    {
-        return new Context(hexViewer);
     }
 }

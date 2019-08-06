@@ -1,6 +1,5 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.*;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
@@ -24,46 +23,50 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 {
     @NotNull
     @Override
-    public IOffsetRowTemplate createOffsetTemplate(@NotNull final JHexViewer hexViewer, final int totalCharsCount, final int onlyDigitsCount)
+    public IOffsetRowTemplate createOffsetTemplate(@NotNull final TemplateFactoryContext context, final int totalCharsCount, final int onlyDigitsCount)
     {
-        context = createFreshContext(hexViewer);
+        this.context = context;
 
         final RowInsets rowInsets = context.getConfiguration().rowInsets(AreaId.OFFSET);
         final ElementDimension elementDimension = computeElementDimension(totalCharsCount);
         final List<IElement> elements = createOffsetRowElements(rowInsets, elementDimension);
         final IOffsetRowTemplate result = createOffsetRowTemplate(elements, rowInsets, totalCharsCount, onlyDigitsCount);
 
+        this.context = null;
+
         return result;
     }
 
     @NotNull
     @Override
-    public IByteRowTemplate createHexTemplate(@NotNull final JHexViewer hexViewer, final int bytesPerRow)
+    public IByteRowTemplate createHexTemplate(@NotNull final TemplateFactoryContext context)
     {
-        context = createFreshContext(hexViewer);
+        this.context = context;
 
-        final IRowTemplateConfiguration configuration = context.getConfiguration();
-        final int caretWidth = computeValue(configuration.caretWidth());
-        final RowInsets rowInsets = configuration.rowInsets(AreaId.HEX);
+        final int caretWidth = computeValue(context.getConfiguration().caretWidth());
+        final RowInsets rowInsets = context.getConfiguration().rowInsets(AreaId.HEX);
         final IElement.IDimension byteDimension = computeElementDimension(2);
         final List<IElement> bytes = createHexRowElements(rowInsets, byteDimension, caretWidth);
         final IByteRowTemplate result = createByteRowTemplate(bytes, rowInsets, caretWidth);
 
+        this.context = null;
+
         return result;
     }
 
     @NotNull
     @Override
-    public IByteRowTemplate createAsciiTemplate(@NotNull final JHexViewer hexViewer, final int bytesPerRow)
+    public IByteRowTemplate createAsciiTemplate(@NotNull final TemplateFactoryContext context)
     {
-        context = createFreshContext(hexViewer);
+        this.context = context;
 
-        final IRowTemplateConfiguration configuration = context.getConfiguration();
-        final int caretWidth = computeValue(configuration.caretWidth());
-        final RowInsets rowInsets = configuration.rowInsets(AreaId.ASCII);
+        final int caretWidth = computeValue(context.getConfiguration().caretWidth());
+        final RowInsets rowInsets = context.getConfiguration().rowInsets(AreaId.ASCII);
         final IElement.IDimension byteDimension = computeElementDimension(1);
         final List<IElement> bytes = createAsciiRowElements(rowInsets, byteDimension, caretWidth);
         final IByteRowTemplate result = createByteRowTemplate(bytes, rowInsets, caretWidth);
+
+        this.context = null;
 
         return result;
     }

@@ -16,6 +16,7 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateC
 import cms.rendner.hexviewer.core.uidelegate.DefaultHexViewerUI;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.row.template.factory.IRowTemplateFactory;
+import cms.rendner.hexviewer.core.uidelegate.row.template.factory.TemplateFactoryContext;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
 import cms.rendner.hexviewer.core.view.IContextMenuFactory;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
@@ -83,6 +84,12 @@ public class JHexViewer extends JComponent
     @NotNull
     public static final String PROPERTY_DAMAGER = "damager";
     /**
+     * Constant used to determine when the row template configuration property has changed.
+     * Note that either value (old and new) can also be null.
+     */
+    @NotNull
+    public static final String PROPERTY_ROW_TEMPLATE_CONFIGURATION = "rowTemplateConfiguration";
+    /**
      * Constant used to determine when the offset <code>formatter</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
@@ -123,7 +130,7 @@ public class JHexViewer extends JComponent
     /**
      * The configuration from which the <code>IRowTemplates</code> are build.
      */
-    @NotNull
+    @Nullable
     protected IRowTemplateConfiguration rowTemplateConfiguration;
 
     /**
@@ -293,7 +300,7 @@ public class JHexViewer extends JComponent
         if(newValue != oldValue)
         {
             formatter.setPreferredValue(newValue);
-            recreateOffsetRowTemplate();
+            recreateOffsetRowTemplate(createRowTemplateFactoryContext());
             firePropertyChange(PROPERTY_OFFSET_FORMATTER, oldValue, formatter.getValue());
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.OFFSET));
         }
@@ -702,12 +709,12 @@ public class JHexViewer extends JComponent
     /**
      * Returns the factory to be used to create row templates for the areas.
      *
-     * @return the current installed factory or <code>null</code> if no factory was set.
+     * @return the current installed factory.
      */
-    @Nullable
-    public IRowTemplateFactory getRowTemplateFactory()
+    @NotNull
+    public Optional<IRowTemplateFactory> getRowTemplateFactory()
     {
-        return rowTemplateFactory;
+        return Optional.ofNullable(rowTemplateFactory);
     }
 
     /**
@@ -1018,9 +1025,9 @@ public class JHexViewer extends JComponent
      * @return the configuration.
      */
     @NotNull
-    public IRowTemplateConfiguration getRowTemplateConfiguration()
+    public Optional<IRowTemplateConfiguration> getRowTemplateConfiguration()
     {
-        return rowTemplateConfiguration;
+        return Optional.ofNullable(rowTemplateConfiguration);
     }
 
     /**
@@ -1033,8 +1040,10 @@ public class JHexViewer extends JComponent
     {
         if (rowTemplateConfiguration != newConfiguration)
         {
+            final IRowTemplateConfiguration oldValue = rowTemplateConfiguration;
             rowTemplateConfiguration = newConfiguration;
             handleRowTemplateConfigurationChange();
+            firePropertyChange(PROPERTY_ROW_TEMPLATE_CONFIGURATION, oldValue, newConfiguration);
         }
     }
 
@@ -1314,27 +1323,73 @@ public class JHexViewer extends JComponent
      */
     protected void recreateRowTemplates()
     {
-        IOffsetRowTemplate offsetRowTemplate = null;
+        final TemplateFactoryContext context = createRowTemplateFactoryContext();
+        recreateOffsetRowTemplate(context);
+        recreateByteRowTemplates(context);
+    }
+
+    /**
+     * (Re)creates the row-template of the hex-area and ascii-area.
+     *
+     * @param context the factory context required to update the row-template of the hex-area and ascii-area.
+     *                If <code>null</code> the current installed templates will be removed.
+     */
+    protected void recreateByteRowTemplates(@Nullable final TemplateFactoryContext context)
+    {
         IByteRowTemplate hexRowTemplate = null;
         IByteRowTemplate asciiRowTemplate = null;
 
+        if(context != null && rowTemplateFactory != null)
+        {
+            hexRowTemplate = rowTemplateFactory.createHexTemplate(context);
+            asciiRowTemplate = rowTemplateFactory.createAsciiTemplate(context);
+        }
+
+        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.HEX, hexRowTemplate);
+        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.ASCII, asciiRowTemplate);
+    }
+
+    /**
+     * (Re)creates the row-template of the offset-area.
+     *
+     * @param context the factory context required to update the offset row template. If <code>null</code> the current
+     *                installed template will be removed.
+     */
+    protected void recreateOffsetRowTemplate(@Nullable final TemplateFactoryContext context)
+    {
+        IOffsetRowTemplate offsetRowTemplate = null;
+
+        if(context != null && rowTemplateFactory != null)
+        {
+            final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
+            final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
+            offsetRowTemplate = rowTemplateFactory.createOffsetTemplate(context, totalOffsetCharCount, digitOffsetCharCount);
+        }
+
+        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.OFFSET, offsetRowTemplate);
+    }
+
+    /**
+     * Creates the context which is required to rebuild row templates.
+     * <p/>
+     * Note: The returned context can be <code>null</code>. In this case the current installed row templates should
+     * be removed.
+     *
+     * @return the context to build new row templates, can be <code>null</code> if not all requirements are met to create
+     * a valid context.
+     */
+    private TemplateFactoryContext createRowTemplateFactoryContext()
+    {
         if (rowTemplateConfiguration != null && rowTemplateFactory != null)
         {
             final Font font = getFont();
             if (font != null)
             {
-                final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
-                final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
-                final int bytesPerRow = rowTemplateConfiguration.bytesPerRow();
-                offsetRowTemplate = rowTemplateFactory.createOffsetTemplate(this, totalOffsetCharCount, digitOffsetCharCount);
-                hexRowTemplate = rowTemplateFactory.createHexTemplate(this, bytesPerRow);
-                asciiRowTemplate = rowTemplateFactory.createAsciiTemplate(this, bytesPerRow);
+                final FontMetrics fontMetrics = getFontMetrics(getFont());
+                return new TemplateFactoryContext(this, rowTemplateConfiguration, fontMetrics);
             }
         }
-
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.OFFSET, offsetRowTemplate);
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.HEX, hexRowTemplate);
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.ASCII, asciiRowTemplate);
+        return null;
     }
 
     /**
@@ -1396,35 +1451,13 @@ public class JHexViewer extends JComponent
     }
 
     /**
-     * Recreates the row-template of the offset-area.
-     * The created row-template is directly applied to the offset-area.
-     */
-    protected void recreateOffsetRowTemplate()
-    {
-        IOffsetRowTemplate offsetRowTemplate = null;
-
-        if (rowTemplateConfiguration != null && rowTemplateFactory != null)
-        {
-            final Font font = getFont();
-            if (font != null)
-            {
-                final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
-                final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
-                offsetRowTemplate = rowTemplateFactory.createOffsetTemplate(this, totalOffsetCharCount, digitOffsetCharCount);
-            }
-        }
-
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.OFFSET, offsetRowTemplate);
-    }
-
-    /**
      * Recreates the row-template of the offset-area if required.
      */
     protected final void recreateOffsetRowTemplateIfNeeded()
     {
         if (shouldOffsetRowTemplateRecreated())
         {
-            recreateOffsetRowTemplate();
+            recreateOffsetRowTemplate(createRowTemplateFactoryContext());
         }
     }
 

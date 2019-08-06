@@ -71,12 +71,14 @@ public class Main
 
         ThemeFactory.applyRandomTheme(hexViewer);
 
-        hexViewer.setRowTemplateConfiguration(
-                hexViewer.getRowTemplateConfiguration().toBuilder()
-                        .bytesPerRow(16)
-                        .bytesPerGroup(2)
-                        .spaceBetweenGroups(new EMValue(1))
-                        .build()
+        hexViewer.getRowTemplateConfiguration().ifPresent(configuration ->
+                hexViewer.setRowTemplateConfiguration(
+                        configuration.toBuilder()
+                                .bytesPerRow(16)
+                                .bytesPerGroup(2)
+                                .spaceBetweenGroups(new EMValue(1))
+                                .build()
+                )
         );
 
         final IHighlighter highlighter = hexViewer.getHighlighter();

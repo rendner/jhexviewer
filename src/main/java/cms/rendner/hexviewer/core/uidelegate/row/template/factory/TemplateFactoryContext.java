@@ -7,11 +7,15 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 /**
- * Allows easier access to some properties of the JHexViewer which are required to create row templates.
+ * Provides access to the JHexViewer, the row template configuration and the font metrics object.
+ * The font metrics object can be used to determine the height and width for the row template to create.
+ * <p/>
+ * The context has to be recreated whenever a new row template has to be created to ensure that no outdated values
+ * are used.
  *
  * @author rendner
  */
-public final class Context
+public final class TemplateFactoryContext
 {
     /**
      * Used to build a row template.
@@ -32,15 +36,17 @@ public final class Context
     /**
      * Creates a new context instance.
      *
-     * @param hexViewer the component to use to create the context.
+     * @param hexViewer     the component to use to create the context.
+     * @param configuration the configuration from which the row templates are build.
+     * @param fontMetrics   the font metrics of the font object to calculate the row templates.
      */
-    public Context(@NotNull final JHexViewer hexViewer)
+    public TemplateFactoryContext(@NotNull final JHexViewer hexViewer, @NotNull IRowTemplateConfiguration configuration, @NotNull FontMetrics fontMetrics)
     {
         super();
 
-        this.fontMetrics = hexViewer.getFontMetrics(hexViewer.getFont());
-        this.configuration = hexViewer.getRowTemplateConfiguration();
         this.hexViewer = hexViewer;
+        this.configuration = configuration;
+        this.fontMetrics = fontMetrics;
     }
 
     /**
