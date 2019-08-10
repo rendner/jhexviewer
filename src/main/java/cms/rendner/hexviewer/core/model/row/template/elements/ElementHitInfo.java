@@ -62,7 +62,7 @@ public class ElementHitInfo
     }
 
     /**
-     * Returns <code>true</code> if the hit was inside of the bounding box of the element.
+     * Checks if a hit was inside of the bounding box of the element.
      *
      * @return <code>true</code> if inside otherwise <code>false</code>
      */
@@ -72,23 +72,33 @@ public class ElementHitInfo
     }
 
     /**
-     * Returns <code>true</code> if the hit was outside and after the bounding box of the element.
+     * Checks if a hit was outside of the bounding box of the element.
+     *
+     * @return <code>true</code> if outside otherwise <code>false</code>
+     */
+    public boolean wasOutside()
+    {
+        return !wasInside;
+    }
+
+    /**
+     *  Checks if a hit was outside and after the bounding box of the element.
      *
      * @return <code>true</code> if outside and after otherwise <code>false</code>
      */
     public boolean wasOutsideAfter()
     {
-        return !isLeadingEdge() && !wasInside();
+        return !isLeadingEdge() && wasOutside();
     }
 
     /**
-     * Returns <code>true</code> if the hit was outside and before the bounding box of the element.
+     *  Checks if a hit was outside and before the bounding box of the element.
      *
      * @return <code>true</code> if outside and before otherwise <code>false</code>
      */
     public boolean wasOutsideBefore()
     {
-        return isLeadingEdge() && !wasInside();
+        return isLeadingEdge() && wasOutside();
     }
 
     @Override
