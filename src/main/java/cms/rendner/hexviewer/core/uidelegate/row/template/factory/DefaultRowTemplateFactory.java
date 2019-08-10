@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.*;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
@@ -10,6 +11,7 @@ import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,52 +23,70 @@ import java.util.List;
  */
 public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 {
+    /**
+     * Metrics of the font used to render the text of the rows. To calculate the width, height and position of the row elements.
+     */
+    private FontMetrics fm;
+    /**
+     * Describes the layout of the row template to be created.
+     */
+    private IRowTemplateConfiguration configuration;
+
     @NotNull
     @Override
-    public IOffsetRowTemplate createOffsetTemplate(@NotNull final TemplateFactoryContext context, final int totalCharsCount, final int onlyDigitsCount)
+    public IOffsetRowTemplate createOffsetTemplate(@NotNull final JHexViewer hexViewer, @NotNull final FontMetrics fm, @NotNull final IRowTemplateConfiguration configuration)
     {
-        this.context = context;
+        this.fm = fm;
+        this.configuration = configuration;
 
-        final RowInsets rowInsets = context.getConfiguration().rowInsets(AreaId.OFFSET);
-        final ElementDimension elementDimension = computeElementDimension(totalCharsCount);
+        final int onlyDigitsCount = computeCharCountForMaxOffsetAddress(hexViewer);
+        final int totalCharsCount = computeTotalCharCountForOffsetAddressRow(hexViewer, onlyDigitsCount);
+
+        final RowInsets rowInsets = configuration.rowInsets(AreaId.OFFSET);
+        final ElementDimension elementDimension = computeElementDimension(totalCharsCount, fm);
         final List<IElement> elements = createOffsetRowElements(rowInsets, elementDimension);
         final IOffsetRowTemplate result = createOffsetRowTemplate(elements, rowInsets, totalCharsCount, onlyDigitsCount);
 
-        this.context = null;
+        this.fm = null;
+        this.configuration = null;
 
         return result;
     }
 
     @NotNull
     @Override
-    public IByteRowTemplate createHexTemplate(@NotNull final TemplateFactoryContext context)
+    public IByteRowTemplate createHexTemplate(@NotNull final JHexViewer hexViewer, @NotNull final FontMetrics fm, @NotNull final IRowTemplateConfiguration configuration)
     {
-        this.context = context;
+        this.fm = fm;
+        this.configuration = configuration;
 
-        final int caretWidth = computeValue(context.getConfiguration().caretWidth());
-        final RowInsets rowInsets = context.getConfiguration().rowInsets(AreaId.HEX);
-        final IElement.IDimension byteDimension = computeElementDimension(2);
+        final int caretWidth = computeValue(configuration.caretWidth(), fm);
+        final RowInsets rowInsets = configuration.rowInsets(AreaId.HEX);
+        final IElement.IDimension byteDimension = computeElementDimension(2, fm);
         final List<IElement> bytes = createHexRowElements(rowInsets, byteDimension, caretWidth);
         final IByteRowTemplate result = createByteRowTemplate(bytes, rowInsets, caretWidth);
 
-        this.context = null;
+        this.fm = null;
+        this.configuration = null;
 
         return result;
     }
 
     @NotNull
     @Override
-    public IByteRowTemplate createAsciiTemplate(@NotNull final TemplateFactoryContext context)
+    public IByteRowTemplate createAsciiTemplate(@NotNull final JHexViewer hexViewer, @NotNull final FontMetrics fm, @NotNull final IRowTemplateConfiguration configuration)
     {
-        this.context = context;
+        this.fm = fm;
+        this.configuration = configuration;
 
-        final int caretWidth = computeValue(context.getConfiguration().caretWidth());
-        final RowInsets rowInsets = context.getConfiguration().rowInsets(AreaId.ASCII);
-        final IElement.IDimension byteDimension = computeElementDimension(1);
+        final int caretWidth = computeValue(configuration.caretWidth(), fm);
+        final RowInsets rowInsets = configuration.rowInsets(AreaId.ASCII);
+        final IElement.IDimension byteDimension = computeElementDimension(1, fm);
         final List<IElement> bytes = createAsciiRowElements(rowInsets, byteDimension, caretWidth);
         final IByteRowTemplate result = createByteRowTemplate(bytes, rowInsets, caretWidth);
 
-        this.context = null;
+        this.fm = null;
+        this.configuration = null;
 
         return result;
     }
@@ -86,12 +106,12 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
     {
         // Caret can be placed in front of the first byte. This was taken into account in the calculation of the
         // x-position of the first byte, for symmetry reasons caret width is also added after the last byte
-        final int width = computeRowWidth(bytes, rowInsets) + caretWidth;
-        final int height = computeRowHeight(rowInsets);
+        final int width = computeRowWidth(bytes, rowInsets, fm) + caretWidth;
+        final int height = computeRowHeight(rowInsets, fm);
         final IRowTemplate.IDimension rowDimension = new RowDimension(width, height);
 
-        final ByteRowTemplate template = new ByteRowTemplate(rowDimension, bytes, caretWidth);
-        template.setAscent(context.getFontMetrics().getAscent());
+        final ByteRowTemplate template = new ByteRowTemplate(configuration.font(), rowDimension, bytes, caretWidth);
+        template.setAscent(fm.getAscent());
         return template;
     }
 
@@ -108,12 +128,12 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
     @NotNull
     protected IOffsetRowTemplate createOffsetRowTemplate(@NotNull final List<IElement> elements, @NotNull final RowInsets rowInsets, final int totalCharsCount, final int onlyDigitsCount)
     {
-        final int width = computeRowWidth(elements, rowInsets);
-        final int height = computeRowHeight(rowInsets);
+        final int width = computeRowWidth(elements, rowInsets, fm);
+        final int height = computeRowHeight(rowInsets, fm);
         final IRowTemplate.IDimension rowDimension = new RowDimension(width, height);
 
-        final OffsetRowTemplate template = new OffsetRowTemplate(rowDimension, elements, totalCharsCount, onlyDigitsCount);
-        template.setAscent(context.getFontMetrics().getAscent());
+        final OffsetRowTemplate template = new OffsetRowTemplate(configuration.font(), rowDimension, elements, totalCharsCount, onlyDigitsCount);
+        template.setAscent(fm.getAscent());
         return template;
     }
 
@@ -127,8 +147,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
     @NotNull
     protected List<IElement> createOffsetRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension)
     {
-        final int x = computeValue(rowInsets.left());
-        final int y = computeValue(rowInsets.top());
+        final int x = computeValue(rowInsets.left(), fm);
+        final int y = computeValue(rowInsets.top(), fm);
         final List<IElement> result = new ArrayList<>(1);
         result.add(new Element(elementDimension, new ElementPosition(x, y)));
         return result;
@@ -145,17 +165,15 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
     @NotNull
     protected List<IElement> createHexRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension, final int caretWidth)
     {
-        final IRowTemplateConfiguration configuration = context.getConfiguration();
-
         final int bytesPerRow = configuration.bytesPerRow();
         final int bytesPerGroup = configuration.bytesPerGroup();
-        final int spaceBetweenByteGroups = computeValue(configuration.spaceBetweenGroups());
+        final int spaceBetweenByteGroups = computeValue(configuration.spaceBetweenGroups(), fm);
 
         final List<IElement> result = new ArrayList<>(bytesPerRow);
 
         int byteIndexInByteGroup = 0;
-        int x = computeValue(rowInsets.left()) + caretWidth;
-        final int y = computeValue(rowInsets.top());
+        int x = computeValue(rowInsets.left(), fm) + caretWidth;
+        final int y = computeValue(rowInsets.top(), fm);
         for (int i = 0; i < bytesPerRow; i++)
         {
             result.add(new Element(elementDimension, new ElementPosition(x, y)));
@@ -183,13 +201,12 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
     @NotNull
     protected List<IElement> createAsciiRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension, final int caretWidth)
     {
-        final IRowTemplateConfiguration configuration = context.getConfiguration();
         final int bytesPerRow = configuration.bytesPerRow();
 
         final List<IElement> result = new ArrayList<>();
 
-        int x = computeValue(rowInsets.left()) + caretWidth;
-        final int y = computeValue(rowInsets.top());
+        int x = computeValue(rowInsets.left(), fm) + caretWidth;
+        final int y = computeValue(rowInsets.top(), fm);
         for (int i = 0; i < bytesPerRow; i++)
         {
             result.add(new Element(elementDimension, new ElementPosition(x, y)));

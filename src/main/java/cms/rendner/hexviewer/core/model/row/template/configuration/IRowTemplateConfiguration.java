@@ -6,9 +6,11 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowIns
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+
 /**
  * A row template configuration defines the layout (e.g. spaces between bytes, number of bytes) of a row.
- * Each row of the JHexViewer is created from a row template.
+ * Each row of the JHexViewer is painted using a description of a row, called a row-template.
  * The layout of the rows can be changed during runtime by applying a new configuration to the JHexViewer.
  * <p/>
  * All row template configuration instances are immutable. To create a modified or new version use the builder
@@ -16,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  * @see DefaultRowTemplateConfiguration
+ * @see cms.rendner.hexviewer.core.model.row.template.RowTemplate
  */
 public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.IBuilder>
 {
@@ -54,6 +57,12 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
      */
     @NotNull
     RowInsets rowInsets(AreaId areaId);
+
+    /**
+     * @return the font to use to render the text content of a row.
+     */
+    @NotNull
+    Font font();
 
     /**
      * @return a new builder which is initialized with the values of the row template configuration instance
@@ -139,5 +148,37 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
          */
         @NotNull
         IBuilder<B, C> rowInsets(@NotNull AreaId areaId, @NotNull RowInsets value);
+
+        /**
+         * Changes the size of the font.
+         *
+         * @param size new size &gt;= 1, of the font.
+         * @return the builder instance, to allow method chaining.
+         * @throws IllegalArgumentException if <code>size</code> is &lt; 1.
+         */
+        @NotNull
+        IBuilder<B, C> fontSize(int size);
+
+        /**
+         * Increases the size of the font.
+         *
+         * @param by      the amount of size to increase, has to be &gt;= 1.
+         * @param maxSize the max size, to restrict that the new size.
+         * @return the builder instance, to allow method chaining.
+         * @throws IllegalArgumentException if <code>by</code> or <code>maxSize</code> is &lt; 1.
+         */
+        @NotNull
+        IBuilder<B, C> increaseFontSize(int by, int maxSize);
+
+        /**
+         * Decreases the size of the font.
+         *
+         * @param by      the amount of size to decrease, has to be &gt;= 1.
+         * @param minSize the min size, to restrict that the new size.
+         * @return the builder instance, to allow method chaining.
+         * @throws IllegalArgumentException if <code>by</code> or <code>minSize</code> is &lt; 1.
+         */
+        @NotNull
+        IBuilder<B, C> decreaseFontSize(int by, int minSize);
     }
 }

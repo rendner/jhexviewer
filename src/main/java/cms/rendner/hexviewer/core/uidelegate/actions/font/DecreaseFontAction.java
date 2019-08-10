@@ -1,9 +1,8 @@
 package cms.rendner.hexviewer.core.uidelegate.actions.font;
 
-import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -12,10 +11,10 @@ import java.awt.event.ActionEvent;
  */
 public class DecreaseFontAction extends AbstractHexViewerAction
 {
-    private final float step;
-    private final float minimum;
+    private final int step;
+    private final int minimum;
 
-    public DecreaseFontAction(final float step, final float minimum)
+    public DecreaseFontAction(final int step, final int minimum)
     {
         super();
         this.step = step;
@@ -26,14 +25,14 @@ public class DecreaseFontAction extends AbstractHexViewerAction
     public void actionPerformed(final ActionEvent event)
     {
         final JHexViewer hexViewer = getHexViewer(event);
-        if(hexViewer != null)
+        if (hexViewer != null)
         {
-            final Font font = hexViewer.getFont();
-            if (font != null)
-            {
-                final float newFontSize = Math.max(minimum, font.getSize2D() - step);
-                hexViewer.setFont(font.deriveFont(newFontSize));
-            }
+            hexViewer.getRowTemplateConfiguration().ifPresent(rowConfiguration -> hexViewer.setRowTemplateConfiguration(
+                    rowConfiguration.toBuilder()
+                            .decreaseFontSize(step, minimum)
+                            .build()
+                    )
+            );
         }
     }
 }

@@ -46,6 +46,12 @@ public interface IRowTemplate
     int rightInset();
 
     /**
+     * @return the font to use to render the text content of the row.
+     */
+    @NotNull
+    Font font();
+
+    /**
      * Checks if the position is inside the row.
      *
      * @param position the position to check.

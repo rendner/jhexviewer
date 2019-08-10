@@ -113,7 +113,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
     }
 
     @Override
-    public void paint(@NotNull final Graphics g, @NotNull final RowBasedView rowsView)
+    public void paint(@NotNull final Graphics g, @NotNull final RowBasedView<? extends IRowTemplate> rowsView)
     {
         if (rowsView.hasTemplate())
         {
@@ -121,8 +121,6 @@ public class DefaultPaintDelegate implements IPaintDelegate
 
             if (!rvDirtyRows.isEmpty())
             {
-                copyHexViewerFontInto(rowsView);
-
                 final List<RowGraphicsAndData> rowGraphicsAndDataList = createRowGraphicsAndData(g, rvDirtyRows, rowsView);
                 paintDirtyRows(g, rowGraphicsAndDataList, rowsView);
                 disposeRowGraphics(rowGraphicsAndDataList);
@@ -329,16 +327,6 @@ public class DefaultPaintDelegate implements IPaintDelegate
             result.setRowIndex(rowIndex);
             return result;
         });
-    }
-
-    /**
-     * Ensures that the specified component has the font of the {@link JHexViewer} component.
-     *
-     * @param rowsView the view component to adjust.
-     */
-    protected void copyHexViewerFontInto(@NotNull final RowBasedView rowsView)
-    {
-        rowsView.setFont(hexViewer.getFont());
     }
 
     /**

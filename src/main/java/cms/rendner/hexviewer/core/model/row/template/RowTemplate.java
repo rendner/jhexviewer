@@ -33,6 +33,12 @@ public abstract class RowTemplate implements IRowTemplate
      */
     @NotNull
     private final IRowTemplate.IDimension dimension;
+
+    /**
+     * The font used to render the text of the rows.
+     */
+    @NotNull
+    private final Font font;
     /**
      * The ascent to center an element vertically if painted into a {@link Graphics} object.
      */
@@ -41,16 +47,18 @@ public abstract class RowTemplate implements IRowTemplate
     /**
      * Creates a new instance.
      *
+     * @param font      the font used to render the text of the rows.
      * @param dimension the dimension of the row.
      * @param elements  the elements of the row.
      * @throws IllegalArgumentException if <code>elements</code> is empty.
      */
-    public RowTemplate(@NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements)
+    public RowTemplate(@NotNull final Font font, @NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements)
     {
         super();
 
         CheckUtils.checkMinValue(elements.size(), 1);
 
+        this.font = font;
         this.dimension = dimension;
         this.elements = Collections.unmodifiableList(elements);
     }
@@ -128,6 +136,13 @@ public abstract class RowTemplate implements IRowTemplate
     public void setAscent(final int value)
     {
         ascent = value;
+    }
+
+    @NotNull
+    @Override
+    public Font font()
+    {
+        return font;
     }
 
     @Override

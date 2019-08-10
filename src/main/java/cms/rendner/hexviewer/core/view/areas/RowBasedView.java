@@ -90,7 +90,6 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     {
         super();
         this.id = id;
-
         this.propertiesProvider = propertiesProvider;
         propertiesProvider.addObserver(new InternalHandler());
     }
@@ -291,6 +290,10 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
         if (paintDelegate != null)
         {
+            if(rowTemplate != null)
+            {
+                g.setFont(rowTemplate.font());
+            }
             paintDelegate.paint(g, this);
         }
     }

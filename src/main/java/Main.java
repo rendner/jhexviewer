@@ -47,7 +47,7 @@ public class Main
             @Override
             public void propertyChange(final PropertyChangeEvent event)
             {
-                if (event.getPropertyName().equals(JHexViewer.PROPERTY_DATA_MODEL))
+                if (event.getPropertyName().equals(JHexViewer.PROPERTY_ROW_TEMPLATE_CONFIGURATION))
                 {
                     frame.pack();
                 }

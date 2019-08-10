@@ -16,7 +16,6 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateC
 import cms.rendner.hexviewer.core.uidelegate.DefaultHexViewerUI;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.row.template.factory.IRowTemplateFactory;
-import cms.rendner.hexviewer.core.uidelegate.row.template.factory.TemplateFactoryContext;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
 import cms.rendner.hexviewer.core.view.IContextMenuFactory;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
@@ -277,10 +276,10 @@ public class JHexViewer extends JComponent
         final FallbackValue<IValueFormatter> formatter = valueFormatterMap.get(AreaId.OFFSET);
         final IValueFormatter oldValue = formatter.getPreferredValue();
 
-        if(newValue != oldValue)
+        if (newValue != oldValue)
         {
             formatter.setPreferredValue(newValue);
-            recreateOffsetRowTemplate(createRowTemplateFactoryContext());
+            recreateOffsetRowTemplate();
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.OFFSET));
         }
     }
@@ -297,7 +296,7 @@ public class JHexViewer extends JComponent
         final FallbackValue<IValueFormatter> formatter = valueFormatterMap.get(AreaId.HEX);
         final IValueFormatter oldValue = formatter.getPreferredValue();
 
-        if(newValue != oldValue)
+        if (newValue != oldValue)
         {
             formatter.setPreferredValue(newValue);
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.HEX));
@@ -316,7 +315,7 @@ public class JHexViewer extends JComponent
         final FallbackValue<IValueFormatter> formatter = valueFormatterMap.get(AreaId.ASCII);
         final IValueFormatter oldValue = formatter.getPreferredValue();
 
-        if(newValue != oldValue)
+        if (newValue != oldValue)
         {
             formatter.setPreferredValue(newValue);
             getDamager().ifPresent(damager -> damager.damageArea(AreaId.ASCII));
@@ -453,18 +452,6 @@ public class JHexViewer extends JComponent
     {
         super.setBackground(newBackground);
         scrollPane.setBackground(newBackground);
-    }
-
-    @Override
-    public void setFont(@Nullable final Font font)
-    {
-        final Font oldFont = getFont();
-        super.setFont(font);
-
-        if (font != oldFont)
-        {
-            recreateRowTemplates();
-        }
     }
 
     /**
@@ -712,7 +699,7 @@ public class JHexViewer extends JComponent
     {
         final IDamager oldValue = damager;
 
-        if(oldValue != newValue)
+        if (oldValue != newValue)
         {
             if (oldValue != null)
             {
@@ -1145,6 +1132,7 @@ public class JHexViewer extends JComponent
      * Creates the internal handler used to register for events sent by internal sub components or observable objects.
      * <p/>
      * Overwrite this method if a custom internal handler should be used.
+     *
      * @return the internal handler for the <code>{@link JHexViewer}</code>.
      */
     @NotNull
@@ -1158,6 +1146,7 @@ public class JHexViewer extends JComponent
      * <p/>
      * By default the <code>internalHandler</code> is registered as <code>{@link java.awt.event.MouseListener}</code>
      * with the <code>hexRowsView</code> and <code>asciiRowsView</code> to handle mouse clicks.
+     *
      * @param handler the internal handler to register as listener.
      */
     protected void registerInternalHandler(@NotNull final InternalHandler handler)
@@ -1271,26 +1260,26 @@ public class JHexViewer extends JComponent
      */
     protected void recreateRowTemplates()
     {
-        final TemplateFactoryContext context = createRowTemplateFactoryContext();
-        recreateOffsetRowTemplate(context);
-        recreateByteRowTemplates(context);
+        recreateOffsetRowTemplate();
+        recreateByteRowTemplates();
     }
 
     /**
      * (Re)creates the row-template of the hex-area and ascii-area.
-     *
-     * @param context the factory context required to update the row-template of the hex-area and ascii-area.
-     *                If <code>null</code> the current installed templates will be removed.
+     * <p/>
+     * The byte row templates can't be created if the <code>rowTemplateConfiguration</code> or <code>rowTemplateFactory</code>
+     * is <code>null</code>, in that case the current installed templates will be removed.
      */
-    protected void recreateByteRowTemplates(@Nullable final TemplateFactoryContext context)
+    protected void recreateByteRowTemplates()
     {
         IByteRowTemplate hexRowTemplate = null;
         IByteRowTemplate asciiRowTemplate = null;
 
-        if(context != null && rowTemplateFactory != null)
+        if (rowTemplateConfiguration != null && rowTemplateFactory != null)
         {
-            hexRowTemplate = rowTemplateFactory.createHexTemplate(context);
-            asciiRowTemplate = rowTemplateFactory.createAsciiTemplate(context);
+            final FontMetrics fm = getFontMetrics(rowTemplateConfiguration.font());
+            hexRowTemplate = rowTemplateFactory.createHexTemplate(this, fm, rowTemplateConfiguration);
+            asciiRowTemplate = rowTemplateFactory.createAsciiTemplate(this, fm, rowTemplateConfiguration);
         }
 
         rowsViewPropertiesProvider.forwardRowTemplate(AreaId.HEX, hexRowTemplate);
@@ -1299,99 +1288,23 @@ public class JHexViewer extends JComponent
 
     /**
      * (Re)creates the row-template of the offset-area.
-     *
-     * @param context the factory context required to update the offset row template. If <code>null</code> the current
-     *                installed template will be removed.
+     * <p/>
+     * The offset row template can't be created if the <code>rowTemplateConfiguration</code> or <code>rowTemplateFactory</code>
+     * is <code>null</code>, in that case the current installed template will be removed.
      */
-    protected void recreateOffsetRowTemplate(@Nullable final TemplateFactoryContext context)
+    protected void recreateOffsetRowTemplate()
     {
         IOffsetRowTemplate offsetRowTemplate = null;
 
-        if(context != null && rowTemplateFactory != null)
+        if (rowTemplateConfiguration != null && rowTemplateFactory != null)
         {
-            final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
-            final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
-            offsetRowTemplate = rowTemplateFactory.createOffsetTemplate(context, totalOffsetCharCount, digitOffsetCharCount);
+            offsetRowTemplate = rowTemplateFactory.createOffsetTemplate(
+                    this,
+                    getFontMetrics(rowTemplateConfiguration.font()),
+                    rowTemplateConfiguration);
         }
 
         rowsViewPropertiesProvider.forwardRowTemplate(AreaId.OFFSET, offsetRowTemplate);
-    }
-
-    /**
-     * Creates the context which is required to rebuild row templates.
-     * <p/>
-     * Note: The returned context can be <code>null</code>. In this case the current installed row templates should
-     * be removed.
-     *
-     * @return the context to build new row templates, can be <code>null</code> if not all requirements are met to create
-     * a valid context.
-     */
-    private TemplateFactoryContext createRowTemplateFactoryContext()
-    {
-        if (rowTemplateConfiguration != null && rowTemplateFactory != null)
-        {
-            final Font font = getFont();
-            if (font != null)
-            {
-                final FontMetrics fontMetrics = getFontMetrics(getFont());
-                return new TemplateFactoryContext(this, rowTemplateConfiguration, fontMetrics);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Computes the number of required chars to display only the number of the max offset address.
-     * This number should include separators between the digits, if used, but no additional prefix and suffix.
-     * <p/>
-     * The number of chars to display an address depends on the used offset formatter.
-     * For example the address 123456 (dec system):
-     * <ul>
-     * <li>formatted value in hex: "1E240", requires 5 chars</li>
-     * <li>formatted value in hex: "1E240:", requires 5 chars - ":" is a suffix and doesn't count</li>
-     * <li>formatted value in hex: "1E240h:", requires 5 chars - "h:" is a suffix and doesn't count</li>
-     * <li>formatted value in dec: "123456", requires 6 chars</li>
-     * <li>formatted value in dec: "123 456", requires 7 chars</li>
-     * <li>formatted value in bin: "11110001001000000", requires 17 chars</li>
-     * </ul>
-     *
-     * @return the number of chars to display the offset address without any prefix and suffix.
-     */
-    protected int computeCharCountForMaxOffsetAddress()
-    {
-        final IOffsetValueFormatter offsetValueFormatter = getOffsetValueFormatter();
-        final int formattedDigitsCount = offsetValueFormatter.computeNumberOfCharsForAddress(lastPossibleCaretIndex());
-        return Math.max(formattedDigitsCount, offsetValueFormatter.minNumberOfCharsForAddress());
-    }
-
-    /**
-     * Computes to total number of chars used to render the max offset address.
-     * This also includes the prefix and suffix, if used.
-     *
-     * @param requiredDigits the number of required chars to display only the number of the max offset address.
-     * @return the number of chars used to render the max offset address.
-     */
-    protected int computeTotalCharCountForOffsetAddressRow(final int requiredDigits)
-    {
-        final IOffsetValueFormatter offsetValueFormatter = getOffsetValueFormatter();
-        return offsetValueFormatter.format(requiredDigits, 0).length();
-    }
-
-    /**
-     * Determines if the row template for the offset area should be recreated.
-     * This method is called whenever the data model has changed
-     * to determine if the offset has enough chars to display the number of available rows.
-     *
-     * @return <code>true</code> if the row template should be recreated, otherwise <code>false</code>
-     */
-    protected boolean shouldOffsetRowTemplateRecreated()
-    {
-        return offsetRowsView.template().map(rowTemplate -> {
-            final int digitOffsetCharCount = computeCharCountForMaxOffsetAddress();
-            final int totalOffsetCharCount = computeTotalCharCountForOffsetAddressRow(digitOffsetCharCount);
-            return (rowTemplate.onlyDigitsCount() != digitOffsetCharCount ||
-                    rowTemplate.totalCharsCount() != totalOffsetCharCount);
-        }).orElse(Boolean.TRUE);
     }
 
     /**
@@ -1399,10 +1312,12 @@ public class JHexViewer extends JComponent
      */
     protected final void recreateOffsetRowTemplateIfNeeded()
     {
-        if (shouldOffsetRowTemplateRecreated())
-        {
-            recreateOffsetRowTemplate(createRowTemplateFactoryContext());
-        }
+        getRowTemplateFactory().ifPresent(factory -> {
+            if (factory.shouldOffsetRowTemplateRecreated(this))
+            {
+                recreateOffsetRowTemplate();
+            }
+        });
     }
 
     /**

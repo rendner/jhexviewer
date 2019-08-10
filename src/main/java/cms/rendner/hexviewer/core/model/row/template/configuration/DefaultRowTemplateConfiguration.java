@@ -5,12 +5,11 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.utils.CheckUtils;
-import cms.rendner.hexviewer.utils.ObjectUtils;
+import cms.rendner.hexviewer.utils.FontUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.EnumMap;
-import java.util.Objects;
 
 /**
  * Default implementation of a row template configuration.
@@ -32,6 +31,12 @@ import java.util.Objects;
 public final class DefaultRowTemplateConfiguration implements IRowTemplateConfiguration<DefaultRowTemplateConfiguration.Builder>
 {
     /**
+     * The name of the font created by this configuration.
+     */
+    @NotNull
+    private static final String DEFAULT_FONT_NAME = FontUtils.getMonospacedFontName();
+
+    /**
      * The insets for the rows mapped by area.
      */
     @NotNull
@@ -52,6 +57,12 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
      */
     @NotNull
     private final IValue caretWidth;
+
+    /**
+     * The font used to render the text of the rows.
+     */
+    @NotNull
+    private final Font font;
 
     /**
      * Number of bytes in a group of bytes.
@@ -92,13 +103,12 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
     {
         super();
 
+        font = new Font(DEFAULT_FONT_NAME, Font.PLAIN, source.fontSize);
+        caretWidth = source.caretWidth;
         bytesPerRow = source.bytesPerRow;
         bytesPerGroup = source.bytesPerGroup;
         rowInsets.putAll(source.rowInsets);
-
-        caretWidth = Objects.requireNonNull(source.caretWidth);
-        spaceBetweenGroups = Objects.requireNonNull(source.spaceBetweenGroups);
-
+        spaceBetweenGroups = source.spaceBetweenGroups;
     }
 
     @Override
@@ -136,6 +146,13 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
 
     @NotNull
     @Override
+    public Font font()
+    {
+        return font;
+    }
+
+    @NotNull
+    @Override
     public Builder toBuilder()
     {
         return new Builder(this);
@@ -155,14 +172,19 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
         /**
          * The space between two byte groups.
          */
-        @Nullable
-        private IValue spaceBetweenGroups;
+        @NotNull
+        private IValue spaceBetweenGroups = new EMValue(1.5d);
 
         /**
          * The width for the caret.
          */
-        @Nullable
-        private IValue caretWidth;
+        @NotNull
+        private IValue caretWidth = new EMValue(0.05d);
+
+        /**
+         * The font size for rendering text in the rows.
+         */
+        private int fontSize = 14;
 
         /**
          * Number of bytes in a group of bytes.
@@ -193,6 +215,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
         {
             super();
 
+            fontSize = source.font().getSize();
             caretWidth = source.caretWidth();
             bytesPerRow = source.bytesPerRow();
             bytesPerGroup = source.bytesPerGroup();
@@ -256,6 +279,33 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
 
         @NotNull
         @Override
+        public Builder fontSize(final int size) throws IllegalArgumentException
+        {
+            CheckUtils.checkMinValue(size, 1);
+            fontSize = size;
+            return this;
+        }
+
+        @NotNull
+        @Override
+        public Builder increaseFontSize(final int bySize, final int maxSize)  throws IllegalArgumentException
+        {
+            CheckUtils.checkMinValue(bySize, 1);
+            CheckUtils.checkMinValue(maxSize, 1);
+            return fontSize(Math.min(maxSize, fontSize + bySize));
+        }
+
+        @NotNull
+        @Override
+        public Builder decreaseFontSize(final int bySize, final int minSize)  throws IllegalArgumentException
+        {
+            CheckUtils.checkMinValue(bySize, 1);
+            CheckUtils.checkMinValue(minSize, 1);
+            return fontSize(Math.max(minSize, fontSize - bySize));
+        }
+
+        @NotNull
+        @Override
         public DefaultRowTemplateConfiguration build()
         {
             final RowInsets defaultInsets = RowInsets.newBuilder()
@@ -264,9 +314,6 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
             rowInsets.putIfAbsent(AreaId.OFFSET, defaultInsets);
             rowInsets.putIfAbsent(AreaId.HEX, defaultInsets);
             rowInsets.putIfAbsent(AreaId.ASCII, defaultInsets);
-
-            caretWidth = ObjectUtils.ifNotNullOtherwise(caretWidth, new EMValue(0.05d));
-            spaceBetweenGroups = ObjectUtils.ifNotNullOtherwise(spaceBetweenGroups, new EMValue(1.5d));
 
             return new DefaultRowTemplateConfiguration(this);
         }
