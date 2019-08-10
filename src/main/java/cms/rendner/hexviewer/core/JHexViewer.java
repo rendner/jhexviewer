@@ -236,8 +236,8 @@ public class JHexViewer extends JComponent
      *
      * @return the current paint delegate.
      */
-    @Nullable
-    public IPaintDelegate getPaintDelegate()
+    @NotNull
+    public Optional<IPaintDelegate> getPaintDelegate()
     {
         return offsetRowsView.getPaintDelegate();
     }
@@ -249,18 +249,22 @@ public class JHexViewer extends JComponent
      */
     public void setPaintDelegate(@Nullable final IPaintDelegate newDelegate)
     {
-        final IPaintDelegate oldDelegate = getPaintDelegate();
-        if (oldDelegate != null)
-        {
-            oldDelegate.uninstall(this);
-        }
+        final IPaintDelegate oldDelegate = getPaintDelegate().orElse(null);
 
-        if (newDelegate != null)
+        if(oldDelegate != newDelegate)
         {
-            newDelegate.install(this);
-        }
+            if(oldDelegate != null)
+            {
+                oldDelegate.uninstall(this);
+            }
 
-        rowsViewPropertiesProvider.forwardPaintDelegate(newDelegate);
+            if (newDelegate != null)
+            {
+                newDelegate.install(this);
+            }
+
+            rowsViewPropertiesProvider.forwardPaintDelegate(newDelegate);
+        }
     }
 
     /**
@@ -481,6 +485,7 @@ public class JHexViewer extends JComponent
      * @see JComponent#getUIClassID
      * @see UIDefaults#getUI
      */
+    @NotNull
     @Override
     public String getUIClassID()
     {
@@ -582,8 +587,8 @@ public class JHexViewer extends JComponent
      * @return the delegate or <code>null</code> if no delegate was set.
      * @see #getScrollableByteRowsContainer()
      */
-    @Nullable
-    public IScrollableDelegate getScrollableDelegate()
+    @NotNull
+    public Optional<IScrollableDelegate> getScrollableDelegate()
     {
         return byteRowsViewContainer.getScrollableDelegate();
     }
@@ -598,7 +603,7 @@ public class JHexViewer extends JComponent
      */
     public void setScrollableDelegate(@Nullable final IScrollableDelegate newDelegate)
     {
-        final IScrollableDelegate oldDelegate = getScrollableDelegate();
+        final IScrollableDelegate oldDelegate = byteRowsViewContainer.getScrollableDelegate().orElse(null);
 
         if (oldDelegate != newDelegate)
         {
@@ -727,11 +732,7 @@ public class JHexViewer extends JComponent
      */
     public void setRowColorProvider(@NotNull final AreaId id, @Nullable final IRowColorProvider newProvider)
     {
-        final IPaintDelegate delegate = getPaintDelegate();
-        if (delegate != null)
-        {
-            delegate.setRowColorProvider(id, newProvider);
-        }
+        getPaintDelegate().ifPresent(delegate -> delegate.setRowColorProvider(id, newProvider));
     }
 
     /**
@@ -739,10 +740,10 @@ public class JHexViewer extends JComponent
      *
      * @return the installed highlighter or <code>null</code> if no delegate was set.
      */
-    @Nullable
-    public IHighlighter getHighlighter()
+    @NotNull
+    public Optional<IHighlighter> getHighlighter()
     {
-        return highlighter;
+        return Optional.ofNullable(highlighter);
     }
 
     /**
@@ -797,17 +798,6 @@ public class JHexViewer extends JComponent
     {
         CheckUtils.checkNotNull(id);
         return AreaId.HEX.equals(id) || AreaId.ASCII.equals(id);
-    }
-
-    /**
-     * Returns the factory to be used to create context menus.
-     *
-     * @return the current factory or <code>null</code> if no factory was set.
-     */
-    @Nullable
-    public IContextMenuFactory getContextMenuFactory()
-    {
-        return contextMenuFactory;
     }
 
     /**
@@ -869,11 +859,7 @@ public class JHexViewer extends JComponent
                 }
             }
 
-            final IHighlighter highlighter = getHighlighter();
-            if (highlighter != null)
-            {
-                highlighter.removeAllHighlights();
-            }
+            getHighlighter().ifPresent(IHighlighter::removeAllHighlights);
 
             recalculateRowCount();
             recreateOffsetRowTemplateIfNeeded();

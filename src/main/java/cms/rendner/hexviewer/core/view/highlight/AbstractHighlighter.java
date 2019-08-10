@@ -115,6 +115,12 @@ public abstract class AbstractHighlighter implements IHighlighter
         return highlights.size();
     }
 
+    @Override
+    public boolean hasHighlights()
+    {
+        return !highlights.isEmpty();
+    }
+
     @NotNull
     @Override
     public List<IHighlight> getHighlights()

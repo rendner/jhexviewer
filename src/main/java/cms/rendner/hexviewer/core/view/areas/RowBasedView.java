@@ -148,10 +148,10 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      *
      * @return the current paint delegate or <code>null</code> if no delegate was set.
      */
-    @Nullable
-    public IPaintDelegate getPaintDelegate()
+    @NotNull
+    public Optional<IPaintDelegate> getPaintDelegate()
     {
-        return paintDelegate;
+        return Optional.ofNullable(paintDelegate);
     }
 
     /**

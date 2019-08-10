@@ -16,7 +16,6 @@ import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
 import cms.rendner.hexviewer.core.view.geom.Range;
-import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import cms.rendner.hexviewer.utils.CheckUtils;
@@ -258,12 +257,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
                 renderer.paintBackground(rowGraphicsAndData.g, rowTemplate, context);
             }
 
-            final IHighlighter highlighter = hexViewer.getHighlighter();
-            if (highlighter != null)
-            {
-                highlighter.paint(g, rowsView);
-            }
-
+            hexViewer.getHighlighter().ifPresent(highlighter -> highlighter.paint(g, rowsView));
             hexViewer.getCaret().ifPresent(caret -> caret.paint(g, rowsView));
 
             for (final RowGraphicsAndData rowGraphicsAndData : rowGraphicsAndDataList)

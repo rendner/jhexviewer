@@ -112,19 +112,19 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setCaret(createCaret());
         }
 
-        final IHighlighter highlighter = hexViewer.getHighlighter();
+        final IHighlighter highlighter = hexViewer.getHighlighter().orElse(null);
         if (highlighter == null || highlighter instanceof UIResource)
         {
             hexViewer.setHighlighter(createHighlighter());
         }
 
-        final IScrollableDelegate scrollableDelegate = hexViewer.getScrollableDelegate();
+        final IScrollableDelegate scrollableDelegate = hexViewer.getScrollableDelegate().orElse(null);
         if (scrollableDelegate == null || scrollableDelegate instanceof UIResource)
         {
             hexViewer.setScrollableDelegate(createScrollableDelegate());
         }
 
-        final IPaintDelegate paintRowsDelegate = hexViewer.getPaintDelegate();
+        final IPaintDelegate paintRowsDelegate = hexViewer.getPaintDelegate().orElse(null);
         if (paintRowsDelegate == null || paintRowsDelegate instanceof UIResource)
         {
             hexViewer.setPaintDelegate(createPaintRowsDelegate());
@@ -161,17 +161,17 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setDamager(null);
         }
 
-        if (hexViewer.getHighlighter() instanceof UIResource)
+        if (hexViewer.getHighlighter().orElse(null) instanceof UIResource)
         {
             hexViewer.setHighlighter(null);
         }
 
-        if (hexViewer.getScrollableDelegate() instanceof UIResource)
+        if (hexViewer.getScrollableDelegate().orElse(null) instanceof UIResource)
         {
             hexViewer.setScrollableDelegate(null);
         }
 
-        if (hexViewer.getPaintDelegate() instanceof UIResource)
+        if (hexViewer.getPaintDelegate().orElse(null) instanceof UIResource)
         {
             hexViewer.setPaintDelegate(null);
         }

@@ -420,9 +420,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void adjustSelectionHighlight()
     {
-        final IHighlighter highlighter = Objects.requireNonNull(hexViewer).getHighlighter();
-
-        if (highlighter != null)
+        hexViewer.getHighlighter().ifPresent(highlighter ->
         {
             if (isSelectionEmpty())
             {
@@ -443,7 +441,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
                     highlighter.changeHighlight(selectionHighlight, getSelectionStart(), getSelectionEnd());
                 }
             }
-        }
+        });
     }
 
     /**

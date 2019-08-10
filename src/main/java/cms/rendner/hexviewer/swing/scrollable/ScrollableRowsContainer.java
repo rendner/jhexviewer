@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Optional;
 
 /**
  * Rows container which allows to customize the scrolling behaviour of the content.
@@ -54,10 +55,10 @@ public class ScrollableRowsContainer extends ScrollableContainer
     /**
      * @return the installed scroll delegate, can be <code>null</code> if no delegate was installed.
      */
-    @Nullable
-    public IScrollableDelegate getScrollableDelegate()
+    @NotNull
+    public Optional<IScrollableDelegate> getScrollableDelegate()
     {
-        return scrollableDelegate;
+        return Optional.ofNullable(scrollableDelegate);
     }
 
     /**
@@ -72,10 +73,11 @@ public class ScrollableRowsContainer extends ScrollableContainer
         revalidate();
     }
 
+    @NotNull
     @Override
     public Dimension getPreferredScrollableViewportSize()
     {
-        return scrollableDelegate == null ? null : scrollableDelegate.getPreferredScrollableViewportSize();
+        return scrollableDelegate == null ? new Dimension() : scrollableDelegate.getPreferredScrollableViewportSize();
     }
 
     @Override

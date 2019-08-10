@@ -23,12 +23,7 @@ public abstract class AbstractTheme implements ITheme
         applyRowColorProvider(hexViewer);
 
         hexViewer.getCaret().ifPresent(this::customizeCaret);
-
-        final IHighlighter highlighter = hexViewer.getHighlighter();
-        if (highlighter != null)
-        {
-            customizeHighlighter(highlighter);
-        }
+        hexViewer.getHighlighter().ifPresent(this::customizeHighlighter);
     }
 
     /**

@@ -138,6 +138,11 @@ public interface IHighlighter
     int getHighlightsCount();
 
     /**
+     * @return <code>true</code> if at least one highlight is available otherwise <code>false</code>.
+     */
+    boolean hasHighlights();
+
+    /**
      * @return all highlights, excluding the selection highlight.
      */
     @NotNull

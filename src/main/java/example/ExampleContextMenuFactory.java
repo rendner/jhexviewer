@@ -54,7 +54,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
 
     private void addHighlightMenu(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer, final int byteIndex)
     {
-        final IHighlighter highlighter = hexViewer.getHighlighter();
+        final Optional<IHighlighter> highlighter = hexViewer.getHighlighter();
         final Optional<ICaret> caret = hexViewer.getCaret();
 
         menu.add(new JMenuItem(new AbstractAction("selection to highlight")
@@ -62,47 +62,38 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             @Override
             public boolean isEnabled()
             {
-                return highlighter != null && caret.filter(ICaret::hasSelection).isPresent();
+                return highlighter.isPresent() && caret.filter(ICaret::hasSelection).isPresent();
             }
 
             public void actionPerformed(final ActionEvent e)
             {
-                if(highlighter != null)
-                {
-                    caret.ifPresent(caret ->{
-                        highlighter.addHighlight(caret.getSelectionStart(), caret.getSelectionEnd());
-                        caret.clearSelection();
-                    });
-                }
+                highlighter.ifPresent(highlighter ->
+                        caret.ifPresent(caret ->{
+                            highlighter.addHighlight(caret.getSelectionStart(), caret.getSelectionEnd());
+                            caret.clearSelection();
+                        }));
             }
         }));
 
         final List<IHighlighter.IHighlight> highlightsAtByte = new ArrayList<>();
-        if (highlighter != null)
-        {
-            for (final IHighlighter.IHighlight highlight : highlighter.getHighlights())
+        highlighter.ifPresent(h -> h.getHighlights().forEach(i -> {
+            if(i.getStartOffset() <= byteIndex && i.getEndOffset() >= byteIndex)
             {
-                if (highlight.getStartOffset() <= byteIndex && highlight.getEndOffset() >= byteIndex)
-                {
-                    highlightsAtByte.add(highlight);
-                }
+                highlightsAtByte.add(i);
             }
-        }
+        }));
 
-        menu.add(new JMenuItem(new AbstractAction("remove clicked highlight")
+        menu.add(new JMenuItem(new AbstractAction("remove highlights under click")
         {
             @Override
             public boolean isEnabled()
             {
-                return highlighter != null && !highlightsAtByte.isEmpty();
+                return highlighter.isPresent() && !highlightsAtByte.isEmpty();
             }
 
             public void actionPerformed(final ActionEvent e)
             {
-                if (highlighter != null)
-                {
-                    highlighter.removeHighlights(highlightsAtByte);
-                }
+                highlighter.ifPresent(h ->  h.removeHighlights(highlightsAtByte));
             }
         }));
 
@@ -111,15 +102,12 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             @Override
             public boolean isEnabled()
             {
-                return highlighter != null && highlighter.getHighlightsCount() > 0;
+                return highlighter.filter(IHighlighter::hasHighlights).isPresent();
             }
 
             public void actionPerformed(final ActionEvent e)
             {
-                if (highlighter != null)
-                {
-                    highlighter.removeHighlights(highlighter.getHighlights());
-                }
+                highlighter.ifPresent(h ->  h.removeHighlights(h.getHighlights()));
             }
         }));
     }

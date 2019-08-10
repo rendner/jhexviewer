@@ -1,6 +1,5 @@
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
-import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import example.DataModelFactory;
 import example.ExampleContextMenuFactory;
 import example.themes.ThemeFactory;
@@ -81,12 +80,7 @@ public class Main
                 )
         );
 
-        final IHighlighter highlighter = hexViewer.getHighlighter();
-        if (highlighter != null)
-        {
-            highlighter.setPaintSelectionBehindHighlights(false);
-        }
-
+        hexViewer.getHighlighter().ifPresent(highlighter -> highlighter.setPaintSelectionBehindHighlights(false));
         return hexViewer;
     }
 }
