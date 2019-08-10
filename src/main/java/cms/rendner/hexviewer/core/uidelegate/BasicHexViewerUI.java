@@ -15,6 +15,7 @@ import cms.rendner.hexviewer.core.view.highlight.DefaultHighlighter;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import cms.rendner.hexviewer.swing.scrollable.IScrollableDelegate;
 import cms.rendner.hexviewer.utils.FontUtils;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -229,7 +230,8 @@ public class BasicHexViewerUI extends HexViewerUI
      * @param condition one of JComponent.WHEN_IN_FOCUSED_WINDOW, JComponent.WHEN_FOCUSED, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
      * @return the InputMap for the specified condition
      */
-    protected InputMap getInputMap(final int condition)
+    protected InputMap getInputMap(@MagicConstant(flags = {JComponent.WHEN_IN_FOCUSED_WINDOW,JComponent.WHEN_FOCUSED,JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT})
+                                   final int condition)
     {
         return null;
     }
