@@ -144,7 +144,7 @@ public class Range
      */
     public boolean contains(final int value)
     {
-        if(value <= MIN_VALID_INDEX)
+        if (value <= MIN_VALID_INDEX)
         {
             return false;
         }
@@ -155,11 +155,12 @@ public class Range
     /**
      * Calculates the intersection of two ranges.
      * If the two ranges don't intersect, then the returned range is invalid.
+     * <p/>
+     * Note:
+     * This method can't be called on invalid ranges.
      *
-     * @param otherRange the second range.
+     * @param otherRange a valid second range.
      * @return the intersection of the two rectangles.
-     * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange is invalid.
      */
     @NotNull
     public Range computeIntersection(@NotNull final Range otherRange)
@@ -170,12 +171,13 @@ public class Range
     /**
      * Convenience to calculate the intersection of two ranges without allocating a new range.
      * If the two ranges don't intersect, then the returned range is invalid.
+     * <p/>
+     * Note:
+     * This method can't be called on invalid ranges.
      *
-     * @param otherRange  the range to intersect against.
+     * @param otherRange  a valid range to intersect against.
      * @param returnValue the intersection of the two ranges is returned in this range.
      * @return <code>returnValue</code>, modified to specify the intersection.
-     * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange is invalid.
      */
     @NotNull
     public Range computeIntersection(@NotNull final Range otherRange, @NotNull final Range returnValue)
@@ -186,13 +188,14 @@ public class Range
     /**
      * Convenience to calculate the intersection of two ranges without allocating a new range.
      * If the two ranges don't intersect, then the returned range is invalid.
+     * <p/>
+     * Note:
+     * This method can't be called on invalid ranges.
      *
-     * @param otherStart  the start value of the range to intersect against.
-     * @param otherEnd    the end value of the range to intersect against.
+     * @param otherStart  the start value of the range to intersect against, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
+     * @param otherEnd    the end value of the range to intersect against, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param returnValue the intersection of the two ranges is returned in this range.
      * @return <code>result</code>, modified to specify the intersection.
-     * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if the other range is invalid.
      */
     @NotNull
     public Range computeIntersection(final int otherStart, final int otherEnd, @NotNull final Range returnValue)
@@ -238,11 +241,12 @@ public class Range
 
     /**
      * Convenience method that calculates the union of two ranges without allocating a new range.
+     * <p/>
+     * Note:
+     * This method can't be called on invalid ranges.
      *
-     * @param otherRange the second range.
+     * @param otherRange the second valid range.
      * @return the union of the tow ranges.
-     * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange is invalid.
      */
     @NotNull
     public Range computeUnion(@NotNull final Range otherRange)
@@ -252,12 +256,13 @@ public class Range
 
     /**
      * Convenience method that calculates the union of two ranges without allocating a new range.
+     * <p/>
+     * Note:
+     * This method can't be called on invalid ranges.
      *
-     * @param otherRange  the second range.
+     * @param otherRange  the second valid range.
      * @param returnValue the union of the two ranges is returned in this range.
      * @return the <code>returnValue</code> modified to specify the union.
-     * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if otherRange is invalid.
      */
     @NotNull
     public Range computeUnion(@NotNull final Range otherRange, @NotNull final Range returnValue)
@@ -267,13 +272,14 @@ public class Range
 
     /**
      * Convenience method that calculates the union of two ranges without allocating a new range.
+     * <p/>
+     * Note:
+     * This method can't be called on invalid ranges.
      *
-     * @param otherStart  the start value of the second range.
-     * @param otherEnd    the end value of the second range.
+     * @param otherStart  the start value of the second range, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
+     * @param otherEnd    the end value of the second range, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param returnValue the union of the two ranges is returned in this range.
      * @return the <code>returnValue</code> modified to specify the union.
-     * @throws IllegalStateException    if this range is invalid.
-     * @throws IllegalArgumentException if the other range is invalid.
      */
     @NotNull
     public Range computeUnion(final int otherStart, final int otherEnd, @NotNull final Range returnValue)

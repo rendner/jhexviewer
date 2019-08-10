@@ -49,8 +49,7 @@ public abstract class RowTemplate implements IRowTemplate
      *
      * @param font      the font used to render the text of the rows.
      * @param dimension the dimension of the row.
-     * @param elements  the elements of the row.
-     * @throws IllegalArgumentException if <code>elements</code> is empty.
+     * @param elements  the elements of the row, not empty - the list has to contain at least one element.
      */
     public RowTemplate(@NotNull final Font font, @NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements)
     {

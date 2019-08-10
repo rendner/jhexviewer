@@ -154,7 +154,6 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
          *
          * @param size new size &gt;= 1, of the font.
          * @return the builder instance, to allow method chaining.
-         * @throws IllegalArgumentException if <code>size</code> is &lt; 1.
          */
         @NotNull
         IBuilder<B, C> fontSize(int size);
@@ -162,10 +161,9 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
         /**
          * Increases the size of the font.
          *
-         * @param by      the amount of size to increase, has to be &gt;= 1.
-         * @param maxSize the max size, to restrict that the new size.
+         * @param by      the amount of size to increase, &gt;= 1.
+         * @param maxSize the max size, to restrict that the new size, &gt;= 1.
          * @return the builder instance, to allow method chaining.
-         * @throws IllegalArgumentException if <code>by</code> or <code>maxSize</code> is &lt; 1.
          */
         @NotNull
         IBuilder<B, C> increaseFontSize(int by, int maxSize);
@@ -173,10 +171,9 @@ public interface IRowTemplateConfiguration<B extends IRowTemplateConfiguration.I
         /**
          * Decreases the size of the font.
          *
-         * @param by      the amount of size to decrease, has to be &gt;= 1.
-         * @param minSize the min size, to restrict that the new size.
+         * @param by      the amount of size to decrease, &gt;= 1.
+         * @param minSize the min size, to restrict that the new size, &gt;= 1.
          * @return the builder instance, to allow method chaining.
-         * @throws IllegalArgumentException if <code>by</code> or <code>minSize</code> is &lt; 1.
          */
         @NotNull
         IBuilder<B, C> decreaseFontSize(int by, int minSize);

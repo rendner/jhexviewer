@@ -22,11 +22,9 @@ public interface IDataModel
 
     /**
      * Returns the byte value for the offset as int (the range of a signed byte is -128 to 127, but we want a range of 0 to 255).
-     * This method doesn't validate if the offset is out of bounds before accessing the index.
      *
-     * @param offset the offset in the internal data array &gt;= 0.
+     * @param offset the offset in the internal data array, in the range [0, size()-1].
      * @return the value at the <code>offset</code>.
-     * @throws IndexOutOfBoundsException
      */
-    int getByte(int offset) throws IndexOutOfBoundsException;
+    int getByte(int offset);
 }

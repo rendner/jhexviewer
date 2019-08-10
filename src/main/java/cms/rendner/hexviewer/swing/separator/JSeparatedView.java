@@ -88,9 +88,8 @@ public class JSeparatedView extends BorderlessJComponent
     /**
      * Returns the corresponding separator placeholder for the index.
      *
-     * @param index the index of the n-th separator.
+     * @param index the index of the n-th separator, in the range [0, getSeparatorPlaceholderCount()-1].
      * @return the separator at the index.
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getSeparatorPlaceholderCount())
      */
     public VSeparatorPlaceholder getSeparatorPlaceholder(final int index)
     {

@@ -33,8 +33,6 @@ public class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
      * @param totalCharsCount the number of chars to display the formatted offset value including suffix and prefix (if required).
      * @param onlyDigitsCount the number of chars to display only the digits of the formatted offset value without any
      *                        additional suffix or prefix.
-     * @throws IllegalArgumentException if <code>dimension</code> or <code>elements</code> is <code>null</code>
-     *                                  or <code>elements</code> contains less or more than <code>1</code> entry.
      */
     public OffsetRowTemplate(@NotNull Font font,
                              @NotNull final IRowTemplate.IDimension dimension,

@@ -100,7 +100,6 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * @param comp        ignored
      * @param constraints ignored
      * @param index       ignored
-     * @throws UnsupportedOperationException on every call.
      */
     @Override
     protected void addImpl(final Component comp, final Object constraints, final int index)
@@ -290,7 +289,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
         if (paintDelegate != null)
         {
-            if(rowTemplate != null)
+            if (rowTemplate != null)
             {
                 g.setFont(rowTemplate.font());
             }

@@ -31,7 +31,7 @@ public class VSeparatorPlaceholder extends BorderlessJComponent
     /**
      * Creates a new instance with a specified separator.
      *
-     * @param separator
+     * @param separator the separator to wrap.
      */
     public VSeparatorPlaceholder(final Separator separator)
     {

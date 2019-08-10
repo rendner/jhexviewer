@@ -75,7 +75,7 @@ public class MappedFileData implements IDisposableModel, IDataModel
     }
 
     @Override
-    public int getByte(final int offset) throws IndexOutOfBoundsException
+    public int getByte(final int offset)
     {
         if (mappedByteBuffer == null)
         {

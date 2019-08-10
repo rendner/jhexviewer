@@ -93,7 +93,6 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      *
      * @param byteIndex the index of the byte in the view. The value has to be &gt;= 0.
      * @return the bounds in the view, never <code>null</code>.
-     * @thows IllegalArgumentException if byteIndex is smaller than 0.
      */
     @NotNull
     public Rectangle getByteRect(final int byteIndex)
@@ -108,7 +107,6 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @param byteIndex   the index of the byte in the view. The value has to be &gt;= 0.
      * @param returnValue this rect will be filled with the result.
      * @return the <code>returnValue</code> object.
-     * @thows IllegalArgumentException if byteIndex is smaller than 0.
      */
     @NotNull
     public Rectangle getByteRect(final int byteIndex, @NotNull final Rectangle returnValue)
@@ -143,7 +141,6 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      *
      * @param caretIndex the index of the caret in the view. The value has to be &gt;= 0.
      * @return the bounds in the view, never <code>null</code>.
-     * @thows IllegalArgumentException if caretIndex is smaller than 0.
      */
     @NotNull
     public Rectangle getCaretRect(final int caretIndex)
@@ -158,7 +155,6 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @param caretIndex  the index of the caret in the view. The value has to be &gt;= 0.
      * @param returnValue this rect will be filled with the result.
      * @return the <code>returnValue</code> object.
-     * @thows IllegalArgumentException if caretIndex is smaller than 0.
      */
     @NotNull
     public Rectangle getCaretRect(final int caretIndex, @NotNull final Rectangle returnValue)

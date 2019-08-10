@@ -14,12 +14,10 @@ import javax.swing.border.Border;
 public class BorderlessJComponent extends JComponent
 {
     /**
-     * <p>Note:  If <code>border</code> is non-<code>null</code>, this
-     * method will throw an exception as borders are not supported on
-     * a <code>BorderlessJComponent</code>.
+     * <p>Note:  If <code>border</code> is non-<code>null</code>, this method will throw an exception as borders are
+     * not supported on a <code>BorderlessJComponent</code>.
      *
-     * @param border the <code>Border</code> to set
-     * @throws IllegalArgumentException this method is not implemented
+     * @param border ignored
      */
     public final void setBorder(@Nullable final Border border)
     {

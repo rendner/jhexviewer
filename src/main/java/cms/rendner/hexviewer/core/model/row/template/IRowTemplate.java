@@ -78,10 +78,8 @@ public interface IRowTemplate
     /**
      * Returns the element at the specified index in this row.
      *
-     * @param index index of the element to return
+     * @param index index of the element to return, in the range of <code>index &gt;= 0 && index &lt; elementCount()</code>)
      * @return the element at the index.
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (<code>index &lt; 0 || index &gt;= elementCount()</code>)
      */
     @NotNull
     IElement element(int index);
@@ -130,11 +128,10 @@ public interface IRowTemplate
     /**
      * Computes an union of the bounds of the elements in range of [<code>firstElementIndex</code>, <code>lastElementIndex</code>].
      *
-     * @param firstElementIndex the index of the first element which should be included.
-     * @param lastElementIndex  the index of the last element which should be included.
+     * @param firstElementIndex the index of the first element which should be included, in the range [0, elementCount()-1].
+     * @param lastElementIndex  the index of the last element which should be included, in the range [0, elementCount()-1].
      * @param returnValue       the rectangle in which the result should be stored.
      * @return <code>returnValue</code> modified to specify the bounds
-     * @throws IndexOutOfBoundsException if <code>firstElementIndex</code> or <code>lastElementIndex</code> is out of range ([0, elementCount()-1])
      */
     @NotNull
     Rectangle elementBounds(int firstElementIndex, int lastElementIndex, @NotNull Rectangle returnValue);

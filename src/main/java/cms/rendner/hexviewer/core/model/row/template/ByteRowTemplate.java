@@ -29,9 +29,8 @@ public class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
      *
      * @param font       the font used to render the text of the rows.
      * @param dimension  the dimension of the row.
-     * @param elements   the elements which describe the position and bounds of the bytes of the row.
+     * @param elements   non empty list of elements which describe the position and bounds of the bytes of the row.
      * @param caretWidth the width of the caret which can be placed between the bytes of the row.
-     * @throws IllegalArgumentException if <code>elements</code> is empty.
      */
     public ByteRowTemplate(@NotNull Font font, @NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements, final int caretWidth)
     {

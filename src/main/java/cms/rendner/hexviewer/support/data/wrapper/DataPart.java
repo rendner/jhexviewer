@@ -58,7 +58,7 @@ public class DataPart implements IDataPart
     }
 
     @Override
-    public int getByte(final int indexInPart) throws IndexOutOfBoundsException
+    public int getByte(final int indexInPart)
     {
         return dataModel.getByte(offset + indexInPart);
     }

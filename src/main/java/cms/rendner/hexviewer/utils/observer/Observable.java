@@ -37,8 +37,7 @@ public class Observable<T> implements IObservable<T>
      * The order in which notifications will be delivered to multiple
      * observers is not specified. See the class comment.
      *
-     * @param o an observer to be added.
-     * @throws NullPointerException if the parameter o is null.
+     * @param o an observer to be added, not <code>null</code>.
      */
     public synchronized void addObserver(IObserver<T> o)
     {

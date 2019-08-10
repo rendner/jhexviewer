@@ -384,7 +384,6 @@ public class JHexViewer extends JComponent
      * Sets the number of preferred rows which should be displayed.
      *
      * @param newValue number of rows. Value should be &gt;= 0.
-     * @throws IllegalArgumentException if value is &lt; 0
      */
     public void setPreferredVisibleRowCount(final int newValue)
     {
@@ -414,7 +413,6 @@ public class JHexViewer extends JComponent
      * A PropertyChange event {@link JHexViewer#PROPERTY_FOCUSED_AREA} is fired when focused area has changed.
      *
      * @param id <code>AreaId.HEX</code> or <code>AreaId.ASCII</code>
-     * @throws IllegalArgumentException if <code>id</code> is not a focusable area.
      * @see IPaintDelegate
      * @see #setPaintDelegate(IPaintDelegate)
      * @see #getPaintDelegate()
@@ -549,7 +547,6 @@ public class JHexViewer extends JComponent
      *
      * @param id the id of the requested byte component.
      * @return the component which displays the content of the requested area.
-     * @throws IllegalArgumentException if <code>id</code> is not a byte area.
      * @see #isByteArea(AreaId)
      */
     @NotNull

@@ -52,7 +52,7 @@ public interface IHighlighter
      * Renders the highlights.
      *
      * @param g            the Graphics context in which to paint.
-     * @param byteRowsView
+     * @param byteRowsView the view in which the highlights should be painted.
      */
     void paint(@NotNull Graphics g, @NotNull ByteRowsView byteRowsView);
 
@@ -174,7 +174,7 @@ public interface IHighlighter
          * @param byteStartIndex       the starting offset in the configuration &gt;= 0
          * @param byteEndIndex         the ending offset in the configuration &gt;= byteStartIndex
          */
-        void paint(@NotNull Graphics g, @NotNull JHexViewer hexViewer,@NotNull  ByteRowsView rowsView,
+        void paint(@NotNull Graphics g, @NotNull JHexViewer hexViewer, @NotNull ByteRowsView rowsView,
                    @NotNull final HorizontalDimension rowElementsDimension, int byteStartIndex, int byteEndIndex);
 
     }

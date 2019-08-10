@@ -38,7 +38,6 @@ public class ScrollableRowsContainer extends ScrollableContainer
      * Sets the number of preferred rows which should be displayed.
      *
      * @param newValue number of rows, &gt;= 0.
-     * @throws IllegalArgumentException if value is &lt; 0
      */
     public void setPreferredVisibleRowCount(final int newValue)
     {

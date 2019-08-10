@@ -32,9 +32,8 @@ public class IndexPosition
     /**
      * Creates a new instance from the specified arguments.
      *
-     * @param index the index of the byte to which this position refers.
+     * @param index the index of the byte to which this position refers, index has to be &gt;= 0.
      * @param bias  the interest in one of the two possible directions.
-     * @throws IllegalArgumentException if index is &lt;0.
      */
     public IndexPosition(final int index, @NotNull final Bias bias)
     {
@@ -78,7 +77,6 @@ public class IndexPosition
      * Sets the new index.
      *
      * @param index the new index of the byte to which this position refers, &gt=0.
-     * @throws IllegalArgumentException if index is &lt;0.
      */
     public void setIndex(final int index)
     {

@@ -49,7 +49,7 @@ public class FileData implements IDataModel
     }
 
     @Override
-    public int getByte(final int offset) throws IndexOutOfBoundsException
+    public int getByte(final int offset)
     {
         return data[offset];
     }

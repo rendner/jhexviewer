@@ -26,9 +26,8 @@ public class LookupTable implements ILookupTable
      * Creates a new instance.
      *
      * @param table   array of precalculated strings.
-     * @param bitMask used to "calculate" the index in the char-table.
-     *                The index is calculated by <code>index = aIntValue & bitMask</code>
-     * @throws IllegalArgumentException if the size of the table is less than <code>Integer.MAX_VALUE & bitMask</code>.
+     * @param bitMask used to map an value to an index in the table.
+     *                Therefore the bitMask must fulfill <code>(table.length - 1) == (Integer.MAX_VALUE & bitMask)</code>
      */
     public LookupTable(@NotNull final String[] table, final int bitMask)
     {

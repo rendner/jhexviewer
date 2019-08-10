@@ -32,8 +32,7 @@ public class HorizontalDimension
      * Creates a new instance.
      *
      * @param x     the start position.
-     * @param width the width (has to be positive).
-     * @throws IllegalArgumentException if width is &lt;0.
+     * @param width the width, &gt;= 0.
      */
     public HorizontalDimension(final int x, final int width)
     {
@@ -74,8 +73,7 @@ public class HorizontalDimension
     /**
      * Sets the new width.
      *
-     * @param width the new width (has to be positive)
-     * @throws IllegalArgumentException if width is &lt;0.
+     * @param width the new width, &gt;= 0.
      */
     public void setWidth(final int width)
     {

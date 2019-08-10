@@ -18,10 +18,9 @@ public interface IByteRowTemplate extends IRowTemplate
      * Computes the bounds of the caret in this row.
      * A caret is always placed in front of a byte.
      *
-     * @param byteIndex   the index of the byte before which the caret should be inserted
+     * @param byteIndex   the index of the byte before which the caret should be inserted, in the range [0, getNumberOfBytes()-1].
      * @param returnValue the rectangle in which the result should be stored.
-     * @return <code>returnValue</code> modified to specify the bounds
-     * @throws IndexOutOfBoundsException if <code>byteIndex</code> is out of range (valid range: [0, getNumberOfBytes()-1])
+     * @return <code>returnValue</code> modified to specify the bounds.
      */
     @NotNull
     Rectangle caretBounds(int byteIndex, @NotNull Rectangle returnValue);
