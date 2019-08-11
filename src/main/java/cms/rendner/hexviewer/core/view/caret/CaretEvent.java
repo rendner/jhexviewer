@@ -10,7 +10,7 @@ import java.util.EventObject;
  *
  * @author rendner
  */
-public class CaretEvent extends EventObject
+public final class CaretEvent extends EventObject
 {
     @NotNull
     private final IndexPosition oldDot;

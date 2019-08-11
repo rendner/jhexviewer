@@ -3,6 +3,7 @@ package cms.rendner.hexviewer.core.view.caret;
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
+import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,7 +121,8 @@ public class DefaultCaret extends AbstractCaret
      * @param rvLocation the location to adjust, this instance will contain the result.
      * @return the adjusted result.
      */
-    protected Point clampLocationToRowsBounds(final AreaId id, final Point rvLocation)
+    @NotNull
+    protected Point clampLocationToRowsBounds(@NotNull final AreaId id, @NotNull final Point rvLocation)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
 
@@ -156,8 +158,40 @@ public class DefaultCaret extends AbstractCaret
         }
     }
 
+    @NotNull
     @Override
-    protected void handleMouseReleased(final MouseEvent event, final ByteRowsView targetView)
+    protected ICaretColorProvider createDefaultColorProvider()
+    {
+        return new ICaretColorProvider()
+        {
+            @NotNull
+            private final Color focusedCaretColor = new Color(0, 148, 200);
+            @NotNull
+            private final Color caretColor = new Color(0, 148, 200, 100);
+            @NotNull
+            private final Color focusedSelectionColor = new Color(0, 148, 200, 125);
+            @NotNull
+            private final Color selectionColor = new Color(0, 148, 200, 55);
+
+            @NotNull
+            @Override
+            public Color getCaretColor(@NotNull final AreaId areaId, final boolean focused)
+            {
+                return focused ? focusedCaretColor : caretColor;
+            }
+
+            @NotNull
+            @Override
+            public Color getSelectionColor(@NotNull final AreaId areaId, final boolean focused)
+            {
+                return focused ? focusedSelectionColor : selectionColor;
+            }
+        };
+    }
+
+
+    @Override
+    protected void handleMouseReleased(@NotNull final MouseEvent event, @NotNull final ByteRowsView targetView)
     {
         if (!event.isConsumed() && SwingUtilities.isLeftMouseButton(event))
         {
@@ -178,7 +212,7 @@ public class DefaultCaret extends AbstractCaret
     }
 
     @Override
-    protected void handleMouseDragged(final MouseEvent event, final ByteRowsView targetView)
+    protected void handleMouseDragged(@NotNull final MouseEvent event, @NotNull final ByteRowsView targetView)
     {
         if (!event.isConsumed() && SwingUtilities.isLeftMouseButton(event))
         {
@@ -203,7 +237,7 @@ public class DefaultCaret extends AbstractCaret
     }
 
     @Override
-    protected void handleMousePressed(final MouseEvent event, final ByteRowsView targetView)
+    protected void handleMousePressed(@NotNull final MouseEvent event, @NotNull final ByteRowsView targetView)
     {
         if (!event.isConsumed() && SwingUtilities.isLeftMouseButton(event))
         {

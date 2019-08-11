@@ -38,6 +38,7 @@ public abstract class AbstractCaret implements ICaret
     /**
      * Contains the registered caret listeners.
      */
+    @NotNull
     private final List<ICaretListener> caretListeners = new ArrayList<>();
 
     /**
@@ -502,36 +503,10 @@ public abstract class AbstractCaret implements ICaret
      * Creates a default color provider which is automatically assigned to the caret when the caret is installed to a
      * JHexViewer.
      *
-     * @return a default color provider, never <code>null</code>.
+     * @return a default color provider.
      */
-    protected ICaretColorProvider createDefaultColorProvider()
-    {
-        return new ICaretColorProvider()
-        {
-            @NotNull
-            private final Color focusedCaretColor = new Color(0, 148, 200);
-            @NotNull
-            private final Color caretColor = new Color(0, 148, 200, 100);
-            @NotNull
-            private final Color focusedSelectionColor = new Color(0, 148, 200, 125);
-            @NotNull
-            private final Color selectionColor = new Color(0, 148, 200, 55);
-
-            @NotNull
-            @Override
-            public Color getCaretColor(@NotNull final AreaId areaId, final boolean focused)
-            {
-                return focused ? focusedCaretColor : caretColor;
-            }
-
-            @NotNull
-            @Override
-            public Color getSelectionColor(@NotNull final AreaId areaId, final boolean focused)
-            {
-                return focused ? focusedSelectionColor : selectionColor;
-            }
-        };
-    }
+    @NotNull
+    protected abstract ICaretColorProvider createDefaultColorProvider();
 
     /**
      * Damages the old and new position of the caret which results in a repaint for these areas.
@@ -553,7 +528,7 @@ public abstract class AbstractCaret implements ICaret
      * @param start the start position of the selection.
      * @param end   the end position of the selection.
      */
-    protected void damageSelection(final IndexPosition start, final IndexPosition end)
+    protected void damageSelection(@NotNull final IndexPosition start, @NotNull final IndexPosition end)
     {
         hexViewer.getDamager().ifPresent(damager -> {
             damager.damageBytes(AreaId.HEX, start.getIndex(), end.getIndex());
@@ -580,9 +555,9 @@ public abstract class AbstractCaret implements ICaret
      * Callback triggered by the blinker which updates the visibility of the blinking caret and requests a repaint
      * after modifying the visibility.
      *
-     * @param event the event send by the a Timer.
+     * @param event the event send by the Timer.
      */
-    protected void handleBlinkerAction(final ActionEvent event)
+    protected void handleBlinkerAction(@NotNull final ActionEvent event)
     {
         caretIsVisible = !caretIsVisible;
         final int dotIndex = dot.getIndex();
@@ -594,7 +569,7 @@ public abstract class AbstractCaret implements ICaret
      *
      * @param event the event send by the owner of the changed property.
      */
-    protected void handlePropertyChange(final PropertyChangeEvent event)
+    protected void handlePropertyChange(@NotNull final PropertyChangeEvent event)
     {
         final String propertyName = event.getPropertyName();
 
@@ -611,13 +586,13 @@ public abstract class AbstractCaret implements ICaret
      * Invoked when a mouse button on a ByteRowsView is pressed and then dragged. <code>MOUSE_DRAGGED</code> events will continue to be
      * delivered to the caret where the drag originated until the mouse button is released (regardless of whether the
      * mouse location is within the bounds of the ByteRowsView which initiated the drag).
-     * <p>
+     * <p/>
      * Updates an already started selection.
      *
      * @param event      the event
      * @param targetView the view which sends the event.
      */
-    protected abstract void handleMouseDragged(final MouseEvent event, final ByteRowsView targetView);
+    protected abstract void handleMouseDragged(@NotNull final MouseEvent event, @NotNull final ByteRowsView targetView);
 
     /**
      * Invoked when a mouse button has been released on a ByteRowsView.
@@ -625,7 +600,7 @@ public abstract class AbstractCaret implements ICaret
      * @param event      the event
      * @param targetView the view which sends the event.
      */
-    protected abstract void handleMouseReleased(final MouseEvent event, final ByteRowsView targetView);
+    protected abstract void handleMouseReleased(@NotNull final MouseEvent event, @NotNull final ByteRowsView targetView);
 
     /**
      * Invoked when the mouse button has been pressed.
@@ -634,7 +609,7 @@ public abstract class AbstractCaret implements ICaret
      * @param event      the event
      * @param targetView the view which sends the event.
      */
-    protected abstract void handleMousePressed(final MouseEvent event, final ByteRowsView targetView);
+    protected abstract void handleMousePressed(@NotNull final MouseEvent event, @NotNull final ByteRowsView targetView);
 
     /**
      * Internal observer to hide the public listener interfaces.
@@ -642,13 +617,13 @@ public abstract class AbstractCaret implements ICaret
     protected class InternalHandler extends MouseInputAdapter implements ActionListener, PropertyChangeListener
     {
         @Override
-        public void actionPerformed(final ActionEvent event)
+        public void actionPerformed(@NotNull final ActionEvent event)
         {
             handleBlinkerAction(event);
         }
 
         @Override
-        public void mousePressed(final MouseEvent event)
+        public void mousePressed(@NotNull final MouseEvent event)
         {
             final Object source = event.getSource();
             if (source instanceof ByteRowsView)
@@ -658,7 +633,7 @@ public abstract class AbstractCaret implements ICaret
         }
 
         @Override
-        public void mouseDragged(final MouseEvent event)
+        public void mouseDragged(@NotNull final MouseEvent event)
         {
             final Object source = event.getSource();
             if (source instanceof ByteRowsView)
@@ -668,7 +643,7 @@ public abstract class AbstractCaret implements ICaret
         }
 
         @Override
-        public void mouseReleased(final MouseEvent event)
+        public void mouseReleased(@NotNull final MouseEvent event)
         {
             final Object source = event.getSource();
             if (source instanceof ByteRowsView)
@@ -678,7 +653,7 @@ public abstract class AbstractCaret implements ICaret
         }
 
         @Override
-        public void propertyChange(final PropertyChangeEvent event)
+        public void propertyChange(@NotNull final PropertyChangeEvent event)
         {
             handlePropertyChange(event);
         }
