@@ -306,23 +306,29 @@ public abstract class AbstractCaret implements ICaret
     @Override
     public void setSelection(final int startIndex, final int endIndex)
     {
-        final int markIndex = startIndex;
-        final int dotIndex = endIndex;
+        // startIndex: becomes new index of the mark
+        // endIndex: becomes new index of the dot
+        final boolean selectionFromLeftToRight = endIndex >= startIndex;
 
-        // the dot/mark is always in front of a byte
-        // if the byte in front of the dot/mark should be included
-        // the dot/mark should be incremented by one
-        if (dotIndex >= markIndex)
+        if (selectionFromLeftToRight)
         {
+            // end is equals/after start:
+            //
+            // the dot is placed in front of the rightmost byte which should be included in the selection, +1 to
+            // include this byte
             changeDotAndMark(
-                    createSanitizedPosition(dotIndex + 1),
-                    createSanitizedPosition(markIndex));
+                    createSanitizedPosition(endIndex + 1),
+                    createSanitizedPosition(startIndex));
         }
         else
         {
+            // end is before start:
+            //
+            // the mark is placed in front of the rightmost byte which should be included in the selection, +1 to
+            // include this byte
             changeDotAndMark(
-                    createSanitizedPosition(dotIndex),
-                    createSanitizedPosition(markIndex + 1));
+                    createSanitizedPosition(endIndex),
+                    createSanitizedPosition(startIndex + 1));
         }
     }
 
