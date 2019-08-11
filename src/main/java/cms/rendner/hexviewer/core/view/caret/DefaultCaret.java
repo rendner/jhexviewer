@@ -45,7 +45,7 @@ public class DefaultCaret extends AbstractCaret
     {
         if (caretIsVisible && isSelectionEmpty())
         {
-            final Rectangle caretRect = rowsView.getCaretRect(dotPosition.getIndex());
+            final Rectangle caretRect = rowsView.getCaretRect(dot.getIndex());
             final AreaId areaToPaint = rowsView.getId();
             final int caretInset = 2;
             g.setColor(colorProvider.getCaretColor(areaToPaint, hexViewer.getFocusedArea().equals(areaToPaint)));
@@ -62,7 +62,7 @@ public class DefaultCaret extends AbstractCaret
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
 
 
-        int caretIndex = dotPosition.getIndex();
+        int caretIndex = dot.getIndex();
 
         if (!dragModeIsActive && isSelectionEmpty())
         {
@@ -83,7 +83,7 @@ public class DefaultCaret extends AbstractCaret
                 // than the width of the active rowsView, the visible part in the window shouldn't jump to the first byte of the next row. Otherwise
                 // the user would be confused about the jumping content.
                 //
-                if (dotPosition.getBias().equals(IndexPosition.Bias.Backward))
+                if (dot.getBias().equals(IndexPosition.Bias.Backward))
                 {
                     caretIndex = getSanitizedIndex(caretIndex - 1);
                     visibleRect = rowsView.getByteRect(caretIndex);

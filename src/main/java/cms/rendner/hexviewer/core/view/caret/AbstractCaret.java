@@ -8,7 +8,6 @@ import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.highlight.DefaultHighlighter;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import cms.rendner.hexviewer.utils.CheckUtils;
-import cms.rendner.hexviewer.utils.observer.Observable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An abstract implementation of ICaret. It can blink at the rate specified by the BlinkRate property.
@@ -32,19 +33,24 @@ import java.beans.PropertyChangeListener;
  *
  * @author rendner
  */
-public abstract class AbstractCaret extends Observable<Void> implements ICaret
+public abstract class AbstractCaret implements ICaret
 {
+    /**
+     * Contains the registered caret listeners.
+     */
+    private final List<ICaretListener> caretListeners = new ArrayList<>();
+
     /**
      * The position of the dot.
      */
     @NotNull
-    protected IndexPosition dotPosition = new IndexPosition();
+    protected IndexPosition dot = new IndexPosition();
 
     /**
      * The position of the mark.
      */
     @NotNull
-    protected IndexPosition markPosition = new IndexPosition();
+    protected IndexPosition mark = new IndexPosition();
 
     /**
      * Used to paint the selection.
@@ -110,10 +116,11 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
 
         internalHandler = new InternalHandler();
         hexViewer.addPropertyChangeListener(internalHandler);
-
         // add mouse listener for each byte view separately to monitor dragging (to update selection)
         hexViewer.getHexRowsView().addMouseListener(internalHandler);
         hexViewer.getAsciiRowsView().addMouseListener(internalHandler);
+
+        dot = mark = createSanitizedPosition(0);
 
         adjustBlinker();
         adjustCaretVisibility();
@@ -123,8 +130,9 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     @Override
     public void uninstall(@NotNull final JHexViewer hexViewer)
     {
-        hexViewer.removePropertyChangeListener(internalHandler);
+        caretListeners.clear();
 
+        hexViewer.removePropertyChangeListener(internalHandler);
         hexViewer.getHexRowsView().removeMouseListener(internalHandler);
         hexViewer.getAsciiRowsView().removeMouseListener(internalHandler);
 
@@ -136,6 +144,21 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     @Override
+    public void addCaretListener(@NotNull final ICaretListener listener)
+    {
+        if (!caretListeners.contains(listener))
+        {
+            caretListeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeCaretListener(@NotNull final ICaretListener listener)
+    {
+        caretListeners.remove(listener);
+    }
+
+    @Override
     public void setColorProvider(@NotNull final ICaretColorProvider newColorProvider)
     {
         if (!newColorProvider.equals(colorProvider))
@@ -144,12 +167,12 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
 
             if (isSelectionEmpty())
             {
-                final int dotIndex = dotPosition.getIndex();
+                final int dotIndex = dot.getIndex();
                 damageCaret(dotIndex, dotIndex);
             }
             else
             {
-                damageSelection(markPosition, dotPosition);
+                damageSelection(mark, dot);
             }
         }
     }
@@ -196,7 +219,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     @Override
     public IndexPosition getDot()
     {
-        return dotPosition;
+        return dot;
     }
 
     @Override
@@ -234,20 +257,20 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     public void moveDot(final int index, @NotNull final IndexPosition.Bias bias)
     {
         final IndexPosition sanitizedDot = createSanitizedPosition(index, bias);
-        changeDotAndMark(sanitizedDot, markPosition);
+        changeDotAndMark(sanitizedDot, mark);
     }
 
     @NotNull
     @Override
     public IndexPosition getMark()
     {
-        return markPosition;
+        return mark;
     }
 
     @Override
     public boolean isSelectionEmpty()
     {
-        return dotPosition.getIndex() == markPosition.getIndex();
+        return dot.getIndex() == mark.getIndex();
     }
 
     @Override
@@ -259,7 +282,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     @Override
     public int getSelectionStart()
     {
-        return Math.min(dotPosition.getIndex(), markPosition.getIndex());
+        return Math.min(dot.getIndex(), mark.getIndex());
     }
 
     @Override
@@ -267,7 +290,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     {
         // decrement the selection end by one, because the mark/dot is always in front of a byte
         // otherwise the selection would include the byte
-        return Math.max(dotPosition.getIndex(), markPosition.getIndex()) - 1;
+        return Math.max(dot.getIndex(), mark.getIndex()) - 1;
     }
 
     @Override
@@ -275,7 +298,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     {
         if (hasSelection())
         {
-            setDot(dotPosition.getIndex());
+            setDot(dot.getIndex());
         }
     }
 
@@ -346,24 +369,25 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      * Updates the position of the dot and mark if they have changed.
      * This method also invalidates the areas which have to be repainted after the update and notifies the observer.
      *
-     * @param dot  the new sanitized dot position.
-     * @param mark the new sanitized mark position.
+     * @param newDot  the new sanitized dot position.
+     * @param newMark the new sanitized mark position.
      */
-    protected void changeDotAndMark(@NotNull final IndexPosition dot, @NotNull final IndexPosition mark)
+    protected void changeDotAndMark(@NotNull final IndexPosition newDot, @NotNull final IndexPosition newMark)
     {
-        if (!dot.equals(dotPosition) || !mark.equals(markPosition))
+        if (!newDot.equals(dot) || !newMark.equals(mark))
         {
-            final int oldDotIndex = dotPosition.getIndex();
+            final IndexPosition oldDot = dot;
+            final IndexPosition oldMark = mark;
 
-            dotPosition = dot;
-            markPosition = mark;
+            dot = newDot;
+            mark = newMark;
 
-            damageCaret(oldDotIndex, dotPosition.getIndex());
+            fireCaretPositionChanged(oldDot, oldMark);
 
+            damageCaret(oldDot.getIndex(), dot.getIndex());
             adjustSelectionHighlight();
             adjustCaretVisibility();
             adjustBlinker();
-            setChangedAndNotifyObservers();
         }
     }
 
@@ -538,6 +562,21 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     /**
+     * Notifies all registered listener about the changed caret position.
+     *
+     * @param oldDot  the old position of the dot.
+     * @param oldMark the old position of the mark.
+     */
+    protected void fireCaretPositionChanged(@NotNull final IndexPosition oldDot, @NotNull final IndexPosition oldMark)
+    {
+        if (!caretListeners.isEmpty())
+        {
+            final CaretEvent event = new CaretEvent(this, oldDot, oldMark, dot, mark);
+            caretListeners.forEach(i -> i.caretPositionChanged(event));
+        }
+    }
+
+    /**
      * Callback triggered by the blinker which updates the visibility of the blinking caret and requests a repaint
      * after modifying the visibility.
      *
@@ -546,7 +585,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     protected void handleBlinkerAction(final ActionEvent event)
     {
         caretIsVisible = !caretIsVisible;
-        final int dotIndex = dotPosition.getIndex();
+        final int dotIndex = dot.getIndex();
         damageCaret(dotIndex, dotIndex);
     }
 

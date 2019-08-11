@@ -5,7 +5,6 @@ import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
-import cms.rendner.hexviewer.utils.observer.IObservable;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -24,7 +23,7 @@ import java.awt.*;
  * @see JHexViewer#lastPossibleCaretIndex()
  * @see cms.rendner.hexviewer.core.model.data.IDataModel
  */
-public interface ICaret extends IObservable<Void>
+public interface ICaret
 {
     /**
      * Installs the caret to the JHexViewer.
@@ -45,6 +44,20 @@ public interface ICaret extends IObservable<Void>
      * @param hexViewer the JHexViewer component to uninstall from.
      */
     void uninstall(@NotNull JHexViewer hexViewer);
+
+    /**
+     * Adds a listener for receiving notifications about caret movement.
+     *
+     * @param listener the listener instance to add.
+     */
+    void addCaretListener(@NotNull ICaretListener listener);
+
+    /**
+     * Removes a listener for receiving notifications about caret movement.
+     *
+     * @param listener the listener instance to remove.
+     */
+    void removeCaretListener(@NotNull ICaretListener listener);
 
     /**
      * Automatically called to render the caret.
