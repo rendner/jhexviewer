@@ -90,7 +90,7 @@ public class VerticalPageAction extends AbstractHexViewerAction
     private int getNewCaretIndex(final JHexViewer hexViewer, final ByteRowsView rowsView, final Rectangle visibleRect, final Rectangle newVisibleRect)
     {
         return hexViewer.getCaret().map(caret -> {
-            final int caretIndex = caret.getDot();
+            final int caretIndex = caret.getDot().getIndex();
             final int rowIndexOfCaret = hexViewer.byteIndexToRowIndex(caretIndex);
             final int caretIndexInRow = hexViewer.byteIndexToIndexInRow(caretIndex);
 

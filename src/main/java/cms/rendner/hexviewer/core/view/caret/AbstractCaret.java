@@ -20,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Objects;
 
 /**
  * An abstract implementation of ICaret. It can blink at the rate specified by the BlinkRate property.
@@ -39,13 +38,13 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      * The position of the dot.
      */
     @NotNull
-    protected final IndexPosition dotPosition = new IndexPosition();
+    protected IndexPosition dotPosition = new IndexPosition();
 
     /**
      * The position of the mark.
      */
     @NotNull
-    protected final IndexPosition markPosition = new IndexPosition();
+    protected IndexPosition markPosition = new IndexPosition();
 
     /**
      * Used to paint the selection.
@@ -193,56 +192,56 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
         }
     }
 
-    @Override
-    public int getDot()
-    {
-        return dotPosition.getIndex();
-    }
-
-    @Override
-    public void setDot(final int newDot)
-    {
-        setDot(newDot, IndexPosition.Bias.Forward);
-    }
-
     @NotNull
     @Override
-    public IndexPosition.Bias getDotBias()
+    public IndexPosition getDot()
     {
-        return dotPosition.getBias();
+        return dotPosition;
     }
 
     @Override
-    public void setDot(final int newDot, @NotNull final IndexPosition.Bias newBias)
+    public void setDot(final int index)
     {
-        final IndexPosition sanitizedDot = getSanitizedPosition(newDot, newBias);
+        setDot(index, IndexPosition.Bias.Forward);
+    }
+
+    @Override
+    public void setDot(@NotNull final IndexPosition position)
+    {
+        setDot(position.getIndex(), position.getBias());
+    }
+
+    @Override
+    public void setDot(final int index, @NotNull final IndexPosition.Bias bias)
+    {
+        final IndexPosition sanitizedDot = createSanitizedPosition(index, bias);
         changeDotAndMark(sanitizedDot, sanitizedDot);
     }
 
     @Override
-    public void moveDot(final int newDot, @NotNull final IndexPosition.Bias bias)
+    public void moveDot(final int index)
     {
-        final IndexPosition sanitizedDot = getSanitizedPosition(newDot, bias);
+        moveDot(index, IndexPosition.Bias.Forward);
+    }
+
+    @Override
+    public void moveDot(@NotNull final IndexPosition position)
+    {
+        moveDot(position.getIndex(), position.getBias());
+    }
+
+    @Override
+    public void moveDot(final int index, @NotNull final IndexPosition.Bias bias)
+    {
+        final IndexPosition sanitizedDot = createSanitizedPosition(index, bias);
         changeDotAndMark(sanitizedDot, markPosition);
-    }
-
-    @Override
-    public void moveDot(final int newDot)
-    {
-        moveDot(newDot, IndexPosition.Bias.Forward);
-    }
-
-    @Override
-    public int getMark()
-    {
-        return markPosition.getIndex();
     }
 
     @NotNull
     @Override
-    public IndexPosition.Bias getMarkBias()
+    public IndexPosition getMark()
     {
-        return markPosition.getBias();
+        return markPosition;
     }
 
     @Override
@@ -267,14 +266,14 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     public int getSelectionEnd()
     {
         // decrement the selection end by one, because the mark/dot is always in front of a byte
-        // otherwise the selection would include the byte of Math.max(mark/dot)
+        // otherwise the selection would include the byte
         return Math.max(dotPosition.getIndex(), markPosition.getIndex()) - 1;
     }
 
     @Override
     public void clearSelection()
     {
-        if (!isSelectionEmpty())
+        if (hasSelection())
         {
             setDot(dotPosition.getIndex());
         }
@@ -283,22 +282,24 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     @Override
     public void setSelection(final int startIndex, final int endIndex)
     {
-        final IndexPosition sanitizedMark = getSanitizedPosition(startIndex);
-        final IndexPosition sanitizedDot = getSanitizedPosition(endIndex);
+        final int markIndex = startIndex;
+        final int dotIndex = endIndex;
 
         // the dot/mark is always in front of a byte
         // if the byte in front of the dot/mark should be included
         // the dot/mark should be incremented by one
-        if (sanitizedDot.getIndex() >= sanitizedMark.getIndex())
+        if (dotIndex >= markIndex)
         {
-            sanitizedDot.setIndex(sanitizedDot.getIndex() + 1);
+            changeDotAndMark(
+                    createSanitizedPosition(dotIndex + 1),
+                    createSanitizedPosition(markIndex));
         }
         else
         {
-            sanitizedMark.setIndex(sanitizedMark.getIndex() + 1);
+            changeDotAndMark(
+                    createSanitizedPosition(dotIndex),
+                    createSanitizedPosition(markIndex + 1));
         }
-
-        changeDotAndMark(sanitizedDot, sanitizedMark);
     }
 
     /**
@@ -344,20 +345,19 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     /**
      * Updates the position of the dot and mark if they have changed.
      * This method also invalidates the areas which have to be repainted after the update and notifies the observer.
-     * <p/>
-     * If the dot or mark is negative or beyond the length of the IDataModel, the caret is placed at the beginning or at the end,
-     * respectively.
      *
-     * @param dot  the new dot position.
-     * @param mark the new mark position.
+     * @param dot  the new sanitized dot position.
+     * @param mark the new sanitized mark position.
      */
     protected void changeDotAndMark(@NotNull final IndexPosition dot, @NotNull final IndexPosition mark)
     {
         if (!dot.equals(dotPosition) || !mark.equals(markPosition))
         {
             final int oldDotIndex = dotPosition.getIndex();
-            dotPosition.copyFrom(dot);
-            markPosition.copyFrom(mark);
+
+            dotPosition = dot;
+            markPosition = mark;
+
             damageCaret(oldDotIndex, dotPosition.getIndex());
 
             adjustSelectionHighlight();
@@ -368,12 +368,45 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     /**
-     * Sanitizes an index.
-     * If the index is negative or beyond the length of the IDataModel, the index is adjusted to the beginning or to the end,
-     * respectively.
+     * Creates a sanitized IndexPosition with a forward bias.
+     * <p/>
+     * Note: The index and the bias will be adjusted to always point to a valid position. Therefore the forward bias may
+     * become a backward bias.
      *
-     * @param index the index to sanitize.
+     * @param index the index of the position to create.
+     * @return the sanitized position.
+     */
+    @NotNull
+    protected IndexPosition createSanitizedPosition(final int index)
+    {
+        return createSanitizedPosition(index, IndexPosition.Bias.Forward);
+    }
+
+    /**
+     * Creates a sanitized IndexPosition.
+     * <p/>
+     * The index and the bias will be adjusted to always point to a valid position. Therefore the bias may change.
+     *
+     * @param index the index of the position to create.
+     * @param bias  an interest toward one of the two sides of the position in boundary conditions when the index is
+     *              ambiguous. The bias will be adjusted if the new index doesn't allow the specified value.
+     * @return the sanitized position.
+     */
+    @NotNull
+    protected IndexPosition createSanitizedPosition(final int index, @NotNull final IndexPosition.Bias bias)
+    {
+        final int sanitizedIndex = getSanitizedIndex(index);
+        final IndexPosition.Bias sanitizedBias = getSanitizedBias(sanitizedIndex, bias);
+        return new IndexPosition(sanitizedIndex, sanitizedBias);
+    }
+
+    /**
+     * Sanitizes an index, to ensure that the index is in the range [0, hexViewer.lastPossibleCaretIndex()].
+     *
+     * @param index the index to sanitize. If negative or beyond the last possible caret index, the index is adjusted to
+     *              the beginning or to the end, respectively.
      * @return a sanitized index, &gt=0.
+     * @see JHexViewer#lastPossibleCaretIndex()
      */
     protected int getSanitizedIndex(final int index)
     {
@@ -381,30 +414,16 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
     }
 
     /**
-     * Sanitizes an index position.
+     * Sanitizes a bias, to ensure that the bias is valid for a specific index.
      *
-     * @param index the index to sanitize.
-     * @return a sanitized index position.
+     * @param index the index, has to be sanitized.
+     * @param bias  the bias to be sanitized.
+     * @return the sanitized bias if specified is invalid, otherwise the specified bias.
      */
     @NotNull
-    protected IndexPosition getSanitizedPosition(final int index)
+    protected IndexPosition.Bias getSanitizedBias(final int index, @NotNull final IndexPosition.Bias bias)
     {
-        return getSanitizedPosition(index, IndexPosition.Bias.Forward);
-    }
-
-    /**
-     * Sanitizes an index position.
-     *
-     * @param index the index to sanitize.
-     * @param bias  the bias to toward to the next position when the index is ambiguous.
-     * @return a sanitized index position.
-     */
-    @NotNull
-    protected IndexPosition getSanitizedPosition(final int index, @NotNull final IndexPosition.Bias bias)
-    {
-        final int sanitizedIndex = getSanitizedIndex(index);
-        final IndexPosition.Bias sanitizedBias = sanitizedIndex == 0 ? IndexPosition.Bias.Forward : bias;
-        return new IndexPosition(sanitizedIndex, sanitizedBias);
+        return index == 0 ? IndexPosition.Bias.Backward : bias;
     }
 
     /**
@@ -452,7 +471,7 @@ public abstract class AbstractCaret extends Observable<Void> implements ICaret
      */
     protected void adjustCaretVisibility()
     {
-        Objects.requireNonNull(hexViewer).getScrollableByteRowsContainer().scrollRectToVisible(calculateVisibleRectForCaret());
+        hexViewer.getScrollableByteRowsContainer().scrollRectToVisible(calculateVisibleRectForCaret());
     }
 
     /**

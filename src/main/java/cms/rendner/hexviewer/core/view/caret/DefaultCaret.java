@@ -195,8 +195,7 @@ public class DefaultCaret extends AbstractCaret
 
                     if (byteHit != null)
                     {
-                        final IndexPosition caretPosition = byteHit.getInsertionPosition();
-                        moveDot(caretPosition.getIndex(), caretPosition.getBias());
+                        moveDot(byteHit.getInsertionPosition());
                     }
                 }
             }
@@ -220,8 +219,7 @@ public class DefaultCaret extends AbstractCaret
                 hexViewer.setFocusedArea(activeRowsView.getId());
                 activeRowsView.addMouseMotionListener(internalHandler);
 
-                final IndexPosition caretPosition = byteHit.getInsertionPosition();
-                setDot(caretPosition.getIndex(), caretPosition.getBias());
+                setDot(byteHit.getInsertionPosition());
             }
         }
     }

@@ -28,7 +28,7 @@ public class CaretRightAction extends AbstractHexViewerAction
         {
             hexViewer.getCaret().ifPresent(caret ->
             {
-                final int newDot = caret.getDot() + 1;
+                final int newDotIndex = caret.getDot().getIndex() + 1;
 
                 if (select)
                 {
@@ -39,12 +39,12 @@ public class CaretRightAction extends AbstractHexViewerAction
                     // part in the window shouldn't jump to the first byte of the next row. Otherwise
                     // the user would be confused about the jumping content.
                     //
-                    final int caretIndexInRow = hexViewer.byteIndexToIndexInRow(newDot);
-                    caret.moveDot(newDot, caretIndexInRow == 0 ? IndexPosition.Bias.Backward : IndexPosition.Bias.Forward);
+                    final int caretIndexInRow = hexViewer.byteIndexToIndexInRow(newDotIndex);
+                    caret.moveDot(newDotIndex, caretIndexInRow == 0 ? IndexPosition.Bias.Backward : IndexPosition.Bias.Forward);
                 }
                 else
                 {
-                    caret.setDot(newDot, IndexPosition.Bias.Forward);
+                    caret.setDot(newDotIndex);
                 }
             });
         }

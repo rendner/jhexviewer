@@ -44,6 +44,6 @@ public abstract class AbstractRowColorProvider implements IRowColorProvider
      */
     protected boolean isCaretRowIndex(@NotNull final JHexViewer hexViewer, final int rowIndex)
     {
-        return hexViewer.getCaret().filter(caret -> rowIndex == hexViewer.byteIndexToRowIndex(caret.getDot())).isPresent();
+        return hexViewer.getCaret().filter(caret -> rowIndex == hexViewer.byteIndexToRowIndex(caret.getDot().getIndex())).isPresent();
     }
 }

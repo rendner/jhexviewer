@@ -28,15 +28,16 @@ public class CaretUpAction extends AbstractHexViewerAction
         {
             hexViewer.getCaret().ifPresent(caret ->
             {
-                final int newDot = caret.getDot() - hexViewer.bytesPerRow();
+                final IndexPosition dotPosition = caret.getDot();
+                final int newDotIndex = dotPosition.getIndex() - hexViewer.bytesPerRow();
 
                 if (select)
                 {
-                    caret.moveDot(newDot, caret.getDotBias());
+                    caret.moveDot(newDotIndex, dotPosition.getBias());
                 }
                 else
                 {
-                    caret.setDot(newDot, IndexPosition.Bias.Forward);
+                    caret.setDot(newDotIndex);
                 }
             });
         }

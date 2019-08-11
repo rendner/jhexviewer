@@ -849,7 +849,7 @@ public class JHexViewer extends JComponent
 
             if (caret != null)
             {
-                if (caret.getDot() != 0)
+                if (caret.getDot().getIndex() != 0)
                 {
                     caret.setDot(0);
                 }

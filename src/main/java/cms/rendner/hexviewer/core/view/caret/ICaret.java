@@ -14,13 +14,14 @@ import java.awt.*;
  * A place within a byte view that represents where a selection can be started. A caret has a position referred to as a dot.
  * The dot is where the caret is currently located in the IDataModel rendered by the JHexViewer. There is a second position
  * maintained by the caret that represents the other end of a selection called mark. If there is no selection the dot
- * and mark will be equal. If a selection exists, the two values will be different.
+ * and mark will point to the same position. If a selection exists, the two values will be different.
  * <p/>
  * The dot can be placed by either calling setDot or moveDot. Setting the dot has the effect of removing any selection
- * that may have previously existed. The dot and mark will be equal. Moving the dot has the effect of creating a selection
- * as the mark is left at whatever position it previously had.
+ * that may have previously existed. The dot and mark will point to the same position. Moving the dot has the effect of
+ * creating a selection as the mark is left at whatever position it previously had.
  *
  * @author rendner
+ * @see JHexViewer#lastPossibleCaretIndex()
  * @see cms.rendner.hexviewer.core.model.data.IDataModel
  */
 public interface ICaret extends IObservable<Void>
@@ -56,72 +57,92 @@ public interface ICaret extends IObservable<Void>
     /**
      * Returns the current position of the caret.
      *
-     * @return the position &gt;= 0
+     * @return the position of the dot.
      */
-    int getDot();
+    @NotNull
+    IndexPosition getDot();
 
     /**
-     * Sets the caret position (dot + mark) to the specified position, with a forward bias. This implicitly sets the
+     * Sets the caret (dot + mark) to the specified index, with a forward bias. This implicitly sets the
      * selection range to zero.
      * <p/>
-     * If the dot is negative or beyond the length of the IDataModel, the caret is placed at the beginning or at the end,
-     * respectively.
+     * Note: The index and the bias will be adjusted to always point to a valid position. Therefore the forward bias may
+     * become a backward bias.
      *
-     * @param dot the new position to set the caret to.
+     * @param index the new index to set the caret to. If the index is negative or beyond the last possible caret index,
+     *              the caret is placed at the beginning or at the end, respectively.
+     * @see JHexViewer#lastPossibleCaretIndex()
      */
-    void setDot(int dot);
+    void setDot(int index);
 
     /**
-     * Sets the caret position (dot + mark) to some position. This causes the mark to become the same as the dot,
-     * effectively setting the selection range to zero.
-     * <p/>
-     * If the dot is negative or beyond the length of the IDataModel, the caret is placed at the beginning or at the end,
-     * respectively.
+     * Sets the caret (dot + mark) to the specified position. This implicitly sets the
+     * selection range to zero.
      *
-     * @param dot  the new position to set the caret to.
-     * @param bias the bias to toward to the next position when the dot position is ambiguous.
+     * @param index the new index to set the caret to. If the index is negative or beyond the last possible caret index,
+     *              the caret is placed at the beginning or at the end, respectively.
+     * @param bias  can be used to indicate an interest toward one of the two sides of the position in boundary
+     *              conditions when the index is ambiguous. The bias will be adjusted if the new index doesn't allow the
+     *              specified value.
+     * @see JHexViewer#lastPossibleCaretIndex()
      */
-    void setDot(int dot, @NotNull IndexPosition.Bias bias);
-
-    // todo: add comment
-    @NotNull
-    IndexPosition.Bias getDotBias();
+    void setDot(int index, @NotNull IndexPosition.Bias bias);
 
     /**
-     * Moves the caret position (dot) to some other position with a forward bias, leaving behind the mark.
+     * Sets the caret (dot + mark) to the specified position. This implicitly sets the
+     * selection range to zero.
+     *
+     * @param position the new position to set the caret to. If the index of the position is beyond the last possible
+     *                 caret index, the caret is placed at the end. The bias of the position will be adjusted if the
+     *                 new position doesn't allow the bias.
+     */
+    void setDot(@NotNull IndexPosition position);
+
+    /**
+     * Moves the caret (dot) to some other position with a forward bias, leaving behind the mark.
      * This implicitly modifies the selection range.
      * <p/>
-     * If the dot is negative or beyond the length of the IDataModel, the caret is placed at the beginning or at the end,
-     * respectively.
+     * Note: The index and the bias will be adjusted to always point to a valid position. Therefore the forward bias may
+     * become a backward bias.
      *
-     * @param dot the new position to move the caret to.
+     * @param index the new index to move the caret to. If negative or beyond the last possible caret index, the caret
+     *              is placed at the beginning or at the end, respectively.
+     * @see JHexViewer#lastPossibleCaretIndex()
      */
-    void moveDot(int dot);
+    void moveDot(int index);
 
     /**
-     * Moves the caret position (dot) to some other position, leaving behind the mark.
+     * Moves the caret (dot) to some other position with a forward bias, leaving behind the mark.
      * This implicitly modifies the selection range.
-     * <p/>
-     * If the dot is negative or beyond the length of the IDataModel, the caret is placed at the beginning or at the end,
-     * respectively.
      *
-     * @param dot  the new position to move the caret to.
-     * @param bias the bias to toward to the next position when the dot position is ambiguous.
+     * @param index the new index to move the caret to. If negative or beyond the last possible caret index, the caret
+     *              is placed at the beginning or at the end, respectively.
+     * @param bias  can be used to indicate an interest toward one of the two sides of the position in boundary
+     *              conditions when the index is ambiguous. The bias will be adjusted if the new index doesn't allow the
+     *              specified value.
+     * @see JHexViewer#lastPossibleCaretIndex()
      */
-    void moveDot(int dot, @NotNull IndexPosition.Bias bias);
+    void moveDot(int index, @NotNull IndexPosition.Bias bias);
+
+    /**
+     * Moves the caret (dot) to some other position, leaving behind the mark.
+     * This implicitly modifies the selection range.
+     *
+     * @param position the new position to move the caret to. If the index of the position is beyond the last possible
+     *                 caret index, the caret is placed at the end. The bias of the position will be adjusted if the
+     *                 new position doesn't allow the bias.
+     */
+    void moveDot(@NotNull IndexPosition position);
 
 
     /**
-     * Fetches the current position of the mark. If there is a selection,
-     * the dot and mark will not be the same.
+     * Returns the current position of the mark. If there is a selection,
+     * the dot and mark will point to different positions.
      *
-     * @return the position &gt;= 0
+     * @return the position of the mark.
      */
-    int getMark();
-
-    // todo: add comment
     @NotNull
-    IndexPosition.Bias getMarkBias();
+    IndexPosition getMark();
 
     /**
      * Sets a color provider.

@@ -59,7 +59,7 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
         {
             hexViewer.getCaret().map(caret ->
             {
-                final int caretIndex = caret.getDot();
+                final int caretIndex = caret.getDot().getIndex();
                 final int caretRowIndex = hexViewer.byteIndexToRowIndex(caretIndex);
                 return rowData.rowIndex() == caretRowIndex ? caretIndex : rowData.offset();
             });

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class IndexPosition
+public final class IndexPosition
 {
     /**
      * The index of the byte to which this position refers.
@@ -39,30 +39,9 @@ public class IndexPosition
     {
         super();
 
-        setIndex(index);
-        setBias(bias);
-    }
-
-    /**
-     * Copies the index and bias from another IndexPosition instance.
-     *
-     * @param source the source to copy from.
-     */
-    public void copyFrom(@NotNull final IndexPosition source)
-    {
-        setIndex(source.index);
-        setBias(source.bias);
-    }
-
-    /**
-     * Copies the index and bias to another IndexPosition instance.
-     *
-     * @param target the target to copy to.
-     */
-    public void copyTo(@NotNull final IndexPosition target)
-    {
-        target.setIndex(index);
-        target.setBias(bias);
+        CheckUtils.checkMinValue(index, 0);
+        this.index = index;
+        this.bias = bias;
     }
 
     /**
@@ -74,33 +53,12 @@ public class IndexPosition
     }
 
     /**
-     * Sets the new index.
-     *
-     * @param index the new index of the byte to which this position refers, &gt=0.
-     */
-    public void setIndex(final int index)
-    {
-        CheckUtils.checkMinValue(index, 0);
-        this.index = index;
-    }
-
-    /**
      * @return the interest in one of the two possible directions.
      */
     @NotNull
     public Bias getBias()
     {
         return bias;
-    }
-
-    /**
-     * Sets the bias.
-     *
-     * @param bias the bias to toward to the next byte when the index is ambiguous.
-     */
-    public void setBias(@NotNull final Bias bias)
-    {
-        this.bias = bias;
     }
 
     @Override

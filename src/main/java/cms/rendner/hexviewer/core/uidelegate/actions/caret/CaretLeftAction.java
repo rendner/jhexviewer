@@ -2,7 +2,6 @@ package cms.rendner.hexviewer.core.uidelegate.actions.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 
 import java.awt.event.ActionEvent;
 
@@ -28,15 +27,15 @@ public class CaretLeftAction extends AbstractHexViewerAction
         {
             hexViewer.getCaret().ifPresent(
                     caret -> {
-                        final int newDot = caret.getDot() - 1;
+                        final int newDotIndex = caret.getDot().getIndex() - 1;
 
                         if (select)
                         {
-                            caret.moveDot(newDot, IndexPosition.Bias.Forward);
+                            caret.moveDot(newDotIndex);
                         }
                         else
                         {
-                            caret.setDot(newDot, IndexPosition.Bias.Forward);
+                            caret.setDot(newDotIndex);
                         }
                     }
             );
