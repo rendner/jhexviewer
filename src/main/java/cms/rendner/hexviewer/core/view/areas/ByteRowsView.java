@@ -3,8 +3,6 @@ package cms.rendner.hexviewer.core.view.areas;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
-import cms.rendner.hexviewer.core.view.areas.properties.Property;
-import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
@@ -34,13 +32,13 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
     /**
      * Creates a new instance with the specified values.
      *
-     * @param id                 the id of the area to which is rendered by this view component.
-     * @param propertiesProvider used by the {@link cms.rendner.hexviewer.core.JHexViewer} to forward properties which
-     *                           should not be accessible outside of this component.
+     * @param id                     the id of the area to which is rendered by this view component.
+     * @param internalApiAccessToken the token to allow access to the owner api.
      */
-    public ByteRowsView(@NotNull final AreaId id, @NotNull final ProtectedPropertiesProvider propertiesProvider)
+    public ByteRowsView(@NotNull final AreaId id, @NotNull final Object internalApiAccessToken)
     {
-        super(id, propertiesProvider);
+        super(id, internalApiAccessToken);
+        internalApi = new InternalApi(this);
 
         // to create synthetically during drag outside
         setAutoscrolls(true);
@@ -52,22 +50,6 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
     public boolean hasFocus()
     {
         return focused;
-    }
-
-    /**
-     * Sets the focus state.
-     * <p/>
-     * This results in a complete repaint of the view.
-     *
-     * @param focused the new focused state.
-     */
-    protected void setFocus(final boolean focused)
-    {
-        if (this.focused != focused)
-        {
-            this.focused = focused;
-            repaint();
-        }
     }
 
     /**
@@ -218,15 +200,64 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
         return new ByteHitInfo(templateHitInfo.index() + offsetForFirstByteInRow, position);
     }
 
-    @Override
-    protected void handleProtectedProperty(@NotNull final Property changedDependency)
+    /**
+     * Allows access to the internal api.
+     * <p/>
+     * Note:
+     * If the passed token doesn't match with the expected token an IllegalArgumentException will be thrown.
+     * This method should only be called by the {@link cms.rendner.hexviewer.core.JHexViewer}.
+     *
+     * @param internalApiAccessToken the token to access the internal api.
+     * @return the internal api.
+     */
+    @NotNull
+    public ByteRowsView.InternalApi getInternalApi(@NotNull final Object internalApiAccessToken)
     {
-        super.handleProtectedProperty(changedDependency);
+        return (InternalApi) getGuardedInternalApi(internalApiAccessToken);
+    }
 
-        final String type = changedDependency.getName();
-        if (Property.FOCUS.equals(type))
+    /**
+     * Internal api.
+     *
+     * @param focused the new focused state.
+     * @see InternalApi#setFocus(boolean)
+     */
+    private void setFocus(final boolean focused)
+    {
+        if (this.focused != focused)
         {
-            setFocus((Boolean) changedDependency.getValue());
+            this.focused = focused;
+            repaint();
+        }
+    }
+
+    /**
+     * Allows to set the hidden properties.
+     *
+     * @see RowBasedView.InternalApi
+     */
+    public static class InternalApi extends RowBasedView.InternalApi<ByteRowsView, IByteRowTemplate>
+    {
+        /**
+         * Creates a new instance.
+         *
+         * @param rowView the view to access.
+         */
+        InternalApi(@NotNull final ByteRowsView rowView)
+        {
+            super(rowView);
+        }
+
+        /**
+         * Sets the focus state.
+         * <p/>
+         * This results in a complete repaint of the view.
+         *
+         * @param focused the new focused state.
+         */
+        public void setFocus(final boolean focused)
+        {
+            rowView.setFocus(focused);
         }
     }
 

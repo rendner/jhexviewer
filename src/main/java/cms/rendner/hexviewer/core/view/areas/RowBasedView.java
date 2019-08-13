@@ -2,16 +2,13 @@ package cms.rendner.hexviewer.core.view.areas;
 
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
-import cms.rendner.hexviewer.core.view.areas.properties.Property;
-import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
 import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.swing.BorderlessJComponent;
-import cms.rendner.hexviewer.utils.observer.IObservable;
-import cms.rendner.hexviewer.utils.observer.IObserver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -57,6 +54,19 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     protected final AreaId id;
 
     /**
+     * Used to guard the access to the internal api.
+     */
+    @Nullable
+    protected Object internalApiAccessToken;
+
+    /**
+     * The api instance which allows to set hidden properties which are not accessible from the outside.
+     * To access this api, an access token is required which is only known by the owner which created the view component.
+     */
+    @Nullable
+    protected RowBasedView.InternalApi internalApi;
+
+    /**
      * The template to use to render the bytes in rows.
      */
     @Nullable
@@ -73,25 +83,16 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     private IPaintDelegate paintDelegate;
 
     /**
-     * Used by the {@link cms.rendner.hexviewer.core.JHexViewer} to forward properties which
-     * should not be accessible outside of this component.
-     */
-    @NotNull
-    private final ProtectedPropertiesProvider propertiesProvider;
-
-    /**
      * Creates a new instance with the specified values.
      *
-     * @param id                 the id of the area to which is rendered by this view component.
-     * @param propertiesProvider used by the {@link cms.rendner.hexviewer.core.JHexViewer} to forward properties which
-     *                           should not be accessible outside of this component.
+     * @param id               the id of the area to which is rendered by this view component.
+     * @param ownerAccessToken the token to allow access to the owner api.
      */
-    public RowBasedView(@NotNull final AreaId id, @NotNull final ProtectedPropertiesProvider propertiesProvider)
+    public RowBasedView(@NotNull final AreaId id, @NotNull final Object ownerAccessToken)
     {
         super();
         this.id = id;
-        this.propertiesProvider = propertiesProvider;
-        propertiesProvider.addObserver(new InternalHandler());
+        this.internalApiAccessToken = ownerAccessToken;
     }
 
     /**
@@ -298,12 +299,30 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Sets the row template.
-     * Setting this property results in a complete repaint.
+     * Returns the internal api if the access token is valid.
+     *
+     * @param internalApiAccessToken the token to check if the internal api can be accessed.
+     * @return the internal api.
+     * @throws IllegalArgumentException if the token isn't authorized to access the internal api.
+     */
+    @NotNull
+    RowBasedView.InternalApi getGuardedInternalApi(@NotNull final Object internalApiAccessToken) throws IllegalArgumentException
+    {
+        if (this.internalApiAccessToken == null || this.internalApiAccessToken != internalApiAccessToken)
+        {
+            throw new IllegalArgumentException("The used token isn't authorized to access the internal api.");
+        }
+
+        return Objects.requireNonNull(internalApi);
+    }
+
+    /**
+     * Internal api.
      *
      * @param rowTemplate the template to use to align the bytes in rows, can be <code>null</code>.
+     * @see InternalApi#setRowTemplate(IRowTemplate)
      */
-    protected void setRowTemplate(@Nullable final T rowTemplate)
+    void setRowTemplate(@Nullable final T rowTemplate)
     {
         this.rowTemplate = rowTemplate;
         revalidate();
@@ -311,12 +330,12 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Set the number of total rows.
-     * Setting this property in a complete repaint.
+     * Internal api.
      *
      * @param newRowCount the number of total rows.
+     * @see InternalApi#setRowCount(int)
      */
-    protected void setRowCount(final int newRowCount)
+    void setRowCount(final int newRowCount)
     {
         if (rowCount != newRowCount)
         {
@@ -328,12 +347,12 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Sets the delegate which is responsible for painting the rows of the view.
-     * Setting a delegate results in a complete repaint.
+     * Internal api.
      *
      * @param newPaintDelegate the new delegate, can be <code>null</code>.
+     * @see InternalApi#setPaintDelegate(IPaintDelegate)
      */
-    protected void setPaintDelegate(@Nullable final IPaintDelegate newPaintDelegate)
+    void setPaintDelegate(@Nullable final IPaintDelegate newPaintDelegate)
     {
         if (paintDelegate != newPaintDelegate)
         {
@@ -343,51 +362,65 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Updates the internal properties.
+     * Allows to set new values for hidden properties.
+     * <p/>
+     * This concept was implemented to hide the setter methods for important properties. And allow classes from other
+     * packages to modify these hidden properties, if they are entitled to do so.
+     * Without a guarded access the user could change some of these properties directly which would result in an
+     * unexpected state of the JHexViewer. For example, the property "rowCount" has to have the same value for all three
+     * row based views displayed by the JHexViewer. This can't be guaranteed if the user can modify this property directly.
      *
-     * @param changedDependency a changed property forwarded from the {@link cms.rendner.hexviewer.core.JHexViewer}.
+     * @author rendner
      */
-    protected void handleProtectedProperty(@NotNull final Property changedDependency)
+    public static class InternalApi<V extends RowBasedView, T extends IRowTemplate>
     {
-        switch (changedDependency.getName())
-        {
-            case Property.PAINT_DELEGATE:
-            {
-                setPaintDelegate((IPaintDelegate) changedDependency.getValue());
-                break;
-            }
-            case Property.ROW_COUNT:
-            {
-                setRowCount((Integer) changedDependency.getValue());
-                break;
-            }
-            case Property.ROW_TEMPLATE:
-            {
-                setRowTemplate((T) changedDependency.getValue());
-                break;
-            }
-            default:
-            {
-                // ignore...
-            }
-        }
-    }
+        /**
+         * The view to access.
+         */
+        @NotNull
+        protected final V rowView;
 
-    /**
-     * Internal handler which listens for changes properties.
-     */
-    private class InternalHandler implements IObserver<Property>
-    {
-        @Override
-        public void update(@NotNull final IObservable<Property> observable, @NotNull final Property property)
+        /**
+         * Creates a new instance.
+         *
+         * @param rowView the view to access.
+         */
+        protected InternalApi(@NotNull final V rowView)
         {
-            if (propertiesProvider == observable)
-            {
-                if (property.isTarget(id))
-                {
-                    handleProtectedProperty(property);
-                }
-            }
+            this.rowView = rowView;
+        }
+
+        /**
+         * Sets the row template.
+         * Setting this property results in a complete repaint.
+         *
+         * @param rowTemplate the template to use to align the bytes in rows, can be <code>null</code>.
+         */
+        public void setRowTemplate(@Nullable final T rowTemplate)
+        {
+            rowView.setRowTemplate(rowTemplate);
+        }
+
+        /**
+         * Set the number of total rows.
+         * Setting this property in a complete repaint.
+         *
+         * @param rowCount the number of total rows.
+         */
+        public void setRowCount(final int rowCount)
+        {
+            rowView.setRowCount(rowCount);
+        }
+
+        /**
+         * Sets the delegate which is responsible for painting the rows of the view.
+         * Setting a delegate results in a complete repaint.
+         *
+         * @param newPaintDelegate the new delegate, can be <code>null</code>.
+         */
+        public void setPaintDelegate(@Nullable final IPaintDelegate newPaintDelegate)
+        {
+            rowView.setPaintDelegate(newPaintDelegate);
         }
     }
 }

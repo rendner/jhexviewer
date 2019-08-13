@@ -22,7 +22,6 @@ import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
-import cms.rendner.hexviewer.core.view.areas.properties.ProtectedPropertiesProvider;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
@@ -187,9 +186,10 @@ public class JHexViewer extends JComponent
     private JScrollPane scrollPane;
 
     /**
-     * Provides some properties which can't be set directly to some components.
+     * Allows to access the internal api of the row based views.
      */
-    private ProtectedPropertiesProvider rowsViewPropertiesProvider;
+    @NotNull
+    private final Object internalApiAccessToken = new Object();
 
     /**
      * Creates a new instance.
@@ -263,7 +263,9 @@ public class JHexViewer extends JComponent
                 newDelegate.install(this);
             }
 
-            rowsViewPropertiesProvider.forwardPaintDelegate(newDelegate);
+            offsetRowsView.getInternalApi(internalApiAccessToken).setPaintDelegate(newDelegate);
+            hexRowsView.getInternalApi(internalApiAccessToken).setPaintDelegate(newDelegate);
+            asciiRowsView.getInternalApi(internalApiAccessToken).setPaintDelegate(newDelegate);
         }
     }
 
@@ -435,14 +437,14 @@ public class JHexViewer extends JComponent
             if (AreaId.HEX.equals(id))
             {
                 focusedArea = AreaId.HEX;
-                rowsViewPropertiesProvider.forwardFocus(AreaId.HEX, true);
-                rowsViewPropertiesProvider.forwardFocus(AreaId.ASCII, false);
+                hexRowsView.getInternalApi(internalApiAccessToken).setFocus(true);
+                asciiRowsView.getInternalApi(internalApiAccessToken).setFocus(false);
             }
             else if (AreaId.ASCII.equals(id))
             {
                 focusedArea = AreaId.ASCII;
-                rowsViewPropertiesProvider.forwardFocus(AreaId.HEX, false);
-                rowsViewPropertiesProvider.forwardFocus(AreaId.ASCII, true);
+                hexRowsView.getInternalApi(internalApiAccessToken).setFocus(false);
+                asciiRowsView.getInternalApi(internalApiAccessToken).setFocus(true);
             }
 
             firePropertyChange(PROPERTY_FOCUSED_AREA, oldFocusedAreaId, focusedArea);
@@ -1081,13 +1083,10 @@ public class JHexViewer extends JComponent
      */
     protected void createSubComponents()
     {
-        // used to forward data which can't be set directly
-        rowsViewPropertiesProvider = new ProtectedPropertiesProvider();
-
         // the views which renders the three areas
-        offsetRowsView = new OffsetRowsView(rowsViewPropertiesProvider);
-        hexRowsView = new ByteRowsView(AreaId.HEX, rowsViewPropertiesProvider);
-        asciiRowsView = new ByteRowsView(AreaId.ASCII, rowsViewPropertiesProvider);
+        offsetRowsView = new OffsetRowsView(internalApiAccessToken);
+        hexRowsView = new ByteRowsView(AreaId.HEX, internalApiAccessToken);
+        asciiRowsView = new ByteRowsView(AreaId.ASCII, internalApiAccessToken);
 
         // scroll pane which contains all sub containers
         scrollPane = new JScrollPane();
@@ -1173,7 +1172,9 @@ public class JHexViewer extends JComponent
     {
         // "+1" because rowIndex is zero based
         final int rowCount = 1 + Math.max(0, byteIndexToRowIndex(lastPossibleCaretIndex()));
-        rowsViewPropertiesProvider.forwardRowCount(rowCount);
+        offsetRowsView.getInternalApi(internalApiAccessToken).setRowCount(rowCount);
+        hexRowsView.getInternalApi(internalApiAccessToken).setRowCount(rowCount);
+        asciiRowsView.getInternalApi(internalApiAccessToken).setRowCount(rowCount);
     }
 
     /**
@@ -1265,8 +1266,8 @@ public class JHexViewer extends JComponent
             asciiRowTemplate = rowTemplateFactory.createAsciiTemplate(this, fm, rowTemplateConfiguration);
         }
 
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.HEX, hexRowTemplate);
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.ASCII, asciiRowTemplate);
+        hexRowsView.getInternalApi(internalApiAccessToken).setRowTemplate(hexRowTemplate);
+        asciiRowsView.getInternalApi(internalApiAccessToken).setRowTemplate(asciiRowTemplate);
     }
 
     /**
@@ -1287,7 +1288,7 @@ public class JHexViewer extends JComponent
                     rowTemplateConfiguration);
         }
 
-        rowsViewPropertiesProvider.forwardRowTemplate(AreaId.OFFSET, offsetRowTemplate);
+        offsetRowsView.getInternalApi(internalApiAccessToken).setRowTemplate(offsetRowTemplate);
     }
 
     /**
