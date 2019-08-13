@@ -433,20 +433,8 @@ public class JHexViewer extends JComponent
         if (!id.equals(focusedArea))
         {
             final AreaId oldFocusedAreaId = focusedArea;
-
-            if (AreaId.HEX.equals(id))
-            {
-                focusedArea = AreaId.HEX;
-                hexRowsView.getInternalApi(internalApiAccessToken).setFocus(true);
-                asciiRowsView.getInternalApi(internalApiAccessToken).setFocus(false);
-            }
-            else if (AreaId.ASCII.equals(id))
-            {
-                focusedArea = AreaId.ASCII;
-                hexRowsView.getInternalApi(internalApiAccessToken).setFocus(false);
-                asciiRowsView.getInternalApi(internalApiAccessToken).setFocus(true);
-            }
-
+            focusedArea = id;
+            updateByteAreaFocus();
             firePropertyChange(PROPERTY_FOCUSED_AREA, oldFocusedAreaId, focusedArea);
         }
     }
@@ -1074,6 +1062,7 @@ public class JHexViewer extends JComponent
 
         registerInternalHandler(internalHandler);
 
+        updateByteAreaFocus();
         revalidate();
         repaint();
     }
@@ -1108,6 +1097,23 @@ public class JHexViewer extends JComponent
         rowHeaderView.add(new VSeparatorPlaceholder());
         scrollPane.setRowHeader(new JSeparatedViewport());
         scrollPane.setRowHeaderView(rowHeaderView);
+    }
+
+    /**
+     * Updates the focus property of the byte areas depending on the current focused area.
+     */
+    protected void updateByteAreaFocus()
+    {
+        if (AreaId.HEX.equals(focusedArea))
+        {
+            hexRowsView.getInternalApi(internalApiAccessToken).setFocus(true);
+            asciiRowsView.getInternalApi(internalApiAccessToken).setFocus(false);
+        }
+        else if (AreaId.ASCII.equals(focusedArea))
+        {
+            hexRowsView.getInternalApi(internalApiAccessToken).setFocus(false);
+            asciiRowsView.getInternalApi(internalApiAccessToken).setFocus(true);
+        }
     }
 
     /**
