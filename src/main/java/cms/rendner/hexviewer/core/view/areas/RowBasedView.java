@@ -56,7 +56,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * Used to guard the access to the internal api.
      */
-    @Nullable
+    @NotNull
     protected Object internalApiAccessToken;
 
     /**
@@ -85,14 +85,14 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * Creates a new instance with the specified values.
      *
-     * @param id               the id of the area to which is rendered by this view component.
-     * @param ownerAccessToken the token to allow access to the owner api.
+     * @param id                     the id of the area to which is rendered by this view component.
+     * @param internalApiAccessToken the token to allow access to the internal api.
      */
-    public RowBasedView(@NotNull final AreaId id, @NotNull final Object ownerAccessToken)
+    public RowBasedView(@NotNull final AreaId id, @NotNull final Object internalApiAccessToken)
     {
         super();
         this.id = id;
-        this.internalApiAccessToken = ownerAccessToken;
+        this.internalApiAccessToken = internalApiAccessToken;
     }
 
     /**
@@ -308,7 +308,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     @NotNull
     RowBasedView.InternalApi getGuardedInternalApi(@NotNull final Object internalApiAccessToken) throws IllegalArgumentException
     {
-        if (this.internalApiAccessToken == null || this.internalApiAccessToken != internalApiAccessToken)
+        if (this.internalApiAccessToken != internalApiAccessToken)
         {
             throw new IllegalArgumentException("The used token isn't authorized to access the internal api.");
         }
