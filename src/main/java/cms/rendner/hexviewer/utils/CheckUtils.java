@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author rendner
  */
-public class CheckUtils
+public final class CheckUtils
 {
     /**
      * Checks if a value is not smaller than required.
@@ -94,4 +94,9 @@ public class CheckUtils
             throw new IllegalArgumentException("Invalid value, value can't be null.");
         }
     }
+
+    /**
+     * Hide constructor.
+     */
+    private CheckUtils(){}
 }

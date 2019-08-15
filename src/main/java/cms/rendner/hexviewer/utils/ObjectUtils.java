@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author rendner
  */
-public class ObjectUtils
+public final class ObjectUtils
 {
     /**
      * Returns the first value if not <code>null</code> otherwise the second value.
@@ -22,4 +22,9 @@ public class ObjectUtils
     {
         return value != null ? value : otherwise;
     }
+
+    /**
+     * Hide constructor.
+     */
+    private ObjectUtils(){}
 }

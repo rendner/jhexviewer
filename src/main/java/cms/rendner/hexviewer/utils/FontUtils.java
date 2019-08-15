@@ -9,7 +9,7 @@ import java.awt.*;
  *
  * @author rendner
  */
-public class FontUtils
+public final class FontUtils
 {
     /**
      * Checks for the font <code>Courier New</code> if not available
@@ -33,4 +33,9 @@ public class FontUtils
         }
         return Font.MONOSPACED;
     }
+
+    /**
+     * Hide constructor.
+     */
+    private FontUtils(){}
 }

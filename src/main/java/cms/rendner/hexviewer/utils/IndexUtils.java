@@ -5,7 +5,7 @@ package cms.rendner.hexviewer.utils;
  *
  * @author rendner
  */
-public class IndexUtils
+public final class IndexUtils
 {
     /**
      * Returns the byte index (zero based) in the data provider of the first byte of a row.
@@ -83,4 +83,9 @@ public class IndexUtils
 
         return -1;
     }
+
+    /**
+     * Hide constructor.
+     */
+    private IndexUtils(){}
 }
