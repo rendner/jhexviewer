@@ -16,13 +16,6 @@ import java.awt.*;
 public class DefaultScrollableDelegate extends AbstractScrollableDelegate
 {
     /**
-     * A return value which is used to retrieve the bounds of a row.
-     * This instance be reused to minimize creation of new rectangles.
-     */
-    @NotNull
-    private final Rectangle rvRect = new Rectangle();
-
-    /**
      * Used to manage the hex-rows and ascii-rows as large virtual rows.
      */
     private VirtualBytesRow virtualBytesRow;
@@ -50,19 +43,19 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
         {
             if (virtualBytesRow.isValidVirtualByteIndex(leadingByteIndex))
             {
-                final Rectangle rvLeadingByteRect = virtualBytesRow.getByteRect(leadingByteIndex, rvRect);
+                final Rectangle leadingByteRect = virtualBytesRow.getByteRect(leadingByteIndex);
 
-                if (rvLeadingByteRect.x < visibleRect.x)
+                if (leadingByteRect.x < visibleRect.x)
                 {
-                    return visibleRect.x - rvLeadingByteRect.x;
+                    return visibleRect.x - leadingByteRect.x;
                 }
                 else
                 {
                     final int prevByteIndex = leadingByteIndex - 1;
                     if (virtualBytesRow.isValidVirtualByteIndex(prevByteIndex))
                     {
-                        final Rectangle rvPrevByteRect = virtualBytesRow.getByteRect(prevByteIndex, rvRect);
-                        return visibleRect.x - rvPrevByteRect.x;
+                        final Rectangle prevByteRect = virtualBytesRow.getByteRect(prevByteIndex);
+                        return visibleRect.x - prevByteRect.x;
                     }
                 }
             }
@@ -73,19 +66,19 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
         {
             if (virtualBytesRow.isValidVirtualByteIndex(leadingByteIndex))
             {
-                final Rectangle rvLeadingByteIndex = virtualBytesRow.getByteRect(leadingByteIndex, rvRect);
+                final Rectangle leadingByteRect = virtualBytesRow.getByteRect(leadingByteIndex);
 
-                if (rvLeadingByteIndex.x > visibleRect.x)
+                if (leadingByteRect.x > visibleRect.x)
                 {
-                    return rvLeadingByteIndex.x - visibleRect.x;
+                    return leadingByteRect.x - visibleRect.x;
                 }
                 else
                 {
                     final int nextByteIndex = leadingByteIndex + 1;
                     if (virtualBytesRow.isValidVirtualByteIndex(nextByteIndex))
                     {
-                        final Rectangle rvNextByteIndex = virtualBytesRow.getByteRect(nextByteIndex, rvRect);
-                        return rvNextByteIndex.x - visibleRect.x;
+                        final Rectangle nextByteRect = virtualBytesRow.getByteRect(nextByteIndex);
+                        return nextByteRect.x - visibleRect.x;
                     }
                 }
             }
@@ -105,15 +98,15 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
         }
 
         final AreaId id = horizontalLocationToArea(visibleRect.x);
-        final Rectangle rvLeadingRowRect = getRowRect(id, leadingRowIndex, rvRect);
+        final Rectangle leadingRowRect = getRowRect(id, leadingRowIndex);
 
         if (ScrollDirection.DOWN == direction)
         {
-            return rvLeadingRowRect.height - (visibleRect.y - rvLeadingRowRect.y);
+            return leadingRowRect.height - (visibleRect.y - leadingRowRect.y);
         }
         else
         {
-            if (rvLeadingRowRect.y == visibleRect.y)
+            if (leadingRowRect.y == visibleRect.y)
             {
                 if (leadingRowIndex == 0)
                 {
@@ -122,13 +115,13 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
                 else
                 {
                     final int prevRowIndex = leadingRowIndex - 1;
-                    final Rectangle rvPrevRowRect = getRowRect(id, prevRowIndex, rvRect);
-                    return rvPrevRowRect.height;
+                    final Rectangle prevRowRect = getRowRect(id, prevRowIndex);
+                    return prevRowRect.height;
                 }
             }
             else
             {
-                return visibleRect.y - rvLeadingRowRect.y;
+                return visibleRect.y - leadingRowRect.y;
             }
         }
     }
@@ -138,15 +131,14 @@ public class DefaultScrollableDelegate extends AbstractScrollableDelegate
      *
      * @param id          the id of the area the row is located.
      * @param rowIndex    the index of the row
-     * @param returnValue the result is applied to this rectangle, can't be <code>null</code>.
-     * @return the modified result which contains the bounds of the specified row.
+     * @return the bounds of the specified row.
      */
-    private Rectangle getRowRect(final AreaId id, final int rowIndex, final Rectangle returnValue)
+    private Rectangle getRowRect(final AreaId id, final int rowIndex)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
-        rowsView.getRowRect(rowIndex, returnValue);
-        returnValue.x += rowsView.getX();
-        return returnValue;
+        final Rectangle result = rowsView.getRowRect(rowIndex);
+        result.x += rowsView.getX();
+        return result;
     }
 
     /**

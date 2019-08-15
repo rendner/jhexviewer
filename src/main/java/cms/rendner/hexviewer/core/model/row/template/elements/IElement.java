@@ -96,15 +96,6 @@ public interface IElement
     boolean containsY(int yPosition);
 
     /**
-     * Copies the x, y, width and height of the element into a <code>Rectangle</code>.
-     *
-     * @param returnValue the rectangle which should be filled.
-     * @return <code>returnValue</code> modified to specify the bounds of the element.
-     */
-    @NotNull
-    Rectangle toRectangle(@NotNull Rectangle returnValue);
-
-    /**
      * The dimension of an element.
      */
     interface IDimension

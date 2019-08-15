@@ -14,12 +14,6 @@ import java.awt.*;
 public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRowRenderer<T>
 {
     /**
-     * A return value which is used to retrieve the bounds for a range of elements.
-     * This instance be reused to minimize creation of new Rectangle.
-     */
-    private final Rectangle rvElementBounds = new Rectangle();
-
-    /**
      * The default value to paint the background of a row.
      * This value can be <code>null</code>, to not overwrite the background of the component.
      */
@@ -176,8 +170,8 @@ public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRo
                 endIndex = paintIndex;
             }
 
-            rowTemplate.elementBounds(startIndex, endIndex, rvElementBounds);
-            paintElementBackground(g, rvElementBounds, startColor);
+            final Rectangle elementBounds = rowTemplate.elementBounds(startIndex, endIndex);
+            paintElementBackground(g, elementBounds, startColor);
         }
     }
 }

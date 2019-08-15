@@ -7,7 +7,6 @@ import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
 import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
-import cms.rendner.hexviewer.utils.RectangleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,35 +19,6 @@ import java.awt.*;
  */
 public class DefaultHighlighter extends AbstractHighlighter
 {
-    /**
-     * A return value which is used to retrieve the horizontal dimension of all elements displayed in a row.
-     * This instance be reused to minimize creation of new HorizontalDimension.
-     */
-    @NotNull
-    private final HorizontalDimension rvRowElementsDimension = new HorizontalDimension();
-
-    /**
-     * A return value which is used to retrieve the bounds of all elements displayed in a row.
-     * This instance be reused to minimize creation of new Rectangle.
-     */
-    @NotNull
-    private final Rectangle rvRowElementsBounds = new Rectangle();
-
-    /**
-     * A return value which is used to retrieve the intersection between the current visible bytes and the region of bytes
-     * defined by an highlight.
-     * This instance be reused to minimize creation of new Range.
-     */
-    @NotNull
-    private final Range rvVisibleBytesIntersection = new Range();
-
-    /**
-     * A return value which is used to retrieve the range of the currently visible bytes.
-     * This instance be reused to minimize creation of new Range.
-     */
-    @NotNull
-    private final Range rvVisibleBytes = new Range();
-
     /**
      * Default painter which is used if no custom painter has been defined for a highlight.
      */
@@ -123,27 +93,27 @@ public class DefaultHighlighter extends AbstractHighlighter
     @Override
     public void paint(@NotNull final Graphics g, @NotNull final ByteRowsView rowsView)
     {
-        computeVisibleBytes(rowsView, rvVisibleBytes);
+        final Range visibleBytes = computeVisibleBytes(rowsView);
 
-        if (!rvVisibleBytes.isEmpty())
+        if (!visibleBytes.isEmpty())
         {
             if (selectionHighlight != null || !highlights.isEmpty())
             {
-                computeRowElementsDimension(rowsView, rvRowElementsDimension);
+                final HorizontalDimension rowElementsDimension = computeRowElementsDimension(rowsView);
 
                 if (paintSelectionBehindHighlights && selectionHighlight != null)
                 {
-                    paintHighlight(g, selectionHighlight, rowsView, rvRowElementsDimension);
+                    paintHighlight(g, selectionHighlight, rowsView, visibleBytes, rowElementsDimension);
                 }
 
                 for (final IHighlight highlight : highlights)
                 {
-                    paintHighlight(g, highlight, rowsView, rvRowElementsDimension);
+                    paintHighlight(g, highlight, rowsView, visibleBytes, rowElementsDimension);
                 }
 
                 if (!paintSelectionBehindHighlights && selectionHighlight != null)
                 {
-                    paintHighlight(g, selectionHighlight, rowsView, rvRowElementsDimension);
+                    paintHighlight(g, selectionHighlight, rowsView, visibleBytes, rowElementsDimension);
                 }
             }
         }
@@ -155,17 +125,17 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @param g                    the Graphics context in which to paint.
      * @param highlight            the highlight to paint.
      * @param byteRowsView         the component being painted.
-     * @param rowElementsDimension the horizontal dimension which covers all chars/bytes of a single row.
-     *                             Used to know the min and max possible horizontal position for a highlight.
+     * @param visibleBytes the range of visible bytes.
+     * @param rowElementsDimension the bounds of all elements in the row.
      */
-    protected void paintHighlight(@NotNull final Graphics g, @NotNull final IHighlight highlight, @NotNull final ByteRowsView byteRowsView, final HorizontalDimension rowElementsDimension)
+    protected void paintHighlight(@NotNull final Graphics g, @NotNull final IHighlight highlight, @NotNull final ByteRowsView byteRowsView, @NotNull final Range visibleBytes, @NotNull final HorizontalDimension rowElementsDimension)
     {
         final int start = highlight.getStartOffset();
         final int end = highlight.getEndOffset();
 
-        rvVisibleBytes.computeIntersection(start, end, rvVisibleBytesIntersection);
+        final Range visibleHighlightedBytes = visibleBytes.computeIntersection(start, end);
 
-        if (!rvVisibleBytesIntersection.isEmpty())
+        if (!visibleHighlightedBytes.isEmpty())
         {
             final IHighlightPainter highlightPainter = highlight.getPainter();
             final IHighlightPainter painter = highlightPainter == null ? defaultPainter : highlightPainter;
@@ -177,19 +147,15 @@ public class DefaultHighlighter extends AbstractHighlighter
      * Computes the bounds of all elements of a row displayed in the specified view.
      *
      * @param rowsView    the view to calculate the bounds for.
-     * @param returnValue the result is returned in this HorizontalDimension.
-     * @return the adjusted <code>returnValue</code>
+     * @return the horizontal dimension
      */
     @NotNull
-    protected HorizontalDimension computeRowElementsDimension(@NotNull final ByteRowsView rowsView, @NotNull final HorizontalDimension returnValue)
+    protected HorizontalDimension computeRowElementsDimension(@NotNull final ByteRowsView rowsView)
     {
-        returnValue.clear();
         return rowsView.template().map(rowTemplate -> {
-            rowTemplate.elementBounds(0, rowTemplate.elementCount() - 1, rvRowElementsBounds);
-            returnValue.setX(rvRowElementsBounds.x);
-            returnValue.setWidth(rvRowElementsBounds.width);
-            return returnValue;
-        }).orElse(returnValue);
+            final Rectangle elementBounds = rowTemplate.elementBounds(0, rowTemplate.elementCount() - 1);
+            return new HorizontalDimension(elementBounds.x, elementBounds.width);
+        }).orElse(HorizontalDimension.EMPTY);
     }
 
     /**
@@ -200,24 +166,23 @@ public class DefaultHighlighter extends AbstractHighlighter
      * the first byte of the leading row until the last byte of the trailing row (inclusive) are returned.
      *
      * @param rowsView    the view for which the "visible" bytes should be computed.
-     * @param returnValue the object in which the result should be stored.
-     * @return the adjusted <code>returnValue</code>
+     * @return the number of potentially visible bytes inside the rows-view
      */
     @NotNull
-    protected Range computeVisibleBytes(@NotNull final ByteRowsView rowsView, @NotNull final Range returnValue)
+    protected Range computeVisibleBytes(@NotNull final ByteRowsView rowsView)
     {
         final Rectangle rectangle = rowsView.getVisibleRect();
-        rowsView.getRowRange(rectangle, returnValue);
+        final Range rowRange = rowsView.getRowRange(rectangle);
 
-        if (!returnValue.isEmpty())
+        if (!rowRange.isEmpty())
         {
             final int bytesPerRow = rowsView.bytesPerRow();
-            final int firstByte = IndexUtils.rowIndexToByteIndex(returnValue.getStart(), bytesPerRow);
-            final int lastByte = IndexUtils.rowIndexToByteIndex(returnValue.getEnd() + bytesPerRow - 1, bytesPerRow);
-            returnValue.resize(firstByte, lastByte);
+            final int firstByte = IndexUtils.rowIndexToByteIndex(rowRange.getStart(), bytesPerRow);
+            final int lastByte = IndexUtils.rowIndexToByteIndex(rowRange.getEnd() + bytesPerRow - 1, bytesPerRow);
+            return new Range(firstByte, lastByte);
         }
 
-        return returnValue;
+        return rowRange;
     }
 
     /**
@@ -245,20 +210,6 @@ public class DefaultHighlighter extends AbstractHighlighter
          */
         @NotNull
         private final Color color;
-
-        /**
-         * A return value which is used to retrieve the bounds of the start byte of the highlighted region.
-         * This instance be reused to minimize creation of new rectangles.
-         */
-        @NotNull
-        private final Rectangle rvStartRect = new Rectangle();
-
-        /**
-         * A return value which is used to retrieve the bounds of the end byte of the highlighted region.
-         * This instance be reused to minimize creation of new rectangles.
-         */
-        @NotNull
-        private final Rectangle rvEndRect = new Rectangle();
 
         /**
          * Creates a new instance and sets the used color to yellow.
@@ -302,31 +253,31 @@ public class DefaultHighlighter extends AbstractHighlighter
             {
                 g.setColor(color);
 
-                rowsView.getByteRect(byteStartIndex, rvStartRect);
-                rowsView.getByteRect(byteEndIndex, rvEndRect);
+                final Rectangle startByteRect = rowsView.getByteRect(byteStartIndex);
+                final Rectangle endByteRect = rowsView.getByteRect(byteEndIndex);
 
-                if (rvStartRect.y == rvEndRect.y)
+                if (startByteRect.y == endByteRect.y)
                 {
                     // same line
-                    final Rectangle r = RectangleUtils.computeUnion(rvStartRect, rvEndRect);
+                    final Rectangle r = startByteRect.union(endByteRect);
                     g.fillRect(r.x, r.y, r.width, r.height);
                 }
                 else
                 {
                     // different lines
-                    final int widthOfStart = rowElementsDimension.getX() + rowElementsDimension.getWidth() - rvStartRect.x;
-                    g.fillRect(rvStartRect.x, rvStartRect.y, widthOfStart, rvStartRect.height);
+                    final int widthOfStart = rowElementsDimension.getX() + rowElementsDimension.getWidth() - startByteRect.x;
+                    g.fillRect(startByteRect.x, startByteRect.y, widthOfStart, startByteRect.height);
 
-                    if ((rvStartRect.y + rvStartRect.height) != rvEndRect.y)
+                    if ((startByteRect.y + startByteRect.height) != endByteRect.y)
                     {
                         g.fillRect(rowElementsDimension.getX(),
-                                rvStartRect.y + rvStartRect.height,
+                                startByteRect.y + startByteRect.height,
                                 rowElementsDimension.getWidth(),
-                                rvEndRect.y - (rvStartRect.y + rvStartRect.height));
+                                endByteRect.y - (startByteRect.y + startByteRect.height));
                     }
 
-                    final int widthOfEnd = (rvEndRect.x - rowElementsDimension.getX()) + rvEndRect.width;
-                    g.fillRect(rowElementsDimension.getX(), rvEndRect.y, widthOfEnd, rvEndRect.height);
+                    final int widthOfEnd = (endByteRect.x - rowElementsDimension.getX()) + endByteRect.width;
+                    g.fillRect(rowElementsDimension.getX(), endByteRect.y, widthOfEnd, endByteRect.height);
                 }
             }
         }

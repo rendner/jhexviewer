@@ -164,17 +164,15 @@ public abstract class RowTemplate implements IRowTemplate
 
     @NotNull
     @Override
-    public Rectangle elementBounds(final int firstElementIndex, final int lastElementIndex, @NotNull final Rectangle returnValue)
+    public Rectangle elementBounds(final int firstElementIndex, final int lastElementIndex)
     {
         final IElement firstElement = elements.get(firstElementIndex);
         final IElement lastElement = elements.get(lastElementIndex);
-
-        returnValue.x = firstElement.x();
-        returnValue.y = firstElement.y();
-        returnValue.width = lastElement.right() - returnValue.x;
-        returnValue.height = lastElement.height();
-
-        return returnValue;
+        return new Rectangle(
+                firstElement.x(),
+                firstElement.y(),
+                lastElement.right() - firstElement.x(),
+                lastElement.height());
     }
 
     /**

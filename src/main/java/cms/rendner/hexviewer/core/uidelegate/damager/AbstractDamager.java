@@ -4,7 +4,6 @@ import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
-import cms.rendner.hexviewer.utils.RectangleUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,20 +16,6 @@ import java.awt.*;
  */
 public abstract class AbstractDamager implements IDamager
 {
-    /**
-     * A return value which is used to retrieve the bounds for a row, byte or caret.
-     * This instance be reused to minimize creation of new rectangles.
-     */
-    @NotNull
-    private final Rectangle rvRect = new Rectangle();
-
-    /**
-     * A return value which is used to retrieve the bounds for a row, byte or caret.
-     * This instance be reused to minimize creation of new rectangles.
-     */
-    @NotNull
-    private final Rectangle rvRect2 = new Rectangle();
-
     /**
      * The hex viewer which should be damaged.
      */
@@ -94,7 +79,7 @@ public abstract class AbstractDamager implements IDamager
     public void damageRow(@NotNull final AreaId id, final int rowIndex)
     {
         final RowBasedView rowsView = hexViewer.getRowsView(id);
-        damage(rowsView, rowsView.getRowRect(rowIndex, rvRect));
+        damage(rowsView, rowsView.getRowRect(rowIndex));
     }
 
     @Override
@@ -106,15 +91,11 @@ public abstract class AbstractDamager implements IDamager
 
         if (startRowIndex == endRowIndex)
         {
-            damage(rowsView, RectangleUtils.computeUnion(
-                    rowsView.getByteRect(startByteIndex, rvRect),
-                    rowsView.getByteRect(endByteIndex, rvRect2)));
+            damage(rowsView, rowsView.getByteRect(startByteIndex).union(rowsView.getByteRect(endByteIndex)));
         }
         else
         {
-            damage(rowsView, RectangleUtils.computeUnion(
-                    rowsView.getRowRect(startRowIndex, rvRect),
-                    rowsView.getRowRect(endRowIndex, rvRect2)));
+            damage(rowsView, rowsView.getRowRect(startRowIndex).union(rowsView.getRowRect(endRowIndex)));
         }
     }
 
@@ -135,7 +116,7 @@ public abstract class AbstractDamager implements IDamager
     protected void damageByte(@NotNull final AreaId id, final int byteIndex)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
-        damage(rowsView, rowsView.getByteRect(byteIndex, rvRect));
+        damage(rowsView, rowsView.getByteRect(byteIndex));
     }
 
     /**
@@ -207,7 +188,7 @@ public abstract class AbstractDamager implements IDamager
     protected void damageCaret(@NotNull final AreaId id, final int caretIndex)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
-        damage(rowsView, rowsView.getCaretRect(caretIndex, rvRect));
+        damage(rowsView, rowsView.getCaretRect(caretIndex));
     }
 
     /**

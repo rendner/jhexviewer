@@ -7,17 +7,22 @@ import cms.rendner.hexviewer.utils.CheckUtils;
  *
  * @author rendner
  */
-public class HorizontalDimension
+public final class HorizontalDimension
 {
+    /**
+     * An empty instance.
+     */
+    public static final HorizontalDimension EMPTY = new HorizontalDimension();
+
     /**
      * The start position.
      */
-    private int x;
+    private final int x;
 
     /**
      * The width.
      */
-    private int width;
+    private final int width;
 
     /**
      * Creates a new instance.
@@ -37,8 +42,10 @@ public class HorizontalDimension
     public HorizontalDimension(final int x, final int width)
     {
         super();
-        setX(x);
-        setWidth(width);
+        CheckUtils.checkMinValue(width, 0);
+
+        this.x = x;
+        this.width = width;
     }
 
     /**
@@ -53,16 +60,6 @@ public class HorizontalDimension
     }
 
     /**
-     * Sets the new x.
-     *
-     * @param x the new start position.
-     */
-    public void setX(final int x)
-    {
-        this.x = x;
-    }
-
-    /**
      * @return the start position.
      */
     public int getX()
@@ -71,30 +68,11 @@ public class HorizontalDimension
     }
 
     /**
-     * Sets the new width.
-     *
-     * @param width the new width, &gt;= 0.
-     */
-    public void setWidth(final int width)
-    {
-        CheckUtils.checkMinValue(width, 0);
-        this.width = width;
-    }
-
-    /**
      * @return the width.
      */
     public int getWidth()
     {
         return width;
-    }
-
-    /**
-     * Sets all properties to <code>0</code>.
-     */
-    public void clear()
-    {
-        x = width = 0;
     }
 
     @Override

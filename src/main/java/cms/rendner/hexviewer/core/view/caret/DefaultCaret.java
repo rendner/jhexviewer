@@ -21,13 +21,6 @@ import java.awt.event.MouseEvent;
 public class DefaultCaret extends AbstractCaret
 {
     /**
-     * A placeholder value which is used to work with the x,y coordinates of the mouse events.
-     * This instance be reused to minimize creation of new points.
-     */
-    @NotNull
-    protected final Point rvPoint = new Point();
-
-    /**
      * Keeps track of the view where the dragging start (to create a selection by mouse).
      */
     protected ByteRowsView activeRowsView;
@@ -118,33 +111,35 @@ public class DefaultCaret extends AbstractCaret
      * Clamps the coordinates of a point object to always stay inside a specified area.
      *
      * @param id         the id of the area to stay.
-     * @param rvLocation the location to adjust, this instance will contain the result.
-     * @return the adjusted result.
+     * @param x the x-location to adjust.
+     * @param y the y-location to adjust.
+     * @return the adjusted coordinates.
      */
     @NotNull
-    protected Point clampLocationToRowsBounds(@NotNull final AreaId id, @NotNull final Point rvLocation)
+    protected Point clampLocationToRowsBounds(@NotNull final AreaId id, final int x, final int y)
     {
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
+        final Point result = new Point(x, y);
 
-        if (rvLocation.x < 0)
+        if (x < 0)
         {
-            rvLocation.x = 0;
+            result.x = 0;
         }
-        else if (rvLocation.x >= rowsView.getWidth())
+        else if (x >= rowsView.getWidth())
         {
-            rvLocation.x = rowsView.getWidth() - 1;
-        }
-
-        if (rvLocation.y < 0)
-        {
-            rvLocation.y = 0;
-        }
-        else if (rvLocation.y >= rowsView.getHeight())
-        {
-            rvLocation.y = rowsView.getHeight() - 1;
+            result.x = rowsView.getWidth() - 1;
         }
 
-        return rvLocation;
+        if (y < 0)
+        {
+            result.y = 0;
+        }
+        else if (y >= rowsView.getHeight())
+        {
+            result.y = rowsView.getHeight() - 1;
+        }
+
+        return result;
     }
 
     /**
@@ -220,12 +215,8 @@ public class DefaultCaret extends AbstractCaret
             {
                 if (activeRowsView == targetView)
                 {
-                    // copy instead of creating a new point object
-                    rvPoint.x = event.getX();
-                    rvPoint.y = event.getY();
-
-                    final Point rvClampedLocation = clampLocationToRowsBounds(activeRowsView.getId(), rvPoint);
-                    final ByteRowsView.ByteHitInfo byteHit = activeRowsView.locationToByteHit(rvClampedLocation.x, rvClampedLocation.y);
+                    final Point clampedLocation = clampLocationToRowsBounds(activeRowsView.getId(), event.getX(), event.getY());
+                    final ByteRowsView.ByteHitInfo byteHit = activeRowsView.locationToByteHit(clampedLocation.x, clampedLocation.y);
 
                     if (byteHit != null)
                     {

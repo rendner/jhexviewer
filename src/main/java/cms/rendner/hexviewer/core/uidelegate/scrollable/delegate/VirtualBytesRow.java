@@ -23,13 +23,6 @@ public class VirtualBytesRow
     private static final int INVALID_INDEX = -1;
 
     /**
-     * A return value which is used to retrieve the result of a row hit test.
-     * This instance be reused to minimize creation of new ElementHitInfo.
-     */
-    @NotNull
-    private final ElementHitInfo rvHitInfo = new ElementHitInfo();
-
-    /**
      * The JHexViewer component.
      */
     @NotNull
@@ -50,20 +43,19 @@ public class VirtualBytesRow
      * Returns the bounds for a specific byte.
      *
      * @param virtualByteIndex the index of the byte in the virtual row. The value has to be &gt;= 0.
-     * @param returnValue      this rect will be filled with the result.
-     * @return the <code>returnValue</code> object.
+     * @return the bounds of the byte.
      */
     @NotNull
-    public Rectangle getByteRect(final int virtualByteIndex, @NotNull final Rectangle returnValue)
+    public Rectangle getByteRect(final int virtualByteIndex)
     {
         final AreaId id = virtualByteIndexToAreaId(virtualByteIndex);
         final int indexInArea = virtualByteIndexToByteIndexInArea(id, virtualByteIndex);
 
         final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
-        rowsView.getByteRect(indexInArea, returnValue);
-        returnValue.x += rowsView.getX();
+        final Rectangle result = rowsView.getByteRect(indexInArea);
+        result.x += rowsView.getX();
 
-        return returnValue;
+        return result;
     }
 
     /**
@@ -151,8 +143,8 @@ public class VirtualBytesRow
         return rowsView.template().map(rowTemplate ->
         {
             final int xInRowTemplate = virtualXLocation - rowsView.getX();
-            rowTemplate.hitTest(xInRowTemplate, rvHitInfo);
-            return rvHitInfo.index();
+            final ElementHitInfo hitInfo = rowTemplate.hitTest(xInRowTemplate);
+            return hitInfo.index();
         }).orElse(INVALID_INDEX);
     }
 }

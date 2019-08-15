@@ -164,72 +164,44 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     @NotNull
     public Rectangle getRowRect(final int rowIndex)
     {
-        return getRowRect(rowIndex, new Rectangle());
-    }
-
-    /**
-     * Returns the bounds of a row.
-     *
-     * @param rowIndex the index of the row.
-     * @param result   the result is applied to this rectangle.
-     * @return the modified result which contains the bounds of the specified row.
-     */
-    @NotNull
-    public Rectangle getRowRect(final int rowIndex, @NotNull final Rectangle result)
-    {
         final int rowHeight = rowHeight();
-
-        result.x = 0;
-        result.y = rowIndex * rowHeight;
-        result.width = getWidth();
-        result.height = rowHeight;
-
-        return result;
+        return new Rectangle(
+                0,
+                rowIndex * rowHeight,
+                getWidth(),
+                rowHeight);
     }
 
     /**
      * Returns a range of rows that intersect a rectangle.
      *
      * @param rectangle the rectangle to determine the intersecting rows.
-     * @return a range of intersection rows.
+     * @return the range of intersection.
      */
     @NotNull
     public Range getRowRange(@NotNull final Rectangle rectangle)
     {
-        return getRowRange(rectangle, new Range());
-    }
-
-    /**
-     * Returns a range of rows that intersect a rectangle.
-     *
-     * @param rectangle the rectangle to determine the intersecting rows.
-     * @param result    the result is applied to this rectangle.
-     * @return the modified result which reports the intersection rows.
-     */
-    @NotNull
-    public Range getRowRange(@NotNull final Rectangle rectangle, @NotNull final Range result)
-    {
-        result.invalidate();
-
-        if (!rectangle.isEmpty())
+        if(rectangle.isEmpty())
         {
-            final int topRowIndex = verticalLocationToRowIndex(rectangle.y);
-
-            if (topRowIndex != INVALID_INDEX)
-            {
-                int bottomRowIndex = verticalLocationToRowIndex(rectangle.y + rectangle.height - 1);
-
-                if (bottomRowIndex == INVALID_INDEX)
-                {
-                    // in this case use the rowCount
-                    bottomRowIndex = Math.max(0, rowCount() - 1);
-                }
-
-                result.resize(topRowIndex, bottomRowIndex);
-            }
+            return Range.INVALID;
         }
 
-        return result;
+        final int topRowIndex = verticalLocationToRowIndex(rectangle.y);
+
+        if (topRowIndex != INVALID_INDEX)
+        {
+            int bottomRowIndex = verticalLocationToRowIndex(rectangle.y + rectangle.height - 1);
+
+            if (bottomRowIndex == INVALID_INDEX)
+            {
+                // in this case use the rowCount
+                bottomRowIndex = Math.max(0, rowCount() - 1);
+            }
+
+            return new Range(topRowIndex, bottomRowIndex);
+        }
+
+        return Range.INVALID;
     }
 
     /**

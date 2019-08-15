@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class Range
+public final class Range
 {
     /**
      * Constant for an invalid value.
@@ -17,14 +17,19 @@ public class Range
     private static final int MIN_VALID_INDEX = 0;
 
     /**
+     * An invalid instance.
+     */
+    public static final Range INVALID = new Range(MIN_VALID_INDEX-1, MIN_VALID_INDEX-1);
+
+    /**
      * The start value of the range.
      */
-    private int start;
+    private final int start;
 
     /**
      * The end value of the range.
      */
-    private int end;
+    private final int end;
 
     /**
      * Creates a new instance with an start and end set to 0.
@@ -46,28 +51,6 @@ public class Range
     public Range(final int start, final int end)
     {
         super();
-        resize(start, end);
-    }
-
-    /**
-     * Sets the start and end to an invalid value.
-     */
-    public void invalidate()
-    {
-        start = end = MIN_VALID_INDEX - 1;
-    }
-
-    /**
-     * Changes the start and end of the range.
-     * <p/>
-     * The min value of start/end is used as the internal start value.
-     * The max value of start/end is used as the internal end value.
-     *
-     * @param start the start value.
-     * @param end   the end value.
-     */
-    public void resize(final int start, final int end)
-    {
         this.start = Math.min(start, end);
         this.end = Math.max(start, end);
     }
@@ -131,7 +114,7 @@ public class Range
      * @param end   the end value to check.
      * @return <code>true</code> if range is valid.
      */
-    protected boolean isValid(final int start, final int end)
+    private boolean isValid(final int start, final int end)
     {
         return start >= MIN_VALID_INDEX && end >= MIN_VALID_INDEX && start <= end;
     }
@@ -153,39 +136,6 @@ public class Range
     }
 
     /**
-     * Calculates the intersection of two ranges.
-     * If the two ranges don't intersect, then the returned range is invalid.
-     * <p/>
-     * Note:
-     * This method can't be called on invalid ranges.
-     *
-     * @param otherRange a valid second range.
-     * @return the intersection of the two rectangles.
-     */
-    @NotNull
-    public Range computeIntersection(@NotNull final Range otherRange)
-    {
-        return computeIntersection(otherRange.start, otherRange.end, new Range());
-    }
-
-    /**
-     * Convenience to calculate the intersection of two ranges without allocating a new range.
-     * If the two ranges don't intersect, then the returned range is invalid.
-     * <p/>
-     * Note:
-     * This method can't be called on invalid ranges.
-     *
-     * @param otherRange  a valid range to intersect against.
-     * @param returnValue the intersection of the two ranges is returned in this range.
-     * @return <code>returnValue</code>, modified to specify the intersection.
-     */
-    @NotNull
-    public Range computeIntersection(@NotNull final Range otherRange, @NotNull final Range returnValue)
-    {
-        return computeIntersection(otherRange.start, otherRange.end, returnValue);
-    }
-
-    /**
      * Convenience to calculate the intersection of two ranges without allocating a new range.
      * If the two ranges don't intersect, then the returned range is invalid.
      * <p/>
@@ -194,12 +144,12 @@ public class Range
      *
      * @param otherStart  the start value of the range to intersect against, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param otherEnd    the end value of the range to intersect against, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
-     * @param returnValue the intersection of the two ranges is returned in this range.
-     * @return <code>result</code>, modified to specify the intersection.
+     * @return the intersection of the two ranges.
      */
     @NotNull
-    public Range computeIntersection(final int otherStart, final int otherEnd, @NotNull final Range returnValue)
+    public Range computeIntersection(final int otherStart, final int otherEnd)
     {
+        // todo: allow call on/with invalid ranges
         if (!isValid())
         {
             throw new IllegalStateException("Can't intersect with an invalid range.");
@@ -209,65 +159,28 @@ public class Range
             throw new IllegalArgumentException("Can't intersect with an invalid range.");
         }
 
-        returnValue.invalidate();
-
         final boolean startIsInRange = otherStart >= start && otherStart <= end;
         final boolean endIsInRange = otherEnd >= start && otherEnd <= end;
         final boolean startsBeforeAndEndsAfter = otherStart < start && otherEnd > end;
 
         if (startsBeforeAndEndsAfter)
         {
-            returnValue.start = start;
-            returnValue.end = end;
+            return new Range(start, end);
         }
         if (startIsInRange && endIsInRange)
         {
-            returnValue.start = otherStart;
-            returnValue.end = otherEnd;
+            return new Range(otherStart, otherEnd);
         }
         else if (startIsInRange)
         {
-            returnValue.start = otherStart;
-            returnValue.end = end;
+            return new Range(otherStart, end);
         }
         else if (endIsInRange)
         {
-            returnValue.start = start;
-            returnValue.end = otherEnd;
+            return new Range(start, otherEnd);
         }
 
-        return returnValue;
-    }
-
-    /**
-     * Convenience method that calculates the union of two ranges without allocating a new range.
-     * <p/>
-     * Note:
-     * This method can't be called on invalid ranges.
-     *
-     * @param otherRange the second valid range.
-     * @return the union of the tow ranges.
-     */
-    @NotNull
-    public Range computeUnion(@NotNull final Range otherRange)
-    {
-        return computeUnion(otherRange.start, otherRange.end, new Range());
-    }
-
-    /**
-     * Convenience method that calculates the union of two ranges without allocating a new range.
-     * <p/>
-     * Note:
-     * This method can't be called on invalid ranges.
-     *
-     * @param otherRange  the second valid range.
-     * @param returnValue the union of the two ranges is returned in this range.
-     * @return the <code>returnValue</code> modified to specify the union.
-     */
-    @NotNull
-    public Range computeUnion(@NotNull final Range otherRange, @NotNull final Range returnValue)
-    {
-        return computeUnion(otherRange.start, otherRange.end, returnValue);
+        return Range.INVALID;
     }
 
     /**
@@ -278,12 +191,12 @@ public class Range
      *
      * @param otherStart  the start value of the second range, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param otherEnd    the end value of the second range, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
-     * @param returnValue the union of the two ranges is returned in this range.
-     * @return the <code>returnValue</code> modified to specify the union.
+     * @return the union.
      */
     @NotNull
-    public Range computeUnion(final int otherStart, final int otherEnd, @NotNull final Range returnValue)
+    public Range computeUnion(final int otherStart, final int otherEnd)
     {
+        // todo: allow call on/with invalid ranges
         if (!isValid())
         {
             throw new IllegalStateException("Can't create union with an invalid range.");
@@ -293,11 +206,7 @@ public class Range
             throw new IllegalArgumentException("Can't create union with an invalid range.");
         }
 
-
-        returnValue.start = Math.min(otherStart, start);
-        returnValue.end = Math.max(otherEnd, end);
-
-        return returnValue;
+        return new Range(Math.min(start, otherStart), Math.max(end, otherEnd));
     }
 
     /**

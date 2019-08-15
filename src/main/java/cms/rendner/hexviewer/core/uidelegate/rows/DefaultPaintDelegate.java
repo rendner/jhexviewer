@@ -43,20 +43,6 @@ import java.util.*;
 public class DefaultPaintDelegate implements IPaintDelegate
 {
     /**
-     * Rectangle instance used to store temporary the height of a single row.
-     * This instance is reused.
-     */
-    @NotNull
-    protected final Rectangle rvRowRect = new Rectangle();
-
-    /**
-     * Range instance used to store temporary the range of the dirty rows.
-     * This instance is reused.
-     */
-    @NotNull
-    protected final Range rvDirtyRows = new Range();
-
-    /**
      * Contains for each of the three areas a rowColorProvider to be used to color the rows of the area.
      */
     @NotNull
@@ -116,11 +102,11 @@ public class DefaultPaintDelegate implements IPaintDelegate
     {
         if (rowsView.hasTemplate())
         {
-            rowsView.getRowRange(g.getClipBounds(), rvDirtyRows);
+            final Range dirtyRows = rowsView.getRowRange(g.getClipBounds());
 
-            if (!rvDirtyRows.isEmpty())
+            if (!dirtyRows.isEmpty())
             {
-                final List<RowGraphicsAndData> rowGraphicsAndDataList = createRowGraphicsAndData(g, rvDirtyRows, rowsView);
+                final List<RowGraphicsAndData> rowGraphicsAndDataList = createRowGraphicsAndData(g, dirtyRows, rowsView);
                 paintDirtyRows(g, rowGraphicsAndDataList, rowsView);
                 disposeRowGraphics(rowGraphicsAndDataList);
             }
@@ -292,16 +278,16 @@ public class DefaultPaintDelegate implements IPaintDelegate
     {
         final List<RowGraphicsAndData> result = new ArrayList<>(dirtyRows.getLength());
 
-        rowsView.getRowRect(dirtyRows.getStart(), rvRowRect);
+        final Rectangle dirtyRowBounds = rowsView.getRowRect(dirtyRows.getStart());
 
         for (int rowIndex = dirtyRows.getStart(); rowIndex <= dirtyRows.getEnd(); rowIndex++)
         {
             getRowData(rowIndex).ifPresent(rowData -> {
-                final Graphics rowGraphics = g.create(rvRowRect.x, rvRowRect.y, rvRowRect.width, rvRowRect.height);
+                final Graphics rowGraphics = g.create(dirtyRowBounds.x, dirtyRowBounds.y, dirtyRowBounds.width, dirtyRowBounds.height);
                 result.add(new RowGraphicsAndData(rowGraphics, rowData));
             });
 
-            rvRowRect.y += rvRowRect.height;
+            dirtyRowBounds.y += dirtyRowBounds.height;
         }
 
         return result;

@@ -37,19 +37,6 @@ public class Element implements IElement
 
     @NotNull
     @Override
-    public Rectangle toRectangle(@NotNull final Rectangle returnValue)
-    {
-        returnValue.x = position.x();
-        returnValue.y = position.y();
-
-        returnValue.width = dimension.width();
-        returnValue.height = dimension.height();
-
-        return returnValue;
-    }
-
-    @NotNull
-    @Override
     public IPosition position()
     {
         return position;

@@ -6,7 +6,6 @@ import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
-import cms.rendner.hexviewer.utils.RectangleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,17 +55,38 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * Translates the position of an element of a single row into the coordinates within the view.
      *
      * @param rowIndex      the target row index of the row in the view for the element.
-     * @param elementBounds the bounds of an element received from an IRowTemplate.
-     *                      The result is returned in this Rectangle.
+     * @param elementBounds the relative bounds of an element inside the row specified by the rowIndex.
      * @return the adjusted elementBounds parameter.
      */
     @NotNull
     public Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull final Rectangle elementBounds)
     {
         final Rectangle rowRect = getRowRect(rowIndex);
-        elementBounds.x += rowRect.x;
-        elementBounds.y += rowRect.y;
-        return elementBounds;
+        return new Rectangle(
+                rowRect.x + elementBounds.x,
+                rowRect.y + elementBounds.y,
+                elementBounds.width,
+                elementBounds.height
+        );
+    }
+
+    /**
+     * Translates the position of an element of a row into the coordinates within the view.
+     *
+     * @param rowIndex the target row index of the row in the view for the element.
+     * @param element  the element inside the row specified by the rowIndex.
+     * @return the translated coordinates.
+     */
+    @NotNull
+    public Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull IElement element)
+    {
+        final Rectangle rowRect = getRowRect(rowIndex);
+        return new Rectangle(
+                rowRect.x + element.x(),
+                rowRect.y + element.y(),
+                element.width(),
+                element.height()
+        );
     }
 
     /**
@@ -74,39 +94,21 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * The byte doesn't have to be visible, it can be outside of the current view.
      *
      * @param byteIndex the index of the byte in the view. The value has to be &gt;= 0.
-     * @return the bounds in the view, never <code>null</code>.
+     * @return the bounds in the view, the result will be empty if no row-template is installed.
      */
     @NotNull
     public Rectangle getByteRect(final int byteIndex)
     {
-        return getByteRect(byteIndex, new Rectangle());
-    }
-
-    /**
-     * Returns the bounds for a specific byte.
-     * The byte doesn't have to be visible, it can be outside of the current view.
-     *
-     * @param byteIndex   the index of the byte in the view. The value has to be &gt;= 0.
-     * @param returnValue this rect will be filled with the result.
-     * @return the <code>returnValue</code> object.
-     */
-    @NotNull
-    public Rectangle getByteRect(final int byteIndex, @NotNull final Rectangle returnValue)
-    {
-        if (rowTemplate == null)
-        {
-            RectangleUtils.setEmpty(returnValue);
-        }
-        else
+        if (rowTemplate != null)
         {
             final int bytesPerRow = bytesPerRow();
             final int rowIndex = IndexUtils.byteIndexToRowIndex(byteIndex, bytesPerRow);
             final int indexInRow = IndexUtils.byteIndexToIndexInRow(byteIndex, bytesPerRow);
             final IElement byteElement = rowTemplate.element(indexInRow);
-            return translateIntoViewCoordinates(rowIndex, byteElement.toRectangle(returnValue));
+            return translateIntoViewCoordinates(rowIndex, byteElement);
         }
 
-        return returnValue;
+        return new Rectangle();
     }
 
     /**
@@ -122,40 +124,22 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * The index doesn't have to be visible, it can be outside of the current view.
      *
      * @param caretIndex the index of the caret in the view. The value has to be &gt;= 0.
-     * @return the bounds in the view, never <code>null</code>.
+     * @return the bounds of the caret, the result will be empty if no row-template is installed.
      */
     @NotNull
     public Rectangle getCaretRect(final int caretIndex)
     {
-        return getCaretRect(caretIndex, new Rectangle());
-    }
-
-    /**
-     * Returns the bounds for the caret at a specific index.
-     * The index doesn't have to be visible, it can be outside of the current view.
-     *
-     * @param caretIndex  the index of the caret in the view. The value has to be &gt;= 0.
-     * @param returnValue this rect will be filled with the result.
-     * @return the <code>returnValue</code> object.
-     */
-    @NotNull
-    public Rectangle getCaretRect(final int caretIndex, @NotNull final Rectangle returnValue)
-    {
-        if (rowTemplate == null)
-        {
-            RectangleUtils.setEmpty(returnValue);
-        }
-        else
+        if (rowTemplate != null)
         {
             CheckUtils.checkMinValue(caretIndex, 0);
 
             final int bytesPerRow = bytesPerRow();
             final int indexInRowTemplate = IndexUtils.byteIndexToIndexInRow(caretIndex, bytesPerRow);
-            rowTemplate.caretBounds(indexInRowTemplate, returnValue);
-            return translateIntoViewCoordinates(IndexUtils.byteIndexToRowIndex(caretIndex, bytesPerRow), returnValue);
+            final Rectangle caretBounds = rowTemplate.caretBounds(indexInRowTemplate);
+            return translateIntoViewCoordinates(IndexUtils.byteIndexToRowIndex(caretIndex, bytesPerRow), caretBounds);
         }
 
-        return returnValue;
+        return new Rectangle();
     }
 
     /**

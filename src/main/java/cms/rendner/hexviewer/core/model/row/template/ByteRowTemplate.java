@@ -40,13 +40,14 @@ public class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
 
     @NotNull
     @Override
-    public Rectangle caretBounds(final int byteIndex, @NotNull final Rectangle returnValue)
+    public Rectangle caretBounds(final int byteIndex)
     {
         final IElement byteAfterCaret = elements.get(byteIndex);
-        returnValue.x = byteAfterCaret.x() - caretWidth;
-        returnValue.y = byteAfterCaret.y();
-        returnValue.width = caretWidth;
-        returnValue.height = byteAfterCaret.height();
-        return returnValue;
+        return new Rectangle(
+                byteAfterCaret.x() - caretWidth,
+                byteAfterCaret.y(),
+                caretWidth,
+                byteAfterCaret.height()
+        );
     }
 }

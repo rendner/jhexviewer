@@ -19,9 +19,8 @@ public interface IByteRowTemplate extends IRowTemplate
      * A caret is always placed in front of a byte.
      *
      * @param byteIndex   the index of the byte before which the caret should be inserted, in the range [0, getNumberOfBytes()-1].
-     * @param returnValue the rectangle in which the result should be stored.
-     * @return <code>returnValue</code> modified to specify the bounds.
+     * @return the bounds of the caret
      */
     @NotNull
-    Rectangle caretBounds(int byteIndex, @NotNull Rectangle returnValue);
+    Rectangle caretBounds(int byteIndex);
 }

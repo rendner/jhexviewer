@@ -130,11 +130,10 @@ public interface IRowTemplate
      *
      * @param firstElementIndex the index of the first element which should be included, in the range [0, elementCount()-1].
      * @param lastElementIndex  the index of the last element which should be included, in the range [0, elementCount()-1].
-     * @param returnValue       the rectangle in which the result should be stored.
-     * @return <code>returnValue</code> modified to specify the bounds
+     * @return the bounds of the elements.
      */
     @NotNull
-    Rectangle elementBounds(int firstElementIndex, int lastElementIndex, @NotNull Rectangle returnValue);
+    Rectangle elementBounds(int firstElementIndex, int lastElementIndex);
 
     /**
      * The dimension of a row.
