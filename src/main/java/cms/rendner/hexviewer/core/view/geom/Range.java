@@ -181,7 +181,7 @@ public final class Range
         {
             return Range.INVALID;
         }
-        if (!isValid(otherStart, otherEnd))
+        else if (!isValid(otherStart, otherEnd))
         {
             return Range.INVALID;
         }
