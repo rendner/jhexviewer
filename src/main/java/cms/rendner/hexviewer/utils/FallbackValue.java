@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author rendner
  */
-public class FallbackValue<T>
+public final class FallbackValue<T>
 {
     /**
      * The preferred value.
