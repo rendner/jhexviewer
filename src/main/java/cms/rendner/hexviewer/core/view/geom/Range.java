@@ -138,9 +138,6 @@ public final class Range
     /**
      * Convenience to calculate the intersection of two ranges without allocating a new range.
      * If the two ranges don't intersect, then the returned range is invalid.
-     * <p/>
-     * Note:
-     * This method can't be called on invalid ranges.
      *
      * @param otherStart  the start value of the range to intersect against, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param otherEnd    the end value of the range to intersect against, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
@@ -149,14 +146,13 @@ public final class Range
     @NotNull
     public Range computeIntersection(final int otherStart, final int otherEnd)
     {
-        // todo: allow call on/with invalid ranges
         if (!isValid())
         {
-            throw new IllegalStateException("Can't intersect with an invalid range.");
+            return Range.INVALID;
         }
-        if (!isValid(otherStart, otherEnd))
+        else if (!isValid(otherStart, otherEnd))
         {
-            throw new IllegalArgumentException("Can't intersect with an invalid range.");
+            return Range.INVALID;
         }
 
         final boolean startIsInRange = otherStart >= start && otherStart <= end;
@@ -185,9 +181,6 @@ public final class Range
 
     /**
      * Convenience method that calculates the union of two ranges without allocating a new range.
-     * <p/>
-     * Note:
-     * This method can't be called on invalid ranges.
      *
      * @param otherStart  the start value of the second range, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param otherEnd    the end value of the second range, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
@@ -196,14 +189,13 @@ public final class Range
     @NotNull
     public Range computeUnion(final int otherStart, final int otherEnd)
     {
-        // todo: allow call on/with invalid ranges
         if (!isValid())
         {
-            throw new IllegalStateException("Can't create union with an invalid range.");
+            return Range.INVALID;
         }
         if (!isValid(otherStart, otherEnd))
         {
-            throw new IllegalArgumentException("Can't create union with an invalid range.");
+            return Range.INVALID;
         }
 
         return new Range(Math.min(start, otherStart), Math.max(end, otherEnd));
