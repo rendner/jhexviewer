@@ -104,7 +104,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
         {
             final Range dirtyRows = rowsView.getRowRange(g.getClipBounds());
 
-            if (!dirtyRows.isEmpty())
+            if (dirtyRows.isValid())
             {
                 final List<RowGraphicsAndData> rowGraphicsAndDataList = createRowGraphicsAndData(g, dirtyRows, rowsView);
                 paintDirtyRows(g, rowGraphicsAndDataList, rowsView);

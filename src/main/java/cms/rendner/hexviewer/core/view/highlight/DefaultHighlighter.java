@@ -95,7 +95,7 @@ public class DefaultHighlighter extends AbstractHighlighter
     {
         final Range visibleBytes = computeVisibleBytes(rowsView);
 
-        if (!visibleBytes.isEmpty())
+        if (visibleBytes.isValid())
         {
             if (selectionHighlight != null || !highlights.isEmpty())
             {
@@ -135,7 +135,7 @@ public class DefaultHighlighter extends AbstractHighlighter
 
         final Range visibleHighlightedBytes = visibleBytes.computeIntersection(start, end);
 
-        if (!visibleHighlightedBytes.isEmpty())
+        if (visibleHighlightedBytes.isValid())
         {
             final IHighlightPainter highlightPainter = highlight.getPainter();
             final IHighlightPainter painter = highlightPainter == null ? defaultPainter : highlightPainter;
@@ -174,7 +174,7 @@ public class DefaultHighlighter extends AbstractHighlighter
         final Rectangle rectangle = rowsView.getVisibleRect();
         final Range rowRange = rowsView.getRowRange(rectangle);
 
-        if (!rowRange.isEmpty())
+        if (rowRange.isValid())
         {
             final int bytesPerRow = rowsView.bytesPerRow();
             final int firstByte = IndexUtils.rowIndexToByteIndex(rowRange.getStart(), bytesPerRow);

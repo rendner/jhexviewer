@@ -72,18 +72,6 @@ public final class Range
     }
 
     /**
-     * Checks if the range is empty.
-     * <p/>
-     * A range is empty if the start or end is an invalid value (invalid value: &lt;0).
-     *
-     * @return <code>true</code> if the range is invalid and has no length.
-     */
-    public boolean isEmpty()
-    {
-        return getLength() == 0;
-    }
-
-    /**
      * Returns the length of the range.
      * If start is equals end, the range has a length of <code>1</code>.
      * Only invalid ranges have a length of <code>0</code>
