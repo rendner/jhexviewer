@@ -14,12 +14,12 @@ public final class IndexPosition
     /**
      * The index of the byte to which this position refers.
      */
-    private int index;
+    private final int index;
 
     /**
      * The interest in one of the two possible directions.
      */
-    private Bias bias;
+    private final Bias bias;
 
     /**
      * Creates a new instance with index set to <code>0</code> and bias to <code>Bias.Forward</code>.
