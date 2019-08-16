@@ -62,15 +62,14 @@ public class DefaultPaintDelegate implements IPaintDelegate
     /**
      * The context which is required by the IRowRenderer instances to paint the rows of the areas.
      */
-    @NotNull
-    protected final RendererContext context = new RendererContext();
+    protected RendererContext context;
 
 
     @Override
     public void install(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = hexViewer;
-        context.setHexViewer(hexViewer);
+        context = new RendererContext(hexViewer);
 
         addDefaultRowRenderer(rowRendererMap);
         addDefaultRowColorProvider(rowColorProviderMap);
@@ -81,7 +80,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
     @Override
     public void uninstall(@NotNull final JHexViewer hexViewer)
     {
-        context.setHexViewer(null);
+        context = null;
         rowRendererMap.clear();
         rowColorProviderMap.clear();
         this.hexViewer = null;

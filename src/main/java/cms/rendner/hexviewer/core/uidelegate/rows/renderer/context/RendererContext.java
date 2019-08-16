@@ -1,9 +1,10 @@
 package cms.rendner.hexviewer.core.uidelegate.rows.renderer.context;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
+import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Contains data used in a <code>IRowRenderer</code> to support customized rendering of the rows of an area.
@@ -15,7 +16,8 @@ public class RendererContext implements IRendererContext
     /**
      * The hexViewer component.
      */
-    private JHexViewer hexViewer;
+    @NotNull
+    private final JHexViewer hexViewer;
 
     /**
      * The color provider used to determine colors of an row.
@@ -32,22 +34,24 @@ public class RendererContext implements IRendererContext
      */
     private AreaId areaId;
 
+    /**
+     * Creates a new instance.
+     * @param hexViewer the {@link JHexViewer} component.
+     */
+    public RendererContext(@NotNull JHexViewer hexViewer)
+    {
+        super();
+        this.hexViewer = hexViewer;
+    }
+
+    @NotNull
     @Override
     public JHexViewer getHexViewer()
     {
         return hexViewer;
     }
 
-    /**
-     * A reference to the {@link JHexViewer} component.
-     *
-     * @param hexViewer the reference.
-     */
-    public void setHexViewer(final JHexViewer hexViewer)
-    {
-        this.hexViewer = hexViewer;
-    }
-
+    @NotNull
     @Override
     public IRowColorProvider getColorProvider()
     {
@@ -59,11 +63,12 @@ public class RendererContext implements IRendererContext
      *
      * @param colorProvider color provider for the row to paint.
      */
-    public void setColorProvider(final IRowColorProvider colorProvider)
+    public void setColorProvider(@NotNull final IRowColorProvider colorProvider)
     {
         this.colorProvider = colorProvider;
     }
 
+    @NotNull
     @Override
     public IRowData getRowData()
     {
@@ -80,6 +85,7 @@ public class RendererContext implements IRendererContext
         this.rowData = rowData;
     }
 
+    @NotNull
     @Override
     public AreaId getAreaId()
     {
@@ -91,7 +97,7 @@ public class RendererContext implements IRendererContext
      *
      * @param areaId area to be rendered.
      */
-    public void setAreaId(final AreaId areaId)
+    public void setAreaId(@NotNull final AreaId areaId)
     {
         this.areaId = areaId;
     }

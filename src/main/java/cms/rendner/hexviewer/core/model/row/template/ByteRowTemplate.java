@@ -1,10 +1,14 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
+import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Describes the layout of a row of bytes.
@@ -18,6 +22,13 @@ import java.awt.*;
  */
 public final class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
 {
+    /**
+     * The elements of the row.
+     * The number of minimum entries of this property is <code>1</code>.
+     */
+    @NotNull
+    private final List<IElement> elements;
+
     /**
      * The width of the caret which can be placed between the bytes of the row.
      */
@@ -33,6 +44,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
     {
         super(source);
         this.caretWidth = source.caretWidth;
+        this.elements = source.elements;
     }
 
     /**
@@ -59,11 +71,90 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         );
     }
 
+    @NotNull
+    @Override
+    public Rectangle elementBounds(final int firstElementIndex, final int lastElementIndex)
+    {
+        final IElement firstElement = elements.get(firstElementIndex);
+        final IElement lastElement = elements.get(lastElementIndex);
+        return new Rectangle(
+                firstElement.x(),
+                firstElement.y(),
+                lastElement.right() - firstElement.x(),
+                lastElement.height());
+    }
+
+    @Override
+    public int elementCount()
+    {
+        return elements.size();
+    }
+
+    @NotNull
+    @Override
+    public IElement element(final int index)
+    {
+        return elements.get(index);
+    }
+
+    @NotNull
+    @Override
+    public ElementHitInfo hitTest(final int xPosition)
+    {
+        return hitTest(xPosition, new ElementHitInfo());
+    }
+
+    @NotNull
+    @Override
+    public ElementHitInfo hitTest(final int xPosition, @NotNull final ElementHitInfo returnValue)
+    {
+        final int elementIndex = elementIndexForXPosition(xPosition);
+        final IElement element = elements.get(elementIndex);
+
+        final int halfWidth = element.width() / 2;
+        final boolean isLeadingEdge = xPosition < (element.right() - halfWidth);
+        final boolean wasInside = element.containsX(xPosition);
+
+        returnValue.fillWith(elementIndex, isLeadingEdge, wasInside);
+        return returnValue;
+    }
+
+    /**
+     * Checks which element is under the position.
+     *
+     * @param xPosition the x position which should be checked.
+     * @return the index of the element which intersects with the position.
+     */
+    protected int elementIndexForXPosition(final int xPosition)
+    {
+        final int lastElementIndex = elements.size() - 1;
+
+        for (int i = 0; i < lastElementIndex; i++)
+        {
+            final IElement nextElement = elements.get(i + 1);
+
+            final boolean positionIsBeforeNextElement = xPosition < nextElement.x();
+
+            if (positionIsBeforeNextElement)
+            {
+                return i;
+            }
+        }
+
+        return lastElementIndex;
+    }
+
     /**
      * Builder to configure and create ByteRowTemplate instances.
      */
     public static class Builder extends RowTemplate.Builder<Builder>
     {
+        /**
+         * The elements of the row.
+         * The number of minimum entries of this property is <code>1</code>.
+         */
+        protected List<IElement> elements;
+
         /**
          * The width of the caret which can be placed between the bytes of the row.
          */
@@ -95,6 +186,19 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
             CheckUtils.checkMinValue(caretWidth, 1);
             this.caretWidth = caretWidth;
             return this;
+        }
+
+        /**
+         * Sets the horizontal aligned elements for the row.
+         *
+         * @param elements the elements of the row, not empty - the list has to contain at least one element.
+         * @return the builder instance, to allow method chaining.
+         */
+        public Builder setElements(@NotNull final List<IElement> elements)
+        {
+            CheckUtils.checkMinValue(elements.size(), 1);
+            this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
+            return getThis();
         }
 
         /**

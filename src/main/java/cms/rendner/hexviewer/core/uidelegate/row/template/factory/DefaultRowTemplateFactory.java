@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,15 +48,15 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 
         final RowInsets rowInsets = configuration.rowInsets(AreaId.OFFSET);
         final ElementDimension elementDimension = computeElementDimension(totalCharsCount, fm);
-        final List<IElement> elements = createOffsetRowElements(rowInsets, elementDimension);
-        final int width = computeRowWidth(elements, rowInsets, fm);
+        final IElement element = createOffsetRowElement(rowInsets, elementDimension);
+        final int width = computeRowWidth(Collections.singletonList(element), rowInsets, fm);
         final int height = computeRowHeight(rowInsets, fm);
 
         final IOffsetRowTemplate result = OffsetRowTemplate.newBuilder()
                 .setFont(configuration.font())
                 .setAscent(fm.getAscent())
                 .setDimension(width, height)
-                .setElements(elements)
+                .setElement(element)
                 .setOnlyDigitsCount(onlyDigitsCount)
                 .setTotalCharsCount(totalCharsCount)
                 .build();
@@ -132,20 +133,18 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
     }
 
     /**
-     * Creates a list with only one element which is rendered row wise in the offset-view of the JHexViewer.
+     * Creates the single element which displays the formatted offset value.
      *
      * @param rowInsets        the row insets.
-     * @param elementDimension the dimension for the elements to create.
-     * @return list with one element.
+     * @param elementDimension the dimension of the element to create.
+     * @return the element.
      */
     @NotNull
-    protected List<IElement> createOffsetRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension)
+    protected IElement createOffsetRowElement(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension)
     {
         final int x = computeValue(rowInsets.left(), fm);
         final int y = computeValue(rowInsets.top(), fm);
-        final List<IElement> result = new ArrayList<>(1);
-        result.add(new Element(elementDimension, new ElementPosition(x, y)));
-        return result;
+        return new Element(elementDimension, new ElementPosition(x, y));
     }
 
     /**

@@ -3,6 +3,8 @@ package cms.rendner.hexviewer.core.uidelegate.rows.renderer;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -17,17 +19,20 @@ public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRo
      * The default value to paint the background of a row.
      * This value can be <code>null</code>, to not overwrite the background of the component.
      */
+    @Nullable
     protected Color defaultRowBackground = Color.white;
 
     /**
      * The default value to paint the foreground (aka text value) of an element.
      */
+    @NotNull
     protected Color defaultElementForeground = Color.black;
 
     /**
      * The default value to paint the background of an element.
      * This value can be <code>null</code>, to not overwrite the color of the row background.
      */
+    @Nullable
     protected Color defaultElementBackground = null;
 
     /**
@@ -36,29 +41,13 @@ public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRo
      * @param g     the Graphics object in which to paint. The bounds of the Graphics object matches with the bounds of the row to paint.
      * @param color background color to paint, can be <code>null</code>, to not overwrite the current color of the background.
      */
-    protected void paintRowBackground(final Graphics g, final Color color)
+    protected void paintRowBackground(@NotNull final Graphics g, @Nullable final Color color)
     {
         if (color != null)
         {
             final Rectangle bounds = g.getClipBounds();
             g.setColor(color);
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-        }
-    }
-
-    /**
-     * Fills the background of an element with a specified color.
-     *
-     * @param g             the Graphics object in which to paint. The bounds of the Graphics object matches with the bounds of the row to paint.
-     * @param elementBounds the bounds of the element to paint, is used to fill the background of the element.
-     * @param color         background color to paint, can be <code>null</code>, to not overwrite the current color of the background.
-     */
-    protected void paintElementBackground(final Graphics g, final Rectangle elementBounds, final Color color)
-    {
-        if (color != null && !elementBounds.isEmpty())
-        {
-            g.setColor(color);
-            g.fillRect(elementBounds.x, elementBounds.y, elementBounds.width, elementBounds.height);
         }
     }
 
@@ -70,18 +59,14 @@ public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRo
      *
      * @param context      context which may provides a preferred foreground color.
      * @param elementIndex the index of the element to paint.
-     * @return the foreground color to use, can be <code>null</code>.
+     * @return the foreground color to use.
      */
-    protected Color getElementForegroundColor(final IRendererContext context, final int elementIndex)
+    @NotNull
+    protected Color getElementForegroundColor(@NotNull final IRendererContext context, final int elementIndex)
     {
-        Color result = null;
         final IRowColorProvider provider = context.getColorProvider();
-        if (provider != null)
-        {
-            result = provider.getRowElementForeground(context.getHexViewer(), context.getAreaId(), context.getRowData().rowIndex(), elementIndex);
-        }
-
-        return result != null ? result : defaultElementForeground;
+        final Color color = provider.getRowElementForeground(context.getHexViewer(), context.getAreaId(), context.getRowData().rowIndex(), elementIndex);
+        return color != null ? color : defaultElementForeground;
     }
 
     /**
@@ -92,18 +77,14 @@ public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRo
      *
      * @param context      context which may provides a preferred background color.
      * @param elementIndex the index of the element to paint.
-     * @return the background color to use, can be <code>null</code>.
+     * @return the background color to use, or <code>null</code> to not overwrite the current color of the background.
      */
-    protected Color getElementBackgroundColor(final IRendererContext context, final int elementIndex)
+    @Nullable
+    protected Color getElementBackgroundColor(@NotNull final IRendererContext context, final int elementIndex)
     {
-        Color result = null;
         final IRowColorProvider provider = context.getColorProvider();
-        if (provider != null)
-        {
-            result = provider.getRowElementBackground(context.getHexViewer(), context.getAreaId(), context.getRowData().rowIndex(), elementIndex);
-        }
-
-        return result != null ? result : defaultElementBackground;
+        final Color color = provider.getRowElementBackground(context.getHexViewer(), context.getAreaId(), context.getRowData().rowIndex(), elementIndex);
+        return color != null ? color : defaultElementBackground;
     }
 
     /**
@@ -113,65 +94,13 @@ public abstract class AbstractRowRenderer<T extends IRowTemplate> implements IRo
      * If no IRowColorProvider is found the default row background color is used.
      *
      * @param context context which may provides a preferred background color.
-     * @return the background color to use, can be <code>null</code>.
+     * @return the background color to use, or <code>null</code> to not overwrite the current color of the background.
      */
-    protected Color getBackgroundColor(final IRendererContext context)
+    @Nullable
+    protected Color getBackgroundColor(@NotNull final IRendererContext context)
     {
-        Color result = null;
         final IRowColorProvider provider = context.getColorProvider();
-        if (provider != null)
-        {
-            result = provider.getRowBackground(context.getHexViewer(), context.getAreaId(), context.getRowData().rowIndex());
-        }
-
-        return result != null ? result : defaultRowBackground;
-    }
-
-    /**
-     * Paints the backgrounds for all elements defined in an IRowTemplate.
-     *
-     * @param g           the Graphics object in which to paint. The bounds of the Graphics object matches with the bounds of the row to paint.
-     * @param rowTemplate the layout of the row to be painted.
-     * @param context     context which may used to draw customized backgrounds.
-     */
-    protected void paintLayoutElementsBackground(final Graphics g, final IRowTemplate rowTemplate, final IRendererContext context)
-    {
-        final int elementsToPaint = rowTemplate.elementCount();
-
-        Color startColor;
-        Color endColor;
-
-        int startIndex;
-        int endIndex;
-
-        int paintIndex = 0;
-        while (paintIndex < elementsToPaint)
-        {
-            startColor = getElementBackgroundColor(context, paintIndex);
-
-            if (startColor == null)
-            {
-                paintIndex++;
-                continue;
-            }
-
-            startIndex = paintIndex;
-            endIndex = paintIndex;
-
-            while (++paintIndex < elementsToPaint)
-            {
-                endColor = getElementBackgroundColor(context, paintIndex);
-
-                if (!startColor.equals(endColor))
-                {
-                    break;
-                }
-
-                endIndex = paintIndex;
-            }
-
-            final Rectangle elementBounds = rowTemplate.elementBounds(startIndex, endIndex);
-            paintElementBackground(g, elementBounds, startColor);
-        }
+        final Color color = provider.getRowBackground(context.getHexViewer(), context.getAreaId(), context.getRowData().rowIndex());
+        return color != null ? color : defaultRowBackground;
     }
 }

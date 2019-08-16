@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
+import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,14 +13,20 @@ import org.jetbrains.annotations.NotNull;
 public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
 {
     /**
+     * The element of the row.
+     */
+    @NotNull
+    private final IElement element;
+
+    /**
      * Number of chars to display the formatted offset value.
      */
-    protected final int totalCharsCount;
+    private final int totalCharsCount;
 
     /**
      * Number of chars to display only the digits of the formatted offset value.
      */
-    protected final int onlyDigitsCount;
+    private final int onlyDigitsCount;
 
     /**
      * Hide the constructor.
@@ -30,6 +37,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
     private OffsetRowTemplate(@NotNull final Builder source)
     {
         super(source);
+        this.element = source.element;
         this.totalCharsCount = source.totalCharsCount;
         this.onlyDigitsCount = source.onlyDigitsCount;
     }
@@ -43,6 +51,12 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
     public static Builder newBuilder()
     {
         return new Builder();
+    }
+
+    @Override
+    public @NotNull IElement element()
+    {
+        return element;
     }
 
     @Override
@@ -63,14 +77,19 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
     public static class Builder extends RowTemplate.Builder<Builder>
     {
         /**
+         * The element of the row.
+         */
+        IElement element;
+
+        /**
          * Number of chars to display the formatted offset value.
          */
-        protected int totalCharsCount;
+        int totalCharsCount;
 
         /**
          * Number of chars to display only the digits of the formatted offset value.
          */
-        protected int onlyDigitsCount;
+        int onlyDigitsCount;
 
         /**
          * Hide the constructor.
@@ -113,11 +132,23 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
         }
 
         /**
+         * Sets the element which displays the formatted offset value.
+         *
+         * @param element the element.
+         * @return the builder instance, to allow method chaining.
+         */
+        public Builder setElement(@NotNull final IElement element)
+        {
+            this.element = element;
+            return getThis();
+        }
+
+        /**
          * @return a new instance with the configured values.
          */
         public OffsetRowTemplate build()
         {
-            CheckUtils.checkMaxValue(elements.size(), 1);
+            CheckUtils.checkNotNull(element);
             CheckUtils.checkMinValue(totalCharsCount, 1);
             CheckUtils.checkMinValue(onlyDigitsCount, 1);
             CheckUtils.checkMinValue(totalCharsCount, onlyDigitsCount);

@@ -2,6 +2,7 @@ package cms.rendner.hexviewer.core.uidelegate.rows.renderer;
 
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -34,7 +35,7 @@ public interface IRowRenderer<T extends IRowTemplate>
      * @param rowTemplate the layout of the row to be painted.
      * @param context     the context to provide additional information.
      */
-    void paintBackground(final Graphics g, final T rowTemplate, final IRendererContext context);
+    void paintBackground(@NotNull final Graphics g, @NotNull final T rowTemplate, @NotNull final IRendererContext context);
 
     /**
      * Is called whenever the foreground of a row should be painted. In this method only the foreground should be painted.
@@ -48,5 +49,5 @@ public interface IRowRenderer<T extends IRowTemplate>
      * @param rowTemplate the layout of the row to be painted.
      * @param context     the context to provide additional information.
      */
-    void paintForeground(final Graphics g, final T rowTemplate, final IRendererContext context);
+    void paintForeground(@NotNull final Graphics g, @NotNull final T rowTemplate, @NotNull final IRendererContext context);
 }
