@@ -1,8 +1,6 @@
 package cms.rendner.hexviewer.core;
 
 import cms.rendner.hexviewer.core.formatter.IValueFormatter;
-import cms.rendner.hexviewer.core.formatter.LookupValueFormatter;
-import cms.rendner.hexviewer.core.formatter.lookup.LookupTableFactory;
 import cms.rendner.hexviewer.core.formatter.offset.IOffsetValueFormatter;
 import cms.rendner.hexviewer.core.formatter.offset.OffsetFormatter;
 import cms.rendner.hexviewer.core.model.data.DefaultDataModel;
@@ -25,6 +23,8 @@ import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.caret.ICaret;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
+import cms.rendner.hexviewer.support.data.formatter.AsciiByteFormatter;
+import cms.rendner.hexviewer.support.data.formatter.HexByteFormatter;
 import cms.rendner.hexviewer.swing.scrollable.IScrollableDelegate;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableRowsContainer;
@@ -1165,8 +1165,8 @@ public class JHexViewer extends JComponent
     protected void setupValueFormatterMap(@NotNull final Map<AreaId, FallbackValue<IValueFormatter>> map)
     {
         map.put(AreaId.OFFSET, new FallbackValue<>(new OffsetFormatter(4)));
-        map.put(AreaId.HEX, new FallbackValue<>(new LookupValueFormatter(LookupTableFactory.createHexTable())));
-        map.put(AreaId.ASCII, new FallbackValue<>(new LookupValueFormatter(LookupTableFactory.createAsciiTable())));
+        map.put(AreaId.HEX, new FallbackValue<>(new HexByteFormatter()));
+        map.put(AreaId.ASCII, new FallbackValue<>(new AsciiByteFormatter()));
     }
 
     /**

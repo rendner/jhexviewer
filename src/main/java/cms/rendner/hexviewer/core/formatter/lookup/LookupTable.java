@@ -9,7 +9,7 @@ import java.util.Arrays;
  *
  * @author rendner
  */
-public class LookupTable implements ILookupTable
+public final class LookupTable implements ILookupTable
 {
     /**
      * Array of precalculated strings.

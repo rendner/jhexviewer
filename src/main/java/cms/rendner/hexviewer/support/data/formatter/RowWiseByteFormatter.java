@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class RowWiseByteFormatter implements IRowWiseByteFormatter
+public final class RowWiseByteFormatter implements IRowWiseByteFormatter
 {
     /**
      * Used to format the values of the offset-area.
@@ -34,40 +34,40 @@ public class RowWiseByteFormatter implements IRowWiseByteFormatter
      * Used to separate rows.
      */
     @NotNull
-    protected String rowSeparator = System.lineSeparator();
+    protected final String rowSeparator = System.lineSeparator();
 
     /**
      * Used to separate areas.
      */
-    protected String areaSeparator = " | ";
+    protected final String areaSeparator = " | ";
 
     /**
      * Used to separate bytes of the hex-area.
      */
     @NotNull
-    protected String hexByteSeparator = " ";
+    protected final String hexByteSeparator = " ";
 
     // todo add comment
     @NotNull
-    protected String hexByteDoubleSeparator = "  ";
+    protected final String hexByteDoubleSeparator = "  ";
 
     /**
      * Used to separate bytes of the ascii-area.
      */
     @NotNull
-    protected String asciiByteSeparator = "";
+    protected final String asciiByteSeparator = "";
 
     /**
      * Used to print an excluded byte of the hex-area.
      */
     @NotNull
-    protected String hexBytePlaceholder = "  ";
+    protected final String hexBytePlaceholder = "  ";
 
     /**
      * Used to print an excluded byte of the ascii-area.
      */
     @NotNull
-    protected String asciiBytePlaceholder = ".";
+    protected final String asciiBytePlaceholder = ".";
 
     /**
      * Creates a new instance.

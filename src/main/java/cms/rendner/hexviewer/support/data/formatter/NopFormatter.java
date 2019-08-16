@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class NopFormatter implements IValueFormatter
+public final class NopFormatter implements IValueFormatter
 {
     @NotNull
     @Override

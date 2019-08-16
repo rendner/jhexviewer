@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class OffsetFormatter extends StringValueFormatter implements IOffsetValueFormatter
+public final class OffsetFormatter extends StringValueFormatter implements IOffsetValueFormatter
 {
     /**
      * The minimum number of chars to represent a address.
@@ -21,7 +21,7 @@ public class OffsetFormatter extends StringValueFormatter implements IOffsetValu
      * The digit used for padding.
      */
     @NotNull
-    protected String padDigit = "0";
+    private final String padDigit = "0";
 
     /**
      * The format identifier.
@@ -30,13 +30,13 @@ public class OffsetFormatter extends StringValueFormatter implements IOffsetValu
      * @see String#format(String, Object...)
      */
     @NotNull
-    protected String valueFormat = "X";
+    private final String valueFormat = "X";
 
     /**
      * The suffix which gets added to each formatted address.
      */
     @NotNull
-    protected String valueSuffix = "h";
+    private final String valueSuffix = "h";
 
     /**
      * Creates a new instance.

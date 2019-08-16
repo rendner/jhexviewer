@@ -8,7 +8,7 @@ import cms.rendner.hexviewer.core.formatter.lookup.LookupTableFactory;
  *
  * @author rendner
  */
-public class AsciiByteFormatter extends LookupValueFormatter
+public final class AsciiByteFormatter extends LookupValueFormatter
 {
     /**
      * Creates a new instance which uses a lookup table to format the bytes.

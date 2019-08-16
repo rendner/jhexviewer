@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
  *
  * @author rendner
  */
-public class LookupTableFactory
+public final class LookupTableFactory
 {
     /**
      * The dot.
@@ -161,4 +161,9 @@ public class LookupTableFactory
     {
         return c >= 0x20 && c < 0x7F;
     }
+
+    /**
+     * Hide constructor.
+     */
+    private LookupTableFactory(){}
 }
