@@ -15,6 +15,6 @@ public final class AsciiByteFormatter extends LookupValueFormatter
      */
     public AsciiByteFormatter()
     {
-        super(LookupTableFactory.createUnicodeTable());
+        super(LookupTableFactory.createAsciiTable());
     }
 }
