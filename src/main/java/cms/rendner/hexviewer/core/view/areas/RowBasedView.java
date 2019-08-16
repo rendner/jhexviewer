@@ -57,7 +57,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * Used to guard the access to the internal api.
      */
     @NotNull
-    protected Object internalApiAccessToken;
+    protected final Object internalApiAccessToken;
 
     /**
      * The api instance which allows to set hidden properties which are not accessible from the outside.

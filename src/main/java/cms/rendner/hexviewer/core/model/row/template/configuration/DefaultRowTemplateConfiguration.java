@@ -169,7 +169,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
          * The insets for the rows mapped by area.
          */
         @NotNull
-        private EnumMap<AreaId, RowInsets> rowInsets = new EnumMap<>(AreaId.class);
+        private final EnumMap<AreaId, RowInsets> rowInsets = new EnumMap<>(AreaId.class);
 
         /**
          * The space between two byte groups.

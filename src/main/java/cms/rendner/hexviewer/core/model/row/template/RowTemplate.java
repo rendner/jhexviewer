@@ -34,7 +34,7 @@ public abstract class RowTemplate implements IRowTemplate
     /**
      * The ascent to center an element vertically if painted into a {@link Graphics} object.
      */
-    private int ascent;
+    private final int ascent;
 
     /**
      * Hide the constructor.
