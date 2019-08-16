@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.core.view.areas;
 
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
-import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
+import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
@@ -78,7 +78,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @return the translated coordinates.
      */
     @NotNull
-    public Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull IElement element)
+    public Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull Element element)
     {
         final Rectangle rowRect = getRowRect(rowIndex);
         return new Rectangle(
@@ -104,7 +104,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
             final int bytesPerRow = bytesPerRow();
             final int rowIndex = IndexUtils.byteIndexToRowIndex(byteIndex, bytesPerRow);
             final int indexInRow = IndexUtils.byteIndexToIndexInRow(byteIndex, bytesPerRow);
-            final IElement byteElement = rowTemplate.element(indexInRow);
+            final Element byteElement = rowTemplate.element(indexInRow);
             return translateIntoViewCoordinates(rowIndex, byteElement);
         }
 
@@ -160,7 +160,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
             if (rowIndex != INVALID_INDEX && rowTemplate.containsX(x))
             {
                 final int offsetForFirstByteInRow = (rowIndex * rowTemplate.elementCount());
-                final ElementHitInfo hitInfo = rowTemplate.hitTest(x);
+                final HitInfo hitInfo = rowTemplate.hitTest(x);
                 return convert(hitInfo, rowTemplate, offsetForFirstByteInRow);
             }
         }
@@ -177,7 +177,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * @return the hit info for the byte, never <code>null</code>.
      */
     @NotNull
-    protected ByteHitInfo convert(@NotNull final ElementHitInfo templateHitInfo, @NotNull final IByteRowTemplate rowTemplate, final int offsetForFirstByteInRow)
+    protected ByteHitInfo convert(@NotNull final HitInfo templateHitInfo, @NotNull final IByteRowTemplate rowTemplate, final int offsetForFirstByteInRow)
     {
         final IndexPosition.Bias bias = templateHitInfo.insertionIndex() >= rowTemplate.elementCount() ? IndexPosition.Bias.Backward : IndexPosition.Bias.Forward;
         final IndexPosition position = new IndexPosition(templateHitInfo.insertionIndex() + offsetForFirstByteInRow, bias);

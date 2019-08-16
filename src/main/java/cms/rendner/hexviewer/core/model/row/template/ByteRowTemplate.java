@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
-import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
+import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
      * The number of minimum entries of this property is <code>1</code>.
      */
     @NotNull
-    private final List<IElement> elements;
+    private final List<Element> elements;
 
     /**
      * The width of the caret which can be placed between the bytes of the row.
@@ -62,7 +62,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
     @Override
     public Rectangle caretBounds(final int byteIndex)
     {
-        final IElement byteAfterCaret = elements.get(byteIndex);
+        final Element byteAfterCaret = elements.get(byteIndex);
         return new Rectangle(
                 byteAfterCaret.x() - caretWidth,
                 byteAfterCaret.y(),
@@ -75,8 +75,8 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
     @Override
     public Rectangle elementBounds(final int firstElementIndex, final int lastElementIndex)
     {
-        final IElement firstElement = elements.get(firstElementIndex);
-        final IElement lastElement = elements.get(lastElementIndex);
+        final Element firstElement = elements.get(firstElementIndex);
+        final Element lastElement = elements.get(lastElementIndex);
         return new Rectangle(
                 firstElement.x(),
                 firstElement.y(),
@@ -92,24 +92,24 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
 
     @NotNull
     @Override
-    public IElement element(final int index)
+    public Element element(final int index)
     {
         return elements.get(index);
     }
 
     @NotNull
     @Override
-    public ElementHitInfo hitTest(final int xPosition)
+    public HitInfo hitTest(final int xPosition)
     {
-        return hitTest(xPosition, new ElementHitInfo());
+        return hitTest(xPosition, new HitInfo());
     }
 
     @NotNull
     @Override
-    public ElementHitInfo hitTest(final int xPosition, @NotNull final ElementHitInfo returnValue)
+    public HitInfo hitTest(final int xPosition, @NotNull final HitInfo returnValue)
     {
         final int elementIndex = elementIndexForXPosition(xPosition);
-        final IElement element = elements.get(elementIndex);
+        final Element element = elements.get(elementIndex);
 
         final int halfWidth = element.width() / 2;
         final boolean isLeadingEdge = xPosition < (element.right() - halfWidth);
@@ -131,7 +131,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
 
         for (int i = 0; i < lastElementIndex; i++)
         {
-            final IElement nextElement = elements.get(i + 1);
+            final Element nextElement = elements.get(i + 1);
 
             final boolean positionIsBeforeNextElement = xPosition < nextElement.x();
 
@@ -153,7 +153,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * The elements of the row.
          * The number of minimum entries of this property is <code>1</code>.
          */
-        protected List<IElement> elements;
+        protected List<Element> elements;
 
         /**
          * The width of the caret which can be placed between the bytes of the row.
@@ -194,7 +194,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param elements the elements of the row, not empty - the list has to contain at least one element.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder setElements(@NotNull final List<IElement> elements)
+        public Builder setElements(@NotNull final List<Element> elements)
         {
             CheckUtils.checkMinValue(elements.size(), 1);
             this.elements = Collections.unmodifiableList(new ArrayList<>(elements));

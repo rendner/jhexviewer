@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
      * The element of the row.
      */
     @NotNull
-    private final IElement element;
+    private final Element element;
 
     /**
      * Number of chars to display the formatted offset value.
@@ -54,7 +54,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
     }
 
     @Override
-    public @NotNull IElement element()
+    public @NotNull Element element()
     {
         return element;
     }
@@ -79,7 +79,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
         /**
          * The element of the row.
          */
-        IElement element;
+        Element element;
 
         /**
          * Number of chars to display the formatted offset value.
@@ -137,7 +137,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          * @param element the element.
          * @return the builder instance, to allow method chaining.
          */
-        public Builder setElement(@NotNull final IElement element)
+        public Builder setElement(@NotNull final Element element)
         {
             this.element = element;
             return getThis();

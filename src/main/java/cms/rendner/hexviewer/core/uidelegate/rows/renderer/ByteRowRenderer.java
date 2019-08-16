@@ -2,7 +2,7 @@ package cms.rendner.hexviewer.core.uidelegate.rows.renderer;
 
 import cms.rendner.hexviewer.core.formatter.IValueFormatter;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
@@ -38,7 +38,7 @@ public class ByteRowRenderer extends AbstractRowRenderer<IByteRowTemplate>
             for (int i = 0; i < rowData.size(); i++)
             {
                 final Color color = getElementForegroundColor(context, i);
-                final IElement byteElement = rowTemplate.element(i);
+                final Element byteElement = rowTemplate.element(i);
                 final String byteToDraw = valueFormatter.format(rowData.getByte(i));
 
                 g.setColor(color);

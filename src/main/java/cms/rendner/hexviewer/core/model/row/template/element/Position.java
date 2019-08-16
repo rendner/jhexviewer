@@ -1,28 +1,31 @@
-package cms.rendner.hexviewer.core.model.row.template.elements;
+package cms.rendner.hexviewer.core.model.row.template.element;
+
+import java.util.Objects;
 
 /**
- * Position of an element.
+ * Position of an element inside a row.
  *
  * @author rendner
  */
-public class ElementPosition implements IElement.IPosition
+public final class Position
 {
     /**
-     * The x.
+     * The x position inside a row.
      */
     private final int x;
+
     /**
-     * The y.
+     * The y position inside a row.
      */
     private final int y;
 
     /**
      * Creates a new instance.
      *
-     * @param x the x.
-     * @param y the y.
+     * @param x the x position inside a row.
+     * @param y the y position inside a row.
      */
-    public ElementPosition(final int x, final int y)
+    public Position(final int x, final int y)
     {
         super();
 
@@ -30,13 +33,17 @@ public class ElementPosition implements IElement.IPosition
         this.y = y;
     }
 
-    @Override
+    /**
+     * @return the x position inside a row.
+     */
     public int x()
     {
         return x;
     }
 
-    @Override
+    /**
+     * @return the y position inside a row.
+     */
     public int y()
     {
         return y;
@@ -56,26 +63,18 @@ public class ElementPosition implements IElement.IPosition
         {
             return true;
         }
-        if (!(o instanceof ElementPosition))
+        if (!(o instanceof Position))
         {
             return false;
         }
-
-        ElementPosition that = (ElementPosition) o;
-
-        if (x != that.x)
-        {
-            return false;
-        }
-        return y == that.y;
-
+        Position position = (Position) o;
+        return x == position.x &&
+                y == position.y;
     }
 
     @Override
     public int hashCode()
     {
-        int result = x;
-        result = 31 * result + y;
-        return result;
+        return Objects.hash(x, y);
     }
 }

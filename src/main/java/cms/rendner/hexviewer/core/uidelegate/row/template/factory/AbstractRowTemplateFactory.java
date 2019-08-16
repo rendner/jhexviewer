@@ -6,8 +6,8 @@ import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValu
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.FixedValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
-import cms.rendner.hexviewer.core.model.row.template.elements.ElementDimension;
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Dimension;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,9 +113,9 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @param fontMetrics   metrics of the font used to render the text of the rows.
      * @return the width of the row.
      */
-    protected int computeRowWidth(@NotNull final List<IElement> elementsInRow, @NotNull final RowInsets rowInsets, @NotNull final FontMetrics fontMetrics)
+    protected int computeRowWidth(@NotNull final List<Element> elementsInRow, @NotNull final RowInsets rowInsets, @NotNull final FontMetrics fontMetrics)
     {
-        final IElement lastElement = elementsInRow.get(elementsInRow.size() - 1);
+        final Element lastElement = elementsInRow.get(elementsInRow.size() - 1);
         return lastElement.right() + computeValue(rowInsets.right(), fontMetrics);
     }
 
@@ -127,9 +127,9 @@ public abstract class AbstractRowTemplateFactory implements IRowTemplateFactory
      * @return the calculated dimension.
      */
     @NotNull
-    protected ElementDimension computeElementDimension(final int charsPerElement, @NotNull final FontMetrics fontMetrics)
+    protected Dimension computeElementDimension(final int charsPerElement, @NotNull final FontMetrics fontMetrics)
     {
-        return new ElementDimension(computeCharWidth(fontMetrics) * charsPerElement, computeCharHeight(fontMetrics));
+        return new Dimension(computeCharWidth(fontMetrics) * charsPerElement, computeCharHeight(fontMetrics));
     }
 
     /**

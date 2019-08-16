@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +18,7 @@ public interface IOffsetRowTemplate extends IRowTemplate
      * @return the element.
      */
     @NotNull
-    IElement element();
+    Element element();
 
     /**
      * The number of chars used to display the offset value without any prefix or suffix.

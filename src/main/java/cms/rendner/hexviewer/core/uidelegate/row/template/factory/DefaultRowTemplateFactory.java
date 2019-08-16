@@ -7,10 +7,9 @@ import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.OffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
-import cms.rendner.hexviewer.core.model.row.template.elements.Element;
-import cms.rendner.hexviewer.core.model.row.template.elements.ElementDimension;
-import cms.rendner.hexviewer.core.model.row.template.elements.ElementPosition;
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Dimension;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
+import cms.rendner.hexviewer.core.model.row.template.element.Position;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,8 +46,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         final int totalCharsCount = computeTotalCharCountForOffsetAddressRow(hexViewer, onlyDigitsCount);
 
         final RowInsets rowInsets = configuration.rowInsets(AreaId.OFFSET);
-        final ElementDimension elementDimension = computeElementDimension(totalCharsCount, fm);
-        final IElement element = createOffsetRowElement(rowInsets, elementDimension);
+        final Dimension elementDimension = computeElementDimension(totalCharsCount, fm);
+        final Element element = createOffsetRowElement(rowInsets, elementDimension);
         final int width = computeRowWidth(Collections.singletonList(element), rowInsets, fm);
         final int height = computeRowHeight(rowInsets, fm);
 
@@ -76,8 +75,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 
         final int caretWidth = computeValue(configuration.caretWidth(), fm);
         final RowInsets rowInsets = configuration.rowInsets(AreaId.HEX);
-        final IElement.IDimension byteDimension = computeElementDimension(2, fm);
-        final List<IElement> bytes = createHexRowElements(rowInsets, byteDimension, caretWidth);
+        final Dimension byteDimension = computeElementDimension(2, fm);
+        final List<Element> bytes = createHexRowElements(rowInsets, byteDimension, caretWidth);
         final IByteRowTemplate result = createByteRowTemplate(bytes, rowInsets, caretWidth);
 
         this.fm = null;
@@ -95,8 +94,8 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
 
         final int caretWidth = computeValue(configuration.caretWidth(), fm);
         final RowInsets rowInsets = configuration.rowInsets(AreaId.ASCII);
-        final IElement.IDimension byteDimension = computeElementDimension(1, fm);
-        final List<IElement> bytes = createAsciiRowElements(rowInsets, byteDimension, caretWidth);
+        final Dimension byteDimension = computeElementDimension(1, fm);
+        final List<Element> bytes = createAsciiRowElements(rowInsets, byteDimension, caretWidth);
         final IByteRowTemplate result = createByteRowTemplate(bytes, rowInsets, caretWidth);
 
         this.fm = null;
@@ -116,7 +115,7 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @return the byte-row template.
      */
     @NotNull
-    protected IByteRowTemplate createByteRowTemplate(@NotNull final List<IElement> bytes, @NotNull final RowInsets rowInsets, final int caretWidth)
+    protected IByteRowTemplate createByteRowTemplate(@NotNull final List<Element> bytes, @NotNull final RowInsets rowInsets, final int caretWidth)
     {
         // Caret can be placed in front of the first byte. This was taken into account in the calculation of the
         // x-position of the first byte, for symmetry reasons caret width is also added after the last byte
@@ -140,11 +139,11 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @return the element.
      */
     @NotNull
-    protected IElement createOffsetRowElement(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension)
+    protected Element createOffsetRowElement(@NotNull final RowInsets rowInsets, @NotNull final Dimension elementDimension)
     {
         final int x = computeValue(rowInsets.left(), fm);
         final int y = computeValue(rowInsets.top(), fm);
-        return new Element(elementDimension, new ElementPosition(x, y));
+        return new Element(elementDimension, new Position(x, y));
     }
 
     /**
@@ -156,20 +155,20 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @return list of elements.
      */
     @NotNull
-    protected List<IElement> createHexRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension, final int caretWidth)
+    protected List<Element> createHexRowElements(@NotNull final RowInsets rowInsets, @NotNull final Dimension elementDimension, final int caretWidth)
     {
         final int bytesPerRow = configuration.bytesPerRow();
         final int bytesPerGroup = configuration.bytesPerGroup();
         final int spaceBetweenByteGroups = computeValue(configuration.spaceBetweenGroups(), fm);
 
-        final List<IElement> result = new ArrayList<>(bytesPerRow);
+        final List<Element> result = new ArrayList<>(bytesPerRow);
 
         int byteIndexInByteGroup = 0;
         int x = computeValue(rowInsets.left(), fm) + caretWidth;
         final int y = computeValue(rowInsets.top(), fm);
         for (int i = 0; i < bytesPerRow; i++)
         {
-            result.add(new Element(elementDimension, new ElementPosition(x, y)));
+            result.add(new Element(elementDimension, new Position(x, y)));
             x += elementDimension.width();
             x += caretWidth;
 
@@ -192,17 +191,17 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
      * @return list of elements.
      */
     @NotNull
-    protected List<IElement> createAsciiRowElements(@NotNull final RowInsets rowInsets, @NotNull final IElement.IDimension elementDimension, final int caretWidth)
+    protected List<Element> createAsciiRowElements(@NotNull final RowInsets rowInsets, @NotNull final Dimension elementDimension, final int caretWidth)
     {
         final int bytesPerRow = configuration.bytesPerRow();
 
-        final List<IElement> result = new ArrayList<>();
+        final List<Element> result = new ArrayList<>();
 
         int x = computeValue(rowInsets.left(), fm) + caretWidth;
         final int y = computeValue(rowInsets.top(), fm);
         for (int i = 0; i < bytesPerRow; i++)
         {
-            result.add(new Element(elementDimension, new ElementPosition(x, y)));
+            result.add(new Element(elementDimension, new Position(x, y)));
             x += elementDimension.width();
             x += caretWidth;
         }

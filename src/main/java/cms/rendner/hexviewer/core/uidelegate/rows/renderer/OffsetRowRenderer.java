@@ -3,7 +3,7 @@ package cms.rendner.hexviewer.core.uidelegate.rows.renderer;
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.formatter.offset.IOffsetValueFormatter;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
         final IRowData rowData = context.getRowData();
         final IOffsetValueFormatter valueFormatter = context.getHexViewer().getOffsetValueFormatter();
         final String formattedValue = valueFormatter.format(onlyDigitsCount, resolveValueToPaint(context.getHexViewer(), rowData));
-        final IElement element = rowTemplate.element();
+        final Element element = rowTemplate.element();
 
         g.setColor(getElementForegroundColor(context, 0));
         g.drawString(formattedValue, element.x(), ascent + element.y());
@@ -50,7 +50,7 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
         final Color color = getElementBackgroundColor(context, 0);
         if (color != null)
         {
-            final IElement element = rowTemplate.element();
+            final Element element = rowTemplate.element();
             g.setColor(color);
             g.fillRect(element.x(), element.y(), element.width(), element.height());
         }

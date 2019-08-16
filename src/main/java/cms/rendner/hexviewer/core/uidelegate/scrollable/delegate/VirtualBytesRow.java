@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.core.uidelegate.scrollable.delegate;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.model.row.template.elements.ElementHitInfo;
+import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import org.jetbrains.annotations.NotNull;
@@ -143,7 +143,7 @@ public class VirtualBytesRow
         return rowsView.template().map(rowTemplate ->
         {
             final int xInRowTemplate = virtualXLocation - rowsView.getX();
-            final ElementHitInfo hitInfo = rowTemplate.hitTest(xInRowTemplate);
+            final HitInfo hitInfo = rowTemplate.hitTest(xInRowTemplate);
             return hitInfo.index();
         }).orElse(INVALID_INDEX);
     }

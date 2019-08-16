@@ -1,12 +1,12 @@
-package cms.rendner.hexviewer.core.model.row.template.elements;
+package cms.rendner.hexviewer.core.model.row.template.element;
 
 /**
- * Information about an element in the layout.
+ * Information about a hit on an element in the layout.
  * This class is used to describe the nearest element of a row under a mouse position.
  *
  * @author rendner
  */
-public class ElementHitInfo
+public final class HitInfo
 {
     private boolean isLeadingEdge;
     private boolean wasInside;

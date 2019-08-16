@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.*;
  * Each row contains a number of elements which are displayed in the row.
  * <p/>
  * If an element should be drawn into a {@link Graphics} object the {@link IRowTemplate#ascent()} should be
- * added to the {@link IElement#y()} to center the char vertically inside the row.
+ * added to the {@link Element#y()} to center the char vertically inside the row.
  *
  * @author rendner
  */
