@@ -1,11 +1,10 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
 import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
+import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.List;
-
 
 /**
  * Describes the layout of a row of bytes.
@@ -17,7 +16,7 @@ import java.util.List;
  *
  * @author rendner
  */
-public class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
+public final class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
 {
     /**
      * The width of the caret which can be placed between the bytes of the row.
@@ -25,17 +24,26 @@ public class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
     private final int caretWidth;
 
     /**
-     * Creates a new instance.
+     * Hide the constructor.
+     * Creates a new instance with all the values from a builder.
      *
-     * @param font       the font used to render the text of the rows.
-     * @param dimension  the dimension of the row.
-     * @param elements   non empty list of elements which describe the position and bounds of the bytes of the row.
-     * @param caretWidth the width of the caret which can be placed between the bytes of the row.
+     * @param source the builder used to initialize the new instance.
      */
-    public ByteRowTemplate(@NotNull Font font, @NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements, final int caretWidth)
+    private ByteRowTemplate(@NotNull final Builder source)
     {
-        super(font, dimension, elements);
-        this.caretWidth = caretWidth;
+        super(source);
+        this.caretWidth = source.caretWidth;
+    }
+
+    /**
+     * Returns a new builder for this class.
+     *
+     * @return the created builder.
+     */
+    @NotNull
+    public static Builder newBuilder()
+    {
+        return new Builder();
     }
 
     @NotNull
@@ -49,5 +57,52 @@ public class ByteRowTemplate extends RowTemplate implements IByteRowTemplate
                 caretWidth,
                 byteAfterCaret.height()
         );
+    }
+
+    /**
+     * Builder to configure and create ByteRowTemplate instances.
+     */
+    public static class Builder extends RowTemplate.Builder<Builder>
+    {
+        /**
+         * The width of the caret which can be placed between the bytes of the row.
+         */
+        private int caretWidth = 1;
+
+        /**
+         * Hide the constructor.
+         * Creates a new builder.
+         */
+        private Builder()
+        {
+            super();
+        }
+
+        @Override
+        protected Builder getThis()
+        {
+            return this;
+        }
+
+        /**
+         * Sets the width of the caret which can be placed between the bytes of the row.
+         *
+         * @param caretWidth the width for the caret, &gt;= 1.
+         * @return the builder instance, to allow method chaining.
+         */
+        public Builder setCaretWidth(final int caretWidth)
+        {
+            CheckUtils.checkMinValue(caretWidth, 1);
+            this.caretWidth = caretWidth;
+            return this;
+        }
+
+        /**
+         * @return a new instance with the configured values.
+         */
+        public ByteRowTemplate build()
+        {
+            return new ByteRowTemplate(this);
+        }
     }
 }

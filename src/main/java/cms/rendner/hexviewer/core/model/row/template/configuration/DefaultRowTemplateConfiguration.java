@@ -85,6 +85,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
 
     /**
      * Returns a new builder for this class with all the values from a row template configuration.
+     *
      * @param source the configuration used to initialize the new builder.
      * @return the created builder.
      */
@@ -97,6 +98,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
     /**
      * Hide the constructor.
      * Creates a new instance with all the values from a builder.
+     *
      * @param source the builder used to initialize the new instance.
      */
     private DefaultRowTemplateConfiguration(@NotNull final Builder source)
@@ -288,7 +290,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
 
         @NotNull
         @Override
-        public Builder increaseFontSize(final int bySize, final int maxSize)  throws IllegalArgumentException
+        public Builder increaseFontSize(final int bySize, final int maxSize) throws IllegalArgumentException
         {
             CheckUtils.checkMinValue(bySize, 1);
             CheckUtils.checkMinValue(maxSize, 1);
@@ -297,7 +299,7 @@ public final class DefaultRowTemplateConfiguration implements IRowTemplateConfig
 
         @NotNull
         @Override
-        public Builder decreaseFontSize(final int bySize, final int minSize)  throws IllegalArgumentException
+        public Builder decreaseFontSize(final int bySize, final int minSize) throws IllegalArgumentException
         {
             CheckUtils.checkMinValue(bySize, 1);
             CheckUtils.checkMinValue(minSize, 1);

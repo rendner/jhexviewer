@@ -6,6 +6,7 @@ import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
  * {@link cms.rendner.hexviewer.core.view.areas.AreaId#HEX} and
  * {@link cms.rendner.hexviewer.core.view.areas.AreaId#ASCII}) of the JHexViewer a separate template exists
  * which describes the exact layout of the rows rendered by these areas.
+ * <p/>
+ * All subclass should stay immutable.
  *
  * @author rendner
  */
@@ -28,6 +31,7 @@ public abstract class RowTemplate implements IRowTemplate
      */
     @NotNull
     protected final List<IElement> elements;
+
     /**
      * The dimension of the row.
      */
@@ -39,27 +43,26 @@ public abstract class RowTemplate implements IRowTemplate
      */
     @NotNull
     private final Font font;
+
     /**
      * The ascent to center an element vertically if painted into a {@link Graphics} object.
      */
     private int ascent;
 
     /**
-     * Creates a new instance.
+     * Hide the constructor.
+     * Creates a new instance with all the values from a builder.
      *
-     * @param font      the font used to render the text of the rows.
-     * @param dimension the dimension of the row.
-     * @param elements  the elements of the row, not empty - the list has to contain at least one element.
+     * @param source the builder used to initialize the new instance.
      */
-    public RowTemplate(@NotNull final Font font, @NotNull final IRowTemplate.IDimension dimension, @NotNull final List<IElement> elements)
+    RowTemplate(@NotNull final Builder source)
     {
         super();
 
-        CheckUtils.checkMinValue(elements.size(), 1);
-
-        this.font = font;
-        this.dimension = dimension;
-        this.elements = Collections.unmodifiableList(elements);
+        this.font = source.font;
+        this.ascent = source.ascent;
+        this.dimension = source.dimension;
+        this.elements = source.elements;
     }
 
     @NotNull
@@ -127,16 +130,6 @@ public abstract class RowTemplate implements IRowTemplate
         return ascent;
     }
 
-    /**
-     * Sets the ascent to center an element vertically if painted into a {@link Graphics} object.
-     *
-     * @param value the ascent.
-     */
-    public void setAscent(final int value)
-    {
-        ascent = value;
-    }
-
     @NotNull
     @Override
     public Font font()
@@ -198,5 +191,106 @@ public abstract class RowTemplate implements IRowTemplate
         }
 
         return lastElementIndex;
+    }
+
+    /**
+     * A builder can be used to set the desired values before creating a immutable row template instance.
+     *
+     * @param <B> the concrete class of the builder.
+     */
+    public static abstract class Builder<B extends Builder>
+    {
+        /**
+         * The elements of the row.
+         * The number of minimum entries of this property is <code>1</code>.
+         */
+        protected List<IElement> elements;
+
+        /**
+         * The dimension of the row.
+         */
+        protected IRowTemplate.IDimension dimension;
+
+        /**
+         * The font used to render the text of the rows.
+         */
+        protected Font font;
+
+        /**
+         * The ascent to center an element vertically if painted into a {@link Graphics} object.
+         */
+        protected int ascent;
+
+        /**
+         * Hide the constructor.
+         * Creates a new builder.
+         */
+        protected Builder()
+        {
+            super();
+        }
+
+        abstract protected B getThis();
+
+        /**
+         * Sets the font for the template (mandatory).
+         *
+         * @param font the font used to render the text of the row.
+         * @return the builder instance, to allow method chaining.
+         */
+        public B setFont(@NotNull final Font font)
+        {
+            this.font = font;
+            return getThis();
+        }
+
+        /**
+         * Sets the ascent, used to vertically align the characters rendered at the position of an element.
+         *
+         * @param ascent the ascent.
+         * @return the builder instance, to allow method chaining.
+         */
+        public B setAscent(final int ascent)
+        {
+            this.ascent = ascent;
+            return getThis();
+        }
+
+        /**
+         * Sets the dimension of the row.
+         *
+         * @param dimension the dimension for the row.
+         * @return the builder instance, to allow method chaining.
+         */
+        public B setDimension(@NotNull final IRowTemplate.IDimension dimension)
+        {
+            this.dimension = dimension;
+            return getThis();
+        }
+
+        /**
+         * Sets the dimension of the row.
+         *
+         * @param width  the width for the row.
+         * @param height the height for the row.
+         * @return the builder instance, to allow method chaining.
+         */
+        public B setDimension(final int width, final int height)
+        {
+            return setDimension(new RowDimension(width, height));
+        }
+
+        /**
+         * Sets the horizontal aligned elements for the row.
+         *
+         * @param elements the elements of the row, not empty - the list has to contain at least one element.
+         * @return the builder instance, to allow method chaining.
+         */
+        public B setElements(@NotNull final List<IElement> elements)
+        {
+            CheckUtils.checkMinValue(elements.size(), 1);
+            this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
+            return getThis();
+        }
     }
 }

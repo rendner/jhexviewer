@@ -1,18 +1,15 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
-import cms.rendner.hexviewer.core.model.row.template.elements.IElement;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-import java.util.List;
 
 /**
  * Describes the layout of a row from the offset-area.
  *
  * @author rendner
  */
-public class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
+public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
 {
     /**
      * Number of chars to display the formatted offset value.
@@ -25,30 +22,27 @@ public class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
     protected final int onlyDigitsCount;
 
     /**
-     * Creates a new instance.
+     * Hide the constructor.
+     * Creates a new instance with all the values from a builder.
      *
-     * @param font            the font used to render the text of the rows.
-     * @param dimension       the dimension of the row.
-     * @param elements        the elements of the row, list contains exact one entry.
-     * @param totalCharsCount the number of chars to display the formatted offset value including suffix and prefix (if required).
-     * @param onlyDigitsCount the number of chars to display only the digits of the formatted offset value without any
-     *                        additional suffix or prefix.
+     * @param source the builder used to initialize the new instance.
      */
-    public OffsetRowTemplate(@NotNull Font font,
-                             @NotNull final IRowTemplate.IDimension dimension,
-                             @NotNull final List<IElement> elements,
-                             final int totalCharsCount,
-                             final int onlyDigitsCount)
+    private OffsetRowTemplate(@NotNull final Builder source)
     {
-        super(font, dimension, elements);
+        super(source);
+        this.totalCharsCount = source.totalCharsCount;
+        this.onlyDigitsCount = source.onlyDigitsCount;
+    }
 
-        CheckUtils.checkMaxValue(elements.size(), 1);
-        CheckUtils.checkMinValue(totalCharsCount, 1);
-        CheckUtils.checkMinValue(onlyDigitsCount, 1);
-        CheckUtils.checkMinValue(totalCharsCount, onlyDigitsCount);
-
-        this.totalCharsCount = totalCharsCount;
-        this.onlyDigitsCount = onlyDigitsCount;
+    /**
+     * Returns a new builder for this class.
+     *
+     * @return the created builder.
+     */
+    @NotNull
+    public static Builder newBuilder()
+    {
+        return new Builder();
     }
 
     @Override
@@ -61,5 +55,74 @@ public class OffsetRowTemplate extends RowTemplate implements IOffsetRowTemplate
     public int onlyDigitsCount()
     {
         return onlyDigitsCount;
+    }
+
+    /**
+     * Builder to configure and create OffsetRowTemplate instances.
+     */
+    public static class Builder extends RowTemplate.Builder<Builder>
+    {
+        /**
+         * Number of chars to display the formatted offset value.
+         */
+        protected int totalCharsCount;
+
+        /**
+         * Number of chars to display only the digits of the formatted offset value.
+         */
+        protected int onlyDigitsCount;
+
+        /**
+         * Hide the constructor.
+         * Creates a new builder.
+         */
+        private Builder()
+        {
+            super();
+        }
+
+        @Override
+        protected Builder getThis()
+        {
+            return this;
+        }
+
+        /**
+         * Sets the number of chars to display the formatted offset value including suffix and prefix (if required).
+         *
+         * @param totalCharsCount the number of chars displayed by the one element of the row template.
+         * @return the builder instance, to allow method chaining.
+         */
+        public Builder setTotalCharsCount(final int totalCharsCount)
+        {
+            this.totalCharsCount = totalCharsCount;
+            return this;
+        }
+
+        /**
+         * Sets the number of chars to display only the digits of the formatted offset value without any
+         * additional suffix or prefix.
+         *
+         * @param onlyDigitsCount the number of chars to display only the digits of the formatted offset value.
+         * @return the builder instance, to allow method chaining.
+         */
+        public Builder setOnlyDigitsCount(final int onlyDigitsCount)
+        {
+            this.onlyDigitsCount = onlyDigitsCount;
+            return this;
+        }
+
+        /**
+         * @return a new instance with the configured values.
+         */
+        public OffsetRowTemplate build()
+        {
+            CheckUtils.checkMaxValue(elements.size(), 1);
+            CheckUtils.checkMinValue(totalCharsCount, 1);
+            CheckUtils.checkMinValue(onlyDigitsCount, 1);
+            CheckUtils.checkMinValue(totalCharsCount, onlyDigitsCount);
+
+            return new OffsetRowTemplate(this);
+        }
     }
 }

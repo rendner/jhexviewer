@@ -1,7 +1,10 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
 import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.model.row.template.*;
+import cms.rendner.hexviewer.core.model.row.template.ByteRowTemplate;
+import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
+import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
+import cms.rendner.hexviewer.core.model.row.template.OffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
 import cms.rendner.hexviewer.core.model.row.template.elements.Element;
@@ -45,7 +48,17 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         final RowInsets rowInsets = configuration.rowInsets(AreaId.OFFSET);
         final ElementDimension elementDimension = computeElementDimension(totalCharsCount, fm);
         final List<IElement> elements = createOffsetRowElements(rowInsets, elementDimension);
-        final IOffsetRowTemplate result = createOffsetRowTemplate(elements, rowInsets, totalCharsCount, onlyDigitsCount);
+        final int width = computeRowWidth(elements, rowInsets, fm);
+        final int height = computeRowHeight(rowInsets, fm);
+
+        final IOffsetRowTemplate result = OffsetRowTemplate.newBuilder()
+                .setFont(configuration.font())
+                .setAscent(fm.getAscent())
+                .setDimension(width, height)
+                .setElements(elements)
+                .setOnlyDigitsCount(onlyDigitsCount)
+                .setTotalCharsCount(totalCharsCount)
+                .build();
 
         this.fm = null;
         this.configuration = null;
@@ -108,33 +121,14 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         // x-position of the first byte, for symmetry reasons caret width is also added after the last byte
         final int width = computeRowWidth(bytes, rowInsets, fm) + caretWidth;
         final int height = computeRowHeight(rowInsets, fm);
-        final IRowTemplate.IDimension rowDimension = new RowDimension(width, height);
 
-        final ByteRowTemplate template = new ByteRowTemplate(configuration.font(), rowDimension, bytes, caretWidth);
-        template.setAscent(fm.getAscent());
-        return template;
-    }
-
-    /**
-     * Creates the row template which defines the layout of the rows for the offset-view.
-     *
-     * @param elements        the elements for the row, list contains exact one entry.
-     * @param rowInsets       the insets for the row.
-     * @param totalCharsCount the number of chars to display the formatted offset value including suffix and prefix (if required).
-     * @param onlyDigitsCount the number of chars to display only the digits of the formatted offset value without any
-     *                        additional suffix or prefix.
-     * @return the layout template for the offset-view of the JHexViewer.
-     */
-    @NotNull
-    protected IOffsetRowTemplate createOffsetRowTemplate(@NotNull final List<IElement> elements, @NotNull final RowInsets rowInsets, final int totalCharsCount, final int onlyDigitsCount)
-    {
-        final int width = computeRowWidth(elements, rowInsets, fm);
-        final int height = computeRowHeight(rowInsets, fm);
-        final IRowTemplate.IDimension rowDimension = new RowDimension(width, height);
-
-        final OffsetRowTemplate template = new OffsetRowTemplate(configuration.font(), rowDimension, elements, totalCharsCount, onlyDigitsCount);
-        template.setAscent(fm.getAscent());
-        return template;
+        return ByteRowTemplate.newBuilder()
+                .setFont(configuration.font())
+                .setAscent(fm.getAscent())
+                .setCaretWidth(caretWidth)
+                .setDimension(width, height)
+                .setElements(bytes)
+                .build();
     }
 
     /**
