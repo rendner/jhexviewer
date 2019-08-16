@@ -198,6 +198,8 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          */
         public ByteRowTemplate build()
         {
+            CheckUtils.checkNotNull(elements);
+            CheckUtils.checkMinValue(elements.size(), 1);
             return new ByteRowTemplate(this);
         }
     }
