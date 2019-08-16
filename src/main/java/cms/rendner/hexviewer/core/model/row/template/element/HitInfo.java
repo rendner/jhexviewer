@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template.element;
 
+import java.util.Objects;
+
 /**
  * Information about a hit on an element in the layout.
  * This class is used to describe the nearest element of a row under a mouse position.
@@ -8,19 +10,29 @@ package cms.rendner.hexviewer.core.model.row.template.element;
  */
 public final class HitInfo
 {
-    private boolean isLeadingEdge;
-    private boolean wasInside;
-    private int index;
+    /**
+     * Indicates if the leading edge of an element was hit.
+     */
+    private final boolean isLeadingEdge;
 
     /**
-     * Repopulates the info with new data.
-     * This method can be used to reuse an hit info instance.
+     * Indicates if the hit was inside of the bounding box of the element.
+     */
+    private final boolean wasInside;
+
+    /**
+     * The index of the element which was hit.
+     */
+    private final int index;
+
+    /**
+     * Creates a new instance.
      *
      * @param index         the index of the element which was hit.
      * @param isLeadingEdge indicates if the leading edge of an element was hit.
      * @param wasInside     indicates if the hit was inside of the bounding box of the element.
      */
-    public void fillWith(final int index, final boolean isLeadingEdge, boolean wasInside)
+    public HitInfo(final int index, final boolean isLeadingEdge, boolean wasInside)
     {
         this.index = index;
         this.isLeadingEdge = isLeadingEdge;
@@ -106,5 +118,28 @@ public final class HitInfo
     {
         return getClass().getSimpleName() +
                 "[isLeadingEdge=" + isLeadingEdge + ", index=" + index + ", wasInside=" + wasInside + "]";
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof HitInfo))
+        {
+            return false;
+        }
+        HitInfo hitInfo = (HitInfo) o;
+        return isLeadingEdge == hitInfo.isLeadingEdge &&
+                wasInside == hitInfo.wasInside &&
+                index == hitInfo.index;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(isLeadingEdge, wasInside, index);
     }
 }

@@ -56,20 +56,6 @@ public interface IByteRowTemplate extends IRowTemplate
     HitInfo hitTest(int xPosition);
 
     /**
-     * Performs a hit test at the x position in the row.
-     * <p/>
-     * If <code>xPosition</code> is located before the first element the hit is counted as hit on the first element.
-     * If <code>xPosition</code> is located after the element char the hit is counted as hit on the last element.
-     * In such a case to check if a real hit has occurred check <code>{@link HitInfo#wasInside()}</code>.
-     *
-     * @param xPosition   the x position to check.
-     * @param returnValue the object in which the result should be stored.
-     * @return the <code>returnValue</code> object.
-     */
-    @NotNull
-    HitInfo hitTest(int xPosition, @NotNull HitInfo returnValue);
-
-    /**
      * Computes an union of the bounds of the elements in range of [<code>firstElementIndex</code>, <code>lastElementIndex</code>].
      *
      * @param firstElementIndex the index of the first element which should be included, in the range [0, elementCount()-1].

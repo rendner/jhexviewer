@@ -101,13 +101,6 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
     @Override
     public HitInfo hitTest(final int xPosition)
     {
-        return hitTest(xPosition, new HitInfo());
-    }
-
-    @NotNull
-    @Override
-    public HitInfo hitTest(final int xPosition, @NotNull final HitInfo returnValue)
-    {
         final int elementIndex = elementIndexForXPosition(xPosition);
         final Element element = elements.get(elementIndex);
 
@@ -115,8 +108,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         final boolean isLeadingEdge = xPosition < (element.right() - halfWidth);
         final boolean wasInside = element.containsX(xPosition);
 
-        returnValue.fillWith(elementIndex, isLeadingEdge, wasInside);
-        return returnValue;
+        return new HitInfo(elementIndex, isLeadingEdge, wasInside);
     }
 
     /**
