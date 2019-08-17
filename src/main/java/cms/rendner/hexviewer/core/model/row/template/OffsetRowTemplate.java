@@ -119,6 +119,12 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          */
         int ascent;
 
+        /**
+         * Hide the constructor.
+         */
+        private Builder()
+        {}
+
         @Override
         public OffsetRowTemplate build()
         {

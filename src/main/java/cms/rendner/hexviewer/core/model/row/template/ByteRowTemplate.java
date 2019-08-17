@@ -176,6 +176,12 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          */
         private int ascent;
 
+        /**
+         * Hide the constructor.
+         */
+        private Builder()
+        {}
+
         @Override
         public ByteRowTemplate build()
         {
