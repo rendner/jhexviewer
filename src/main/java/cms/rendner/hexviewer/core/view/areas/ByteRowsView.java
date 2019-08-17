@@ -246,7 +246,15 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
     }
 
     /**
-     * Represents a byte hit information in the layout.
+     * Describes a hit in the ByteRowsView.
+     * <p/>
+     * In contrast to the {@link HitInfo}, which only describes a hit on an element inside a byte row, this hit
+     * info describes a hit on a byte located inside the ByteRowsView. The index of the line which contains
+     * the byte can be determined by the helper methods of the {@link cms.rendner.hexviewer.core.JHexViewer}.
+     *
+     * @see cms.rendner.hexviewer.core.JHexViewer#byteIndexToRowIndex(int)
+     * @see cms.rendner.hexviewer.core.JHexViewer#byteIndexToIndexInRow(int)
+     * @see cms.rendner.hexviewer.core.JHexViewer#rowIndexToByteIndex(int)
      */
     public static class ByteHitInfo
     {

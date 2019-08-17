@@ -3,7 +3,7 @@ package cms.rendner.hexviewer.core.model.row.template.element;
 import java.util.Objects;
 
 /**
- * Information about a hit on an element in the layout.
+ * Information about a hit on an element in a row template.
  * This class is used to describe the nearest element of a row under a mouse position.
  *
  * @author rendner
