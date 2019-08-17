@@ -1,5 +1,7 @@
 package cms.rendner.hexviewer.core.model.row.template.element;
 
+import cms.rendner.hexviewer.core.geom.Dimension;
+import cms.rendner.hexviewer.core.geom.Position;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -17,7 +19,7 @@ public final class Element
      * The dimension of the element.
      */
     @NotNull
-    private final Dimension dimension;
+    private final cms.rendner.hexviewer.core.geom.Dimension dimension;
 
     /**
      * The position of the element.
@@ -31,7 +33,7 @@ public final class Element
      * @param dimension the dimension of the element.
      * @param position  the position of the element.
      */
-    public Element(@NotNull final Dimension dimension, @NotNull final Position position)
+    public Element(@NotNull final cms.rendner.hexviewer.core.geom.Dimension dimension, @NotNull final Position position)
     {
         super();
         this.dimension = dimension;

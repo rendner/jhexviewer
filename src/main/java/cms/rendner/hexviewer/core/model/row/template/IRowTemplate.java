@@ -19,14 +19,14 @@ public interface IRowTemplate
     /**
      * The height of the row.
      *
-     * @return the height &gt;=0.
+     * @return the height, &gt;=0.
      */
     int height();
 
     /**
      * The width of the row.
      *
-     * @return the width &gt;=0.
+     * @return the width, &gt;=0.
      */
     int width();
 
@@ -66,24 +66,4 @@ public interface IRowTemplate
      * @return the ascent.
      */
     int ascent();
-
-    /**
-     * The dimension of a row.
-     */
-    interface IDimension
-    {
-        /**
-         * The width.
-         *
-         * @return width.
-         */
-        int width();
-
-        /**
-         * The height.
-         *
-         * @return height.
-         */
-        int height();
-    }
 }

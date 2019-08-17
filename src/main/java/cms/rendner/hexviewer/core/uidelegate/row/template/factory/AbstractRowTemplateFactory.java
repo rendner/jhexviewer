@@ -2,11 +2,11 @@ package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.formatter.offset.IOffsetValueFormatter;
+import cms.rendner.hexviewer.core.geom.Dimension;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.FixedValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.IValue;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
-import cms.rendner.hexviewer.core.model.row.template.element.Dimension;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

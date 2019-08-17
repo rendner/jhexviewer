@@ -1,8 +1,10 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
+import cms.rendner.hexviewer.core.geom.Dimension;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+
 
 /**
  * Describes the layout of a row.
@@ -23,7 +25,7 @@ public abstract class RowTemplate implements IRowTemplate
      * The dimension of the row.
      */
     @NotNull
-    private final IRowTemplate.IDimension dimension;
+    private final Dimension dimension;
 
     /**
      * The font used to render the text of the rows.
@@ -104,7 +106,7 @@ public abstract class RowTemplate implements IRowTemplate
         /**
          * The dimension of the row.
          */
-        protected IRowTemplate.IDimension dimension;
+        protected Dimension dimension;
 
         /**
          * The font used to render the text of the rows.
@@ -157,7 +159,7 @@ public abstract class RowTemplate implements IRowTemplate
          * @param dimension the dimension for the row.
          * @return the builder instance, to allow method chaining.
          */
-        public B setDimension(@NotNull final IRowTemplate.IDimension dimension)
+        public B setDimension(@NotNull final Dimension dimension)
         {
             this.dimension = dimension;
             return getThis();
@@ -172,7 +174,7 @@ public abstract class RowTemplate implements IRowTemplate
          */
         public B setDimension(final int width, final int height)
         {
-            return setDimension(new RowDimension(width, height));
+            return setDimension(new Dimension(width, height));
         }
     }
 }

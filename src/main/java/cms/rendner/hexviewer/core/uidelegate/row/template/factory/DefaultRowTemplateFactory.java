@@ -1,15 +1,15 @@
 package cms.rendner.hexviewer.core.uidelegate.row.template.factory;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.geom.Dimension;
+import cms.rendner.hexviewer.core.geom.Position;
 import cms.rendner.hexviewer.core.model.row.template.ByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.OffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.values.RowInsets;
-import cms.rendner.hexviewer.core.model.row.template.element.Dimension;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
-import cms.rendner.hexviewer.core.model.row.template.element.Position;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import org.jetbrains.annotations.NotNull;
 

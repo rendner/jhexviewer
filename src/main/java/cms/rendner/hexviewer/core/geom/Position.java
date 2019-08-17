@@ -1,9 +1,9 @@
-package cms.rendner.hexviewer.core.model.row.template.element;
+package cms.rendner.hexviewer.core.geom;
 
 import java.util.Objects;
 
 /**
- * Position of an element inside a row.
+ * The immutable Position class provides a "x" and "y" property in integer precision.
  *
  * @author rendner
  */

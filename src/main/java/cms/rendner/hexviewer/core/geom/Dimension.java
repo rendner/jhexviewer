@@ -1,9 +1,11 @@
-package cms.rendner.hexviewer.core.model.row.template.element;
+package cms.rendner.hexviewer.core.geom;
+
+import cms.rendner.hexviewer.utils.CheckUtils;
 
 import java.util.Objects;
 
 /**
- * The dimension of an element.
+ * The immutable Dimension class provides a "width" and "height" property in integer precision.
  *
  * @author rendner
  */
@@ -22,12 +24,14 @@ public final class Dimension
     /**
      * Creates a new instance.
      *
-     * @param width  the width.
-     * @param height the height.
+     * @param width  the width, &gt;=0.
+     * @param height the height, &gt;=0.
      */
     public Dimension(final int width, final int height)
     {
         super();
+        CheckUtils.checkMinValue(width, 0);
+        CheckUtils.checkMinValue(height, 0);
         this.width = width;
         this.height = height;
     }
@@ -35,7 +39,7 @@ public final class Dimension
     /**
      * The width.
      *
-     * @return width.
+     * @return width, &gt;=0.
      */
     public int width()
     {
@@ -45,7 +49,7 @@ public final class Dimension
     /**
      * The height.
      *
-     * @return height.
+     * @return height, &gt;=0.
      */
     public int height()
     {
