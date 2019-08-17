@@ -52,7 +52,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
      * @return the created builder.
      */
     @NotNull
-    public static MandatoryDimensionBuilder newBuilder()
+    public static BuilderStepDimension newBuilder()
     {
         return new Builder();
     }
@@ -82,12 +82,12 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
      * approach to guarantee that "build" method can only be called if all properties are set.
      */
     public static class Builder implements
-            MandatoryDimensionBuilder,
-            MandatoryFontBuilder,
-            MandatoryAscentBuilder,
-            MandatoryCharCountBuilder,
-            MandatoryElementBuilder,
-            Build
+            BuilderStepDimension,
+            BuilderStepFont,
+            BuilderStepAscent,
+            BuilderStepCharCount,
+            BuilderStepElement,
+            BuilderStepBuild
     {
         /**
          * The element of the row.
@@ -132,41 +132,41 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
         }
 
         @Override
-        public MandatoryAscentBuilder font(@NotNull final Font font)
+        public BuilderStepAscent font(@NotNull final Font font)
         {
             this.font = font;
             return this;
         }
 
         @Override
-        public MandatoryFontBuilder dimension(@NotNull final Dimension dimension)
+        public BuilderStepFont dimension(@NotNull final Dimension dimension)
         {
             this.dimension = dimension;
             return this;
         }
 
         @Override
-        public MandatoryFontBuilder dimension(final int width, final int height)
+        public BuilderStepFont dimension(final int width, final int height)
         {
             return dimension(new Dimension(width, height));
         }
 
         @Override
-        public MandatoryCharCountBuilder ascent(final int ascent)
+        public BuilderStepCharCount ascent(final int ascent)
         {
             this.ascent = ascent;
             return this;
         }
 
         @Override
-        public Build element(@NotNull final Element element)
+        public BuilderStepBuild element(@NotNull final Element element)
         {
             this.element = element;
             return this;
         }
 
         @Override
-        public MandatoryElementBuilder charCounts(final int onlyDigitsCount, final int totalCharsCount)
+        public BuilderStepElement charCounts(final int onlyDigitsCount, final int totalCharsCount)
         {
             CheckUtils.checkMinValue(totalCharsCount, 1);
             CheckUtils.checkMinValue(onlyDigitsCount, 1);
@@ -178,7 +178,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
         }
     }
 
-    public interface MandatoryDimensionBuilder
+    public interface BuilderStepDimension
     {
         /**
          * Sets the dimension of the row.
@@ -186,7 +186,7 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          * @param dimension the dimension.
          * @return the next builder step.
          */
-        MandatoryFontBuilder dimension(@NotNull Dimension dimension);
+        BuilderStepFont dimension(@NotNull Dimension dimension);
 
         /**
          * Sets the dimension of the row. Shorthand for <code>dimension(new Dimension(width, height))</code>
@@ -195,10 +195,10 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          * @param height the height of the row, &gt;= 1.
          * @return the next builder step.
          */
-        MandatoryFontBuilder dimension(int width, int height);
+        BuilderStepFont dimension(int width, int height);
     }
 
-    public interface MandatoryFontBuilder
+    public interface BuilderStepFont
     {
         /**
          * Sets the font to use to render the text of the rows.
@@ -206,10 +206,10 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          * @param font the font to use.
          * @return the next builder step.
          */
-        MandatoryAscentBuilder font(@NotNull Font font);
+        BuilderStepAscent font(@NotNull Font font);
     }
 
-    public interface MandatoryAscentBuilder
+    public interface BuilderStepAscent
     {
         /**
          * Sets the ascent used to center an element vertically if painted into a {@link Graphics} object.
@@ -217,10 +217,10 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          * @param ascent the ascent.
          * @return the next builder step.
          */
-        MandatoryCharCountBuilder ascent(int ascent);
+        BuilderStepCharCount ascent(int ascent);
     }
 
-    public interface MandatoryCharCountBuilder
+    public interface BuilderStepCharCount
     {
         /**
          * @param onlyDigitsCount the number of chars to display only the digits of the formatted offset value.
@@ -229,10 +229,10 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          *                        This value has to be &gt; 1 and &gt;= onlyDigitsCount.
          * @return the next builder step.
          */
-        MandatoryElementBuilder charCounts(int onlyDigitsCount, int totalCharsCount);
+        BuilderStepElement charCounts(int onlyDigitsCount, int totalCharsCount);
     }
 
-    public interface MandatoryElementBuilder
+    public interface BuilderStepElement
     {
         /**
          * Sets the element which displays the formatted offset value.
@@ -240,10 +240,10 @@ public final class OffsetRowTemplate extends RowTemplate implements IOffsetRowTe
          * @param element the element.
          * @return the next builder step.
          */
-        Build element(@NotNull Element element);
+        BuilderStepBuild element(@NotNull Element element);
     }
 
-    public interface Build
+    public interface BuilderStepBuild
     {
         /**
          * Builds the configured row template instance.

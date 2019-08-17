@@ -53,7 +53,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
      * @return the created builder.
      */
     @NotNull
-    public static Builder newBuilder()
+    public static BuilderStepDimension newBuilder()
     {
         return new Builder();
     }
@@ -143,12 +143,12 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
      * approach to guarantee that "build" method can only be called if all properties are set.
      */
     public static class Builder implements
-            MandatoryDimensionBuilder,
-            MandatoryFontBuilder,
-            MandatoryAscentBuilder,
-            MandatoryCaretWidthBuilder,
-            MandatoryElementsBuilder,
-            Build
+            BuilderStepDimension,
+            BuilderStepFont,
+            BuilderStepAscent,
+            BuilderStepCaretWidth,
+            BuilderStepElements,
+            BuilderStepBuild
     {
         /**
          * The elements of the row.
@@ -189,34 +189,34 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         }
 
         @Override
-        public MandatoryFontBuilder dimension(@NotNull final Dimension dimension)
+        public BuilderStepFont dimension(@NotNull final Dimension dimension)
         {
             this.dimension = dimension;
             return this;
         }
 
         @Override
-        public MandatoryFontBuilder dimension(final int width, final int height)
+        public BuilderStepFont dimension(final int width, final int height)
         {
             return dimension(new Dimension(width, height));
         }
 
         @Override
-        public MandatoryAscentBuilder font(@NotNull final Font font)
+        public BuilderStepAscent font(@NotNull final Font font)
         {
             this.font = font;
             return this;
         }
 
         @Override
-        public MandatoryCaretWidthBuilder ascent(final int ascent)
+        public BuilderStepCaretWidth ascent(final int ascent)
         {
             this.ascent = ascent;
             return this;
         }
 
         @Override
-        public MandatoryElementsBuilder caretWidth(final int caretWidth)
+        public BuilderStepElements caretWidth(final int caretWidth)
         {
             CheckUtils.checkMinValue(caretWidth, 1);
             this.caretWidth = caretWidth;
@@ -224,7 +224,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         }
 
         @Override
-        public Build elements(@NotNull final List<Element> elements)
+        public BuilderStepBuild elements(@NotNull final List<Element> elements)
         {
             CheckUtils.checkMinValue(elements.size(), 1);
             this.elements = elements;
@@ -232,7 +232,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         }
     }
 
-    public interface MandatoryDimensionBuilder
+    public interface BuilderStepDimension
     {
         /**
          * Sets the dimension of the row.
@@ -240,7 +240,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param dimension the dimension.
          * @return the next builder step.
          */
-        MandatoryFontBuilder dimension(@NotNull Dimension dimension);
+        BuilderStepFont dimension(@NotNull Dimension dimension);
 
         /**
          * Sets the dimension of the row. Shorthand for <code>dimension(new Dimension(width, height))</code>
@@ -249,10 +249,10 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param height the height of the row, &gt;= 1.
          * @return the next builder step.
          */
-        MandatoryFontBuilder dimension(int width, int height);
+        BuilderStepFont dimension(int width, int height);
     }
 
-    public interface MandatoryFontBuilder
+    public interface BuilderStepFont
     {
         /**
          * Sets the font to use to render the text of the rows.
@@ -260,10 +260,10 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param font the font to use.
          * @return the next builder step.
          */
-        MandatoryAscentBuilder font(@NotNull Font font);
+        BuilderStepAscent font(@NotNull Font font);
     }
 
-    public interface MandatoryAscentBuilder
+    public interface BuilderStepAscent
     {
         /**
          * Sets the ascent used to center an element vertically if painted into a {@link Graphics} object.
@@ -271,10 +271,10 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param ascent the ascent.
          * @return the next builder step.
          */
-        MandatoryCaretWidthBuilder ascent(int ascent);
+        BuilderStepCaretWidth ascent(int ascent);
     }
 
-    public interface MandatoryCaretWidthBuilder
+    public interface BuilderStepCaretWidth
     {
         /**
          * Sets the width of the caret which can be placed between the bytes of the row.
@@ -282,10 +282,10 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param caretWidth the width for the caret, &gt;= 1.
          * @return the next builder step.
          */
-        MandatoryElementsBuilder caretWidth(int caretWidth);
+        BuilderStepElements caretWidth(int caretWidth);
     }
 
-    public interface MandatoryElementsBuilder
+    public interface BuilderStepElements
     {
         /**
          * Sets the horizontal aligned elements for the row.
@@ -293,10 +293,10 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
          * @param elements the elements of the row, not empty - the list has to contain at least one element.
          * @return the next builder step.
          */
-        Build elements(@NotNull List<Element> elements);
+        BuilderStepBuild elements(@NotNull List<Element> elements);
     }
 
-    public interface Build
+    public interface BuilderStepBuild
     {
         /**
          * Builds the configured row template instance.
