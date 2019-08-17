@@ -7,7 +7,7 @@ import cms.rendner.hexviewer.utils.CheckUtils;
  *
  * @author rendner
  */
-public class RowDimension implements IRowTemplate.IDimension
+public final class RowDimension implements IRowTemplate.IDimension
 {
     /**
      * The width.

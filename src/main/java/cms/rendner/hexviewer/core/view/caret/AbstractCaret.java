@@ -1,10 +1,10 @@
 package cms.rendner.hexviewer.core.view.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.color.ICaretColorProvider;
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.core.view.highlight.DefaultHighlighter;
 import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
 import cms.rendner.hexviewer.utils.CheckUtils;

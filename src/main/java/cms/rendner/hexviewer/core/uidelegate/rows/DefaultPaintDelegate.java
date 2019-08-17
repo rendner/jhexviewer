@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.core.uidelegate.rows;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.geom.Range;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
@@ -15,7 +16,6 @@ import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
-import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
 import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import cms.rendner.hexviewer.utils.CheckUtils;

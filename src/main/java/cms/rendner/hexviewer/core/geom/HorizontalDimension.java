@@ -1,4 +1,4 @@
-package cms.rendner.hexviewer.core.view.geom;
+package cms.rendner.hexviewer.core.geom;
 
 import cms.rendner.hexviewer.utils.CheckUtils;
 

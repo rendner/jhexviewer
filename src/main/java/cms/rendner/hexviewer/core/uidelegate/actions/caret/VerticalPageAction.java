@@ -1,10 +1,10 @@
 package cms.rendner.hexviewer.core.uidelegate.actions.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.geom.Range;
 import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
-import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
 import cms.rendner.hexviewer.utils.IndexUtils;

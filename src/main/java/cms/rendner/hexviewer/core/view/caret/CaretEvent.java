@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.core.view.caret;
 
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
+import cms.rendner.hexviewer.core.geom.IndexPosition;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EventObject;

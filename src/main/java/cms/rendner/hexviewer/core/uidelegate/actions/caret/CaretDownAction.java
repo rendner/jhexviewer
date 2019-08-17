@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.core.uidelegate.actions.caret;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.geom.IndexPosition;
 import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 
 import java.awt.event.ActionEvent;
 

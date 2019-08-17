@@ -129,7 +129,7 @@ public class VirtualBytesRow
     }
 
     /**
-     * Returns the index of a element of the specified area that intersects with the virtual location.
+     * Returns the index of an element of the specified area that intersects with the virtual location.
      *
      * @param id               the id of the area which contains the byte virtualByteIndex points to.
      * @param virtualXLocation the x location in the virtual row.

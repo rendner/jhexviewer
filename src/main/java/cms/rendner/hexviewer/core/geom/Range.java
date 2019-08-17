@@ -1,4 +1,4 @@
-package cms.rendner.hexviewer.core.view.geom;
+package cms.rendner.hexviewer.core.geom;
 
 import org.jetbrains.annotations.NotNull;
 

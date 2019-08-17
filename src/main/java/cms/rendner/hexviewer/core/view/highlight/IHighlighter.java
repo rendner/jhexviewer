@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.core.view.highlight;
 
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.geom.HorizontalDimension;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
-import cms.rendner.hexviewer.core.view.geom.HorizontalDimension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

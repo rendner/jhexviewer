@@ -1,9 +1,9 @@
 package cms.rendner.hexviewer.core.view.areas;
 
+import cms.rendner.hexviewer.core.geom.IndexPosition;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
-import cms.rendner.hexviewer.core.view.geom.IndexPosition;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import org.jetbrains.annotations.NotNull;

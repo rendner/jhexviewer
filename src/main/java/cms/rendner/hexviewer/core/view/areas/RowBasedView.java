@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.core.view.areas;
 
+import cms.rendner.hexviewer.core.geom.Range;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.uidelegate.rows.IPaintDelegate;
-import cms.rendner.hexviewer.core.view.geom.Range;
 import cms.rendner.hexviewer.swing.BorderlessJComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
