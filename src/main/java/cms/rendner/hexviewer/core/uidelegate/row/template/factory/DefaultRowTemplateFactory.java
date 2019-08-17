@@ -52,12 +52,11 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         final int height = computeRowHeight(rowInsets, fm);
 
         final IOffsetRowTemplate result = OffsetRowTemplate.newBuilder()
-                .setFont(configuration.font())
-                .setAscent(fm.getAscent())
-                .setDimension(width, height)
-                .setElement(element)
-                .setOnlyDigitsCount(onlyDigitsCount)
-                .setTotalCharsCount(totalCharsCount)
+                .dimension(width, height)
+                .font(configuration.font())
+                .ascent(fm.getAscent())
+                .charCounts(onlyDigitsCount, totalCharsCount)
+                .element(element)
                 .build();
 
         this.fm = null;
@@ -123,11 +122,11 @@ public class DefaultRowTemplateFactory extends AbstractRowTemplateFactory
         final int height = computeRowHeight(rowInsets, fm);
 
         return ByteRowTemplate.newBuilder()
-                .setFont(configuration.font())
-                .setAscent(fm.getAscent())
-                .setCaretWidth(caretWidth)
-                .setDimension(width, height)
-                .setElements(bytes)
+                .dimension(width, height)
+                .font(configuration.font())
+                .ascent(fm.getAscent())
+                .caretWidth(caretWidth)
+                .elements(bytes)
                 .build();
     }
 

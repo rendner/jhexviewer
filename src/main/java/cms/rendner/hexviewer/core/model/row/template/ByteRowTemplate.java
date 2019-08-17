@@ -1,13 +1,12 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
+import cms.rendner.hexviewer.core.geom.Dimension;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,13 +37,14 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
      * Hide the constructor.
      * Creates a new instance with all the values from a builder.
      *
-     * @param source the builder used to initialize the new instance.
+     * @param builder the builder used to initialize the new instance.
      */
-    private ByteRowTemplate(@NotNull final Builder source)
+    private ByteRowTemplate(@NotNull final Builder builder)
     {
-        super(source);
-        this.caretWidth = source.caretWidth;
-        this.elements = source.elements;
+        super(builder.dimension, builder.font, builder.ascent);
+
+        this.caretWidth = builder.caretWidth;
+        this.elements = builder.elements;
     }
 
     /**
@@ -138,14 +138,23 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
 
     /**
      * Builder to configure and create ByteRowTemplate instances.
+     * <p/>
+     * All properties are required (mandatory) to build a valid row template. Therefore the builder uses a step based
+     * approach to guarantee that "build" method can only be called if all properties are set.
      */
-    public static class Builder extends RowTemplate.Builder<Builder>
+    public static class Builder implements
+            MandatoryDimensionBuilder,
+            MandatoryFontBuilder,
+            MandatoryAscentBuilder,
+            MandatoryCaretWidthBuilder,
+            MandatoryElementsBuilder,
+            Build
     {
         /**
          * The elements of the row.
          * The number of minimum entries of this property is <code>1</code>.
          */
-        protected List<Element> elements;
+        private List<Element> elements;
 
         /**
          * The width of the caret which can be placed between the bytes of the row.
@@ -153,54 +162,141 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         private int caretWidth = 1;
 
         /**
-         * Hide the constructor.
-         * Creates a new builder.
+         * The dimension of the row.
          */
-        private Builder()
+        private Dimension dimension;
+
+        /**
+         * The font used to render the text of the rows.
+         */
+        private Font font;
+
+        /**
+         * The ascent to center an element vertically if painted into a {@link Graphics} object.
+         */
+        private int ascent;
+
+        @Override
+        public ByteRowTemplate build()
         {
-            super();
+            return new ByteRowTemplate(this);
         }
 
         @Override
-        protected Builder getThis()
+        public MandatoryFontBuilder dimension(@NotNull final Dimension dimension)
         {
+            this.dimension = dimension;
             return this;
         }
 
-        /**
-         * Sets the width of the caret which can be placed between the bytes of the row.
-         *
-         * @param caretWidth the width for the caret, &gt;= 1.
-         * @return the builder instance, to allow method chaining.
-         */
-        public Builder setCaretWidth(final int caretWidth)
+        @Override
+        public MandatoryFontBuilder dimension(final int width, final int height)
+        {
+            return dimension(new Dimension(width, height));
+        }
+
+        @Override
+        public MandatoryAscentBuilder font(@NotNull final Font font)
+        {
+            this.font = font;
+            return this;
+        }
+
+        @Override
+        public MandatoryCaretWidthBuilder ascent(final int ascent)
+        {
+            this.ascent = ascent;
+            return this;
+        }
+
+        @Override
+        public MandatoryElementsBuilder caretWidth(final int caretWidth)
         {
             CheckUtils.checkMinValue(caretWidth, 1);
             this.caretWidth = caretWidth;
             return this;
         }
 
+        @Override
+        public Build elements(@NotNull final List<Element> elements)
+        {
+            CheckUtils.checkMinValue(elements.size(), 1);
+            this.elements = elements;
+            return this;
+        }
+    }
+
+    public interface MandatoryDimensionBuilder
+    {
+        /**
+         * Sets the dimension of the row.
+         *
+         * @param dimension the dimension.
+         * @return the next builder step.
+         */
+        MandatoryFontBuilder dimension(@NotNull Dimension dimension);
+
+        /**
+         * Sets the dimension of the row. Shorthand for <code>dimension(new Dimension(width, height))</code>
+         *
+         * @param width  the width of the row, &gt;= 1.
+         * @param height the height of the row, &gt;= 1.
+         * @return the next builder step.
+         */
+        MandatoryFontBuilder dimension(int width, int height);
+    }
+
+    public interface MandatoryFontBuilder
+    {
+        /**
+         * Sets the font to use to render the text of the rows.
+         *
+         * @param font the font to use.
+         * @return the next builder step.
+         */
+        MandatoryAscentBuilder font(@NotNull Font font);
+    }
+
+    public interface MandatoryAscentBuilder
+    {
+        /**
+         * Sets the ascent used to center an element vertically if painted into a {@link Graphics} object.
+         *
+         * @param ascent the ascent.
+         * @return the next builder step.
+         */
+        MandatoryCaretWidthBuilder ascent(int ascent);
+    }
+
+    public interface MandatoryCaretWidthBuilder
+    {
+        /**
+         * Sets the width of the caret which can be placed between the bytes of the row.
+         *
+         * @param caretWidth the width for the caret, &gt;= 1.
+         * @return the next builder step.
+         */
+        MandatoryElementsBuilder caretWidth(int caretWidth);
+    }
+
+    public interface MandatoryElementsBuilder
+    {
         /**
          * Sets the horizontal aligned elements for the row.
          *
          * @param elements the elements of the row, not empty - the list has to contain at least one element.
-         * @return the builder instance, to allow method chaining.
+         * @return the next builder step.
          */
-        public Builder setElements(@NotNull final List<Element> elements)
-        {
-            CheckUtils.checkMinValue(elements.size(), 1);
-            this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
-            return getThis();
-        }
+        Build elements(@NotNull List<Element> elements);
+    }
 
+    public interface Build
+    {
         /**
-         * @return a new instance with the configured values.
+         * Builds the configured row template instance.
+         *
+         * @return the created template instance.
          */
-        public ByteRowTemplate build()
-        {
-            CheckUtils.checkNotNull(elements);
-            CheckUtils.checkMinValue(elements.size(), 1);
-            return new ByteRowTemplate(this);
-        }
+        ByteRowTemplate build();
     }
 }
