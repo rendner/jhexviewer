@@ -11,7 +11,6 @@ import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.configuration.DefaultRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
-import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.core.uidelegate.DefaultHexViewerUI;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.row.template.factory.IRowTemplateFactory;
@@ -1196,10 +1195,11 @@ public class JHexViewer extends JComponent
     {
         if (contextMenuFactory != null)
         {
+            final int maxBiteIndex = lastPossibleByteIndex();
             final int byteIndex = rowsView
                     .hitTest(locationInRowsView.x, locationInRowsView.y)
-                    .map(HitInfo::index)
-                    .orElseGet(this::lastPossibleByteIndex);
+                    .map(byteHitInfo -> Math.min(byteHitInfo.index(), maxBiteIndex))
+                    .orElse(maxBiteIndex);
             final JPopupMenu menu = contextMenuFactory.create(this, rowsView.getId(), byteIndex);
 
             if (menu != null)

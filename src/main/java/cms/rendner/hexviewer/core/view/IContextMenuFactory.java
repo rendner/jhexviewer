@@ -21,7 +21,7 @@ public interface IContextMenuFactory
      *
      * @param hexViewer reference to the {@link JHexViewer} component.
      * @param areaId    the id of the area the user clicked.
-     * @param byteIndex the offset of the byte of the right-click.
+     * @param byteIndex the offset of the nearest byte at the right-click.
      * @return a popup menu or <code>null</code> if no popup menu should be shown.
      */
     @Nullable
