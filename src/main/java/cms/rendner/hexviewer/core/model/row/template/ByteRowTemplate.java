@@ -7,6 +7,8 @@ import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -227,7 +229,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
         public BuilderStepBuild elements(@NotNull final List<Element> elements)
         {
             CheckUtils.checkMinValue(elements.size(), 1);
-            this.elements = elements;
+            this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
             return this;
         }
     }
