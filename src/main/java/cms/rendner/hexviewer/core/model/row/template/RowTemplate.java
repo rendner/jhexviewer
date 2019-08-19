@@ -67,6 +67,17 @@ public abstract class RowTemplate implements IRowTemplate
         return dimension.height();
     }
 
+    /**
+     * The dimension of the row.
+     *
+     * @return the dimension.
+     */
+    @NotNull
+    public Dimension dimension()
+    {
+        return dimension;
+    }
+
     @Override
     public int ascent()
     {

@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.core.model.row.template;
 
+import cms.rendner.hexviewer.core.geom.Dimension;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,18 +18,26 @@ import java.awt.*;
 public interface IRowTemplate
 {
     /**
-     * The height of the row.
+     * The height of the row, shorthand for <code>dimension().height()</code>.
      *
      * @return the height, &gt;=0.
      */
     int height();
 
     /**
-     * The width of the row.
+     * The width of the row, shorthand for <code>dimension().width()</code>.
      *
      * @return the width, &gt;=0.
      */
     int width();
+
+    /**
+     * The dimension of the row.
+     *
+     * @return the dimension.
+     */
+    @NotNull
+    Dimension dimension();
 
     /**
      * @return the font to use to render the text content of the row.
