@@ -4,7 +4,7 @@ import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A IndexPosition indicates a location between two bytes. The bias can be used to indicate an interest
+ * An IndexPosition indicates a location between two bytes. The bias can be used to indicate an interest
  * toward one of the two sides of the position in boundary conditions where a simple offset is ambiguous.
  *
  * @author rendner

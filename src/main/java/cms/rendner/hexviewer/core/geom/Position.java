@@ -10,20 +10,20 @@ import java.util.Objects;
 public final class Position
 {
     /**
-     * The x position inside a row.
+     * The x position.
      */
     private final int x;
 
     /**
-     * The y position inside a row.
+     * The y position.
      */
     private final int y;
 
     /**
      * Creates a new instance.
      *
-     * @param x the x position inside a row.
-     * @param y the y position inside a row.
+     * @param x the x position.
+     * @param y the y position.
      */
     public Position(final int x, final int y)
     {
@@ -34,7 +34,7 @@ public final class Position
     }
 
     /**
-     * @return the x position inside a row.
+     * @return the x position.
      */
     public int x()
     {
@@ -42,7 +42,7 @@ public final class Position
     }
 
     /**
-     * @return the y position inside a row.
+     * @return the y position.
      */
     public int y()
     {

@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A Range specifies a number of successive values.
- * <p/>
- * Used to forward a number of successive rows by their row index.
  *
  * @author rendner
  */
@@ -124,7 +122,7 @@ public final class Range
     }
 
     /**
-     * Convenience to calculate the intersection of two ranges without allocating a new range.
+     * Convenience to calculate the intersection of two ranges.
      * If the two ranges don't intersect, then the returned range is invalid.
      *
      * @param otherStart  the start value of the range to intersect against, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
@@ -168,7 +166,7 @@ public final class Range
     }
 
     /**
-     * Convenience method that calculates the union of two ranges without allocating a new range.
+     * Convenience method that calculates the union of two ranges.
      *
      * @param otherStart  the start value of the second range, <code>otherStart >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.
      * @param otherEnd    the end value of the second range, <code>otherEnd >= MIN_VALID_INDEX && otherStart <= otherEnd</code>.

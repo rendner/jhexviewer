@@ -3,7 +3,8 @@ package cms.rendner.hexviewer.core.geom;
 import cms.rendner.hexviewer.utils.CheckUtils;
 
 /**
- * The HorizontalDimension class encapsulates the x and width of a range of bytes (in integer precision) in a single object.
+ * The HorizontalDimension class encapsulates the "x" and "width" of a range of bytes (in integer precision) in a single
+ * object.
  *
  * @author rendner
  */
