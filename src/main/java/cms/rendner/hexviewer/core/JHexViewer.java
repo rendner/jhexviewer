@@ -11,6 +11,7 @@ import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.IRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.configuration.DefaultRowTemplateConfiguration;
 import cms.rendner.hexviewer.core.model.row.template.configuration.IRowTemplateConfiguration;
+import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.core.uidelegate.DefaultHexViewerUI;
 import cms.rendner.hexviewer.core.uidelegate.damager.IDamager;
 import cms.rendner.hexviewer.core.uidelegate.row.template.factory.IRowTemplateFactory;
@@ -1195,19 +1196,11 @@ public class JHexViewer extends JComponent
     {
         if (contextMenuFactory != null)
         {
-            final JPopupMenu menu;
-
-            final ByteRowsView.ByteHitInfo byteHitInfo = rowsView.locationToByteHit(locationInRowsView.x, locationInRowsView.y);
-
-            if (byteHitInfo != null)
-            {
-                menu = contextMenuFactory.create(this, rowsView.getId(), byteHitInfo.getIndex());
-            }
-            else
-            {
-                // click was after the last byte
-                menu = contextMenuFactory.create(this, rowsView.getId(), lastPossibleByteIndex());
-            }
+            final int byteIndex = rowsView
+                    .hitTest(locationInRowsView.x, locationInRowsView.y)
+                    .map(HitInfo::index)
+                    .orElseGet(this::lastPossibleByteIndex);
+            final JPopupMenu menu = contextMenuFactory.create(this, rowsView.getId(), byteIndex);
 
             if (menu != null)
             {

@@ -1,15 +1,14 @@
 package cms.rendner.hexviewer.core.view.areas;
 
-import cms.rendner.hexviewer.core.geom.IndexPosition;
 import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.model.row.template.element.HitInfo;
 import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Optional;
 
 /**
  * Used to display the rows of bytes of the {@link AreaId#HEX} or {@link AreaId#ASCII}.
@@ -147,11 +146,15 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      *
      * @param x the x position for the hit test.
      * @param y the y position for the hit test.
-     * @return a hit info instance if there was a byte under the position, or <code>null</code> if the position
-     * wasn't valid (outside of the view).
+     * @return a hit info instance if there was a byte under the position, is empty if the position
+     * wasn't valid (outside of the view). The index of the line which contains
+     * the byte can be determined by the helper methods of the {@link cms.rendner.hexviewer.core.JHexViewer}.
+     * @see cms.rendner.hexviewer.core.JHexViewer#byteIndexToRowIndex(int)
+     * @see cms.rendner.hexviewer.core.JHexViewer#byteIndexToIndexInRow(int)
+     * @see cms.rendner.hexviewer.core.JHexViewer#rowIndexToByteIndex(int)
      */
-    @Nullable
-    public ByteHitInfo locationToByteHit(final int x, final int y)
+    @NotNull
+    public Optional<HitInfo> hitTest(final int x, final int y)
     {
         if (rowTemplate != null)
         {
@@ -159,29 +162,19 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
 
             if (rowIndex != INVALID_INDEX && rowTemplate.containsX(x))
             {
-                final int offsetForFirstByteInRow = (rowIndex * rowTemplate.elementCount());
                 final HitInfo hitInfo = rowTemplate.hitTest(x);
-                return convert(hitInfo, rowTemplate, offsetForFirstByteInRow);
+                final int offsetForFirstByteInRow = (rowIndex * rowTemplate.elementCount());
+                return Optional.of(
+                        new HitInfo(
+                                hitInfo.index() + offsetForFirstByteInRow,
+                                hitInfo.isLeadingEdge(),
+                                hitInfo.wasInside()
+                        )
+                );
             }
         }
 
-        return null;
-    }
-
-    /**
-     * Converts a local element hit info into a global byte hit info.
-     *
-     * @param templateHitInfo         the hit info retrieved from a IByteRowTemplate.
-     * @param rowTemplate             the template which provided the hit info.
-     * @param offsetForFirstByteInRow the offset for the first byte of the row which was tested.
-     * @return the hit info for the byte, never <code>null</code>.
-     */
-    @NotNull
-    protected ByteHitInfo convert(@NotNull final HitInfo templateHitInfo, @NotNull final IByteRowTemplate rowTemplate, final int offsetForFirstByteInRow)
-    {
-        final IndexPosition.Bias bias = templateHitInfo.insertionIndex() >= rowTemplate.elementCount() ? IndexPosition.Bias.Backward : IndexPosition.Bias.Forward;
-        final IndexPosition position = new IndexPosition(templateHitInfo.insertionIndex() + offsetForFirstByteInRow, bias);
-        return new ByteHitInfo(templateHitInfo.index() + offsetForFirstByteInRow, position);
+        return Optional.empty();
     }
 
     /**
@@ -242,70 +235,6 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
         public void setFocus(final boolean focused)
         {
             rowView.setFocus(focused);
-        }
-    }
-
-    /**
-     * Describes a hit in the ByteRowsView.
-     * <p/>
-     * In contrast to the {@link HitInfo}, which only describes a hit on an element inside a byte row, this hit
-     * info describes a hit on a byte located inside the ByteRowsView. The index of the line which contains
-     * the byte can be determined by the helper methods of the {@link cms.rendner.hexviewer.core.JHexViewer}.
-     *
-     * @see cms.rendner.hexviewer.core.JHexViewer#byteIndexToRowIndex(int)
-     * @see cms.rendner.hexviewer.core.JHexViewer#byteIndexToIndexInRow(int)
-     * @see cms.rendner.hexviewer.core.JHexViewer#rowIndexToByteIndex(int)
-     */
-    public static class ByteHitInfo
-    {
-        /**
-         * The index of the byte in the view.
-         */
-        private final int index;
-
-        /**
-         * Describes if the hit was before the byte or after the byte.
-         */
-        @NotNull
-        private final IndexPosition insertionPosition;
-
-        /**
-         * Creates a new instance with the specified values.
-         *
-         * @param index             the index of the byte in the view.
-         * @param insertionPosition describes where the caret should be inserted (before or after the byte).
-         */
-        public ByteHitInfo(final int index, @NotNull final IndexPosition insertionPosition)
-        {
-            super();
-            this.index = index;
-            this.insertionPosition = insertionPosition;
-        }
-
-        /**
-         * @return the position where the caret should be placed.
-         */
-        @NotNull
-        public IndexPosition getInsertionPosition()
-        {
-            return insertionPosition;
-        }
-
-        /**
-         * @return the index of the byte in the view
-         */
-        public int getIndex()
-        {
-            return index;
-        }
-
-        /**
-         * @return the index of the byte in the view prefixed with the name of the class.
-         */
-        @Override
-        public String toString()
-        {
-            return getClass().getSimpleName() + "[index:" + index + "]";
         }
     }
 }

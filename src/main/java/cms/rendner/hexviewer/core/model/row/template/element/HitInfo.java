@@ -3,8 +3,8 @@ package cms.rendner.hexviewer.core.model.row.template.element;
 import java.util.Objects;
 
 /**
- * Information about a hit on an element in a row template.
- * This class is used to describe the nearest element of a row under a mouse position.
+ * Information about a hit on an element.
+ * This class is used to describe the nearest element under a mouse position.
  *
  * @author rendner
  */
@@ -52,9 +52,8 @@ public final class HitInfo
     }
 
     /**
-     * Returns the insertion index (index for the caret). This is the index of the element inside the row if
-     * the leading edge of the element was hit, and one greater
-     * than the element index if the trailing edge was hit.
+     * Returns the insertion index (index for the caret). Is equals the index if the leading edge of the element
+     * was hit, and one greater if the trailing edge was hit.
      *
      * @return the insertion index.
      */
@@ -64,7 +63,7 @@ public final class HitInfo
     }
 
     /**
-     * The index in the row of the element which was hit.
+     * The index of the element which was hit.
      *
      * @return the index of the element.
      */

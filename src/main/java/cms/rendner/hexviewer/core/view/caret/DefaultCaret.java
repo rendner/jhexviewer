@@ -110,9 +110,9 @@ public class DefaultCaret extends AbstractCaret
     /**
      * Clamps the coordinates of a point object to always stay inside a specified area.
      *
-     * @param id         the id of the area to stay.
-     * @param x the x-location to adjust.
-     * @param y the y-location to adjust.
+     * @param id the id of the area to stay.
+     * @param x  the x-location to adjust.
+     * @param y  the y-location to adjust.
      * @return the adjusted coordinates.
      */
     @NotNull
@@ -216,12 +216,9 @@ public class DefaultCaret extends AbstractCaret
                 if (activeRowsView == targetView)
                 {
                     final Point clampedLocation = clampLocationToRowsBounds(activeRowsView.getId(), event.getX(), event.getY());
-                    final ByteRowsView.ByteHitInfo byteHit = activeRowsView.locationToByteHit(clampedLocation.x, clampedLocation.y);
-
-                    if (byteHit != null)
-                    {
-                        moveDot(byteHit.getInsertionPosition());
-                    }
+                    activeRowsView
+                            .hitTest(clampedLocation.x, clampedLocation.y)
+                            .ifPresent(byteHitInfo -> moveDot(byteHitInfo.insertionIndex()));
                 }
             }
         }
@@ -235,17 +232,16 @@ public class DefaultCaret extends AbstractCaret
             requestComponentFocus();
 
             activeRowsView = targetView;
+            activeRowsView
+                    .hitTest(event.getX(), event.getY())
+                    .ifPresent(byteHitInfo ->
+                    {
+                        dragModeIsActive = true;
+                        hexViewer.setFocusedArea(activeRowsView.getId());
+                        activeRowsView.addMouseMotionListener(internalHandler);
 
-            final ByteRowsView.ByteHitInfo byteHit = activeRowsView.locationToByteHit(event.getX(), event.getY());
-
-            if (byteHit != null)
-            {
-                dragModeIsActive = true;
-                hexViewer.setFocusedArea(activeRowsView.getId());
-                activeRowsView.addMouseMotionListener(internalHandler);
-
-                setDot(byteHit.getInsertionPosition());
-            }
+                        setDot(byteHitInfo.insertionIndex());
+                    });
         }
     }
 }
