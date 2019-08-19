@@ -18,12 +18,6 @@ public final class OffsetFormatter extends StringValueFormatter implements IOffs
     private final int minNumberOfChars;
 
     /**
-     * The digit used for padding.
-     */
-    @NotNull
-    private final String padDigit = "0";
-
-    /**
      * The format identifier.
      * X means the result is formatted as a hexadecimal integer.
      *
@@ -31,12 +25,6 @@ public final class OffsetFormatter extends StringValueFormatter implements IOffs
      */
     @NotNull
     private final String valueFormat = "X";
-
-    /**
-     * The suffix which gets added to each formatted address.
-     */
-    @NotNull
-    private final String valueSuffix = "h";
 
     /**
      * Creates a new instance.
@@ -54,6 +42,8 @@ public final class OffsetFormatter extends StringValueFormatter implements IOffs
     @Override
     public String format(final int numberOfChars, final int offsetAddress)
     {
+        final String padDigit = "0";
+        final String valueSuffix = "h";
         return format("%" + padDigit + numberOfChars + valueFormat + valueSuffix, offsetAddress);
     }
 
