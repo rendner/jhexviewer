@@ -48,7 +48,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     protected final static int INVALID_INDEX = -1;
 
     /**
-     * The id of the area to which is rendered by this view component.
+     * The id of the area to which is rendered by this component.
      */
     @NotNull
     protected final AreaId id;
@@ -61,7 +61,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
     /**
      * The api instance which allows to set hidden properties which are not accessible from the outside.
-     * To access this api, an access token is required which is only known by the owner which created the view component.
+     * To access this api, an access token is required which is only known by the owner which created the component.
      */
     @Nullable
     protected RowBasedView.InternalApi internalApi;
@@ -85,7 +85,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * Creates a new instance with the specified values.
      *
-     * @param id                     the id of the area to which is rendered by this view component.
+     * @param id                     the id of the area to which is rendered by this component.
      * @param internalApiAccessToken the token to allow access to the internal api.
      */
     public RowBasedView(@NotNull final AreaId id, @NotNull final Object internalApiAccessToken)
@@ -109,7 +109,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return the id of the area to which is rendered by this view component.
+     * @return the id of the area to which is rendered by this component.
      */
     @NotNull
     public AreaId getId()
@@ -135,9 +135,9 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return The number of total rows provided by the view.
+     * @return The number of total rows provided by the component.
      * This isn't the number of currently displayed rows.
-     * For example this value can be 123456 but this view displays currently 5 rows at a time.
+     * For example this value can be 123456 but this component displays currently 5 rows at a time.
      */
     public int rowCount()
     {
@@ -145,9 +145,9 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Returns the delegate which paints the rows of the view.
+     * Returns the delegate which paints the rows of the component.
      *
-     * @return the current paint delegate or <code>null</code> if no delegate was set.
+     * @return the current paint delegate.
      */
     @NotNull
     public Optional<IPaintDelegate> getPaintDelegate()
@@ -208,7 +208,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * Returns the index of the row which contains the specified y coordinate.
      *
      * @param yLocation the y value to convert.
-     * @return the index of the row, or <code>-1</code> if the specified y value was out of view bounds.
+     * @return the index of the row, or <code>-1</code> if the specified y value was out of component bounds.
      */
     public int verticalLocationToRowIndex(final int yLocation)
     {
@@ -229,7 +229,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return the current height of a single row in this view, &gt;= 1.
+     * @return the current height of a single row in this component, &gt;= 1.
      */
     public int rowHeight()
     {
@@ -340,14 +340,15 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * packages to modify these hidden properties, if they are entitled to do so.
      * Without a guarded access the user could change some of these properties directly which would result in an
      * unexpected state of the JHexViewer. For example, the property "rowCount" has to have the same value for all three
-     * row based views displayed by the JHexViewer. This can't be guaranteed if the user can modify this property directly.
+     * row based components displayed by the JHexViewer. This can't be guaranteed if the user can modify this property
+     * directly.
      *
      * @author rendner
      */
     public static class InternalApi<V extends RowBasedView, T extends IRowTemplate>
     {
         /**
-         * The view to access.
+         * The component to access.
          */
         @NotNull
         protected final V rowView;
@@ -355,7 +356,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
         /**
          * Creates a new instance.
          *
-         * @param rowView the view to access.
+         * @param rowView the component to access.
          */
         protected InternalApi(@NotNull final V rowView)
         {
@@ -385,7 +386,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
         }
 
         /**
-         * Sets the delegate which is responsible for painting the rows of the view.
+         * Sets the delegate which is responsible for painting the rows of the component.
          * Setting a delegate results in a complete repaint.
          *
          * @param newPaintDelegate the new delegate, can be <code>null</code>.

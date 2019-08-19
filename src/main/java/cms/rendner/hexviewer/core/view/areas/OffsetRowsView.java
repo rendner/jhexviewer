@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Used to display the offsets of the rows displayed in the {@link AreaId#HEX} and {@link AreaId#ASCII}.
  * <p/>
- * This view uses an IOffsetRowTemplate to layout the row bytes.
+ * This component uses an IOffsetRowTemplate to layout the row bytes.
  *
  * @author rendner
  * @see IOffsetRowTemplate
@@ -52,7 +52,7 @@ public final class OffsetRowsView extends RowBasedView<IOffsetRowTemplate>
         /**
          * Creates a new instance.
          *
-         * @param rowView the view to access.
+         * @param rowView the component to access.
          */
         InternalApi(@NotNull final OffsetRowsView rowView)
         {
