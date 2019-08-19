@@ -8,6 +8,30 @@ package cms.rendner.hexviewer.utils;
 public final class IndexUtils
 {
     /**
+     *Checks if an index is odd or not.
+     * Can be used to implementing alternating rows.
+     *
+     * @param index index to check.
+     * @return <code>true</code> if index is odd otherwise <code>false</code>
+     */
+    public static boolean isOdd(final int index)
+    {
+        return (index & 1) != 0;
+    }
+
+    /**
+     * Checks if an index is even or not.
+     * Can be used to implementing alternating rows.
+     *
+     * @param index index to check.
+     * @return <code>true</code> if index is even otherwise <code>false</code>
+     */
+    public static boolean isEven(final int index)
+    {
+        return (index & 1) == 0;
+    }
+
+    /**
      * Returns the byte index (zero based) in the data provider of the first byte of a row.
      * <p/>
      * This method doesn't check if the calculated index is out of bounds.
