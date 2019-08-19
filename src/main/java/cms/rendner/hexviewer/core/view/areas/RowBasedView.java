@@ -345,7 +345,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      *
      * @author rendner
      */
-    public static class InternalApi<V extends RowBasedView, T extends IRowTemplate>
+    public static class InternalApi<V extends RowBasedView<T>, T extends IRowTemplate>
     {
         /**
          * The component to access.
