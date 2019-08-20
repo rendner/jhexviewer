@@ -8,6 +8,11 @@ package cms.rendner.hexviewer.utils;
 public final class IndexUtils
 {
     /**
+     * Constant for an invalid index.
+     */
+    public static final int INVALID_INDEX = -1;
+
+    /**
      *Checks if an index is odd or not.
      * Can be used to implementing alternating rows.
      *
@@ -44,7 +49,7 @@ public final class IndexUtils
     {
         if (rowIndex < 0)
         {
-            return -1;
+            return INVALID_INDEX;
         }
 
         if (bytesPerRow > 0)
@@ -52,7 +57,7 @@ public final class IndexUtils
             return rowIndex * bytesPerRow;
         }
 
-        return -1;
+        return INVALID_INDEX;
     }
 
     /**
@@ -68,7 +73,7 @@ public final class IndexUtils
     {
         if (byteIndex < 0)
         {
-            return -1;
+            return INVALID_INDEX;
         }
 
         if (bytesPerRow > 0)
@@ -76,7 +81,7 @@ public final class IndexUtils
             return byteIndex / bytesPerRow;
         }
 
-        return -1;
+        return INVALID_INDEX;
     }
 
     /**
@@ -92,20 +97,20 @@ public final class IndexUtils
     {
         if (byteIndex < 0)
         {
-            return -1;
+            return INVALID_INDEX;
         }
 
         final int rowIndex = byteIndexToRowIndex(byteIndex, bytesPerRow);
-        if (rowIndex != -1)
+        if (rowIndex != INVALID_INDEX)
         {
             final int indexOfRowStartByte = rowIndexToByteIndex(rowIndex, bytesPerRow);
-            if (indexOfRowStartByte != -1)
+            if (indexOfRowStartByte != INVALID_INDEX)
             {
                 return byteIndex - indexOfRowStartByte;
             }
         }
 
-        return -1;
+        return INVALID_INDEX;
     }
 
     /**
