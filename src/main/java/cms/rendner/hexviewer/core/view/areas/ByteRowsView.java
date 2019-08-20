@@ -16,11 +16,7 @@ import java.util.Optional;
  * A byte area is focusable and provides methods to get the index of a byte under the mouse position which is useful
  * to start a selection.
  * <p/>
- * Note:
- * This component doesn't know about the data rendered inside, therefore a retrieved byte index has to be checked against
- * {@link JHexViewer#lastPossibleByteIndex()} to ensure that the index is valid.
- * <p/>
- * This component uses an IByteRowTemplate to layout the row bytes.
+ * This component uses an IByteRowTemplate to describe the layout of a row.
  *
  * @author rendner
  * @see IByteRowTemplate
@@ -36,7 +32,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * Creates a new instance with the specified values.
      *
      * @param id                     the id of the area to which is rendered by this component.
-     * @param internalApiAccessToken the token to allow access to the owner api.
+     * @param internalApiAccessToken the token to allow access to the internal api.
      */
     public ByteRowsView(@NotNull final AreaId id, @NotNull final Object internalApiAccessToken)
     {
@@ -103,7 +99,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * Returns the bounds for a specific byte.
      * The byte doesn't have to be visible, it can be outside of the current component bounds.
      *
-     * @param byteIndex the index of the byte in the view. The value has to be &gt;= 0.
+     * @param byteIndex the index of the byte in the view, &gt;= 0.
      * @return the bounds in the view, the result will be empty if no row-template is installed.
      */
     @NotNull
@@ -122,7 +118,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
     }
 
     /**
-     * @return the number of bytes per row.
+     * @return the number of bytes displayed in a row.
      */
     public int bytesPerRow()
     {
@@ -133,7 +129,7 @@ public final class ByteRowsView extends RowBasedView<IByteRowTemplate>
      * Returns the bounds for the caret at a specific index.
      * The index doesn't have to be visible, it can be outside of the current view.
      *
-     * @param caretIndex the index of the caret in the view. The value has to be &gt;= 0.
+     * @param caretIndex the index of the caret in the view, &gt;= 0.
      * @return the bounds of the caret, the result will be empty if no row-template is installed.
      */
     @NotNull

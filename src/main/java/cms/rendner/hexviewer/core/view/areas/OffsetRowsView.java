@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Used to display the offsets of the rows displayed in the {@link AreaId#HEX} and {@link AreaId#ASCII}.
  * <p/>
- * This component uses an IOffsetRowTemplate to layout the row bytes.
+ * This component uses an IOffsetRowTemplate to describe the layout of a row.
  *
  * @author rendner
  * @see IOffsetRowTemplate

@@ -172,7 +172,7 @@ public class DefaultHighlighter extends AbstractHighlighter
     protected Range computeVisibleBytes(@NotNull final ByteRowsView rowsView)
     {
         final Rectangle rectangle = rowsView.getVisibleRect();
-        final Range rowRange = rowsView.getRowRange(rectangle);
+        final Range rowRange = rowsView.getIntersectingRows(rectangle);
 
         if (rowRange.isValid())
         {

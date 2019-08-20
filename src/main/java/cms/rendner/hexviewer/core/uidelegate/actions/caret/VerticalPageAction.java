@@ -94,7 +94,7 @@ public class VerticalPageAction extends AbstractHexViewerAction
             final int rowIndexOfCaret = hexViewer.byteIndexToRowIndex(caretIndex);
             final int caretIndexInRow = hexViewer.byteIndexToIndexInRow(caretIndex);
 
-            final Range visibleRows = rowsView.getRowRange(visibleRect);
+            final Range visibleRows = rowsView.getIntersectingRows(visibleRect);
 
             if (visibleRows.isValid() && visibleRows.contains(rowIndexOfCaret))
             {

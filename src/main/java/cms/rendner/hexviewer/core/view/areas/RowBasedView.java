@@ -14,10 +14,10 @@ import java.util.Optional;
 /**
  * View component which displays the rows of an area of the JHexViewer.
  * <p/>
- * This component doesn't allow to set an border or to add other components as children. The visual representation of
+ * This component doesn't allow to set a border or to add other components as children. The visual representation of
  * the component is painted by an IPaintDelegate which knows what content has to be painted. In order to paint the
- * component an IRowTemplate is required to determine the expected layout of the rows. The layout is taken into account
- * by the IPaintDelegate. Without an IRowTemplate and IPaintDelegate the component will stay empty.
+ * component an IRowTemplate is required which describes the layout of the rows to be rendered. The layout is taken into
+ * account by the IPaintDelegate. Without an IRowTemplate or IPaintDelegate the component will stay empty.
  *
  * @author rendner
  * @see IPaintDelegate
@@ -30,17 +30,17 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * Max possible component height.
      * Content which is located behind Integer.MAX_VALUE can't be rendered in Swing components.
      */
-    protected final static int MAX_HEIGHT = Integer.MAX_VALUE - 100;
+    private final static int MAX_HEIGHT = Integer.MAX_VALUE - 100;
 
     /**
      * Dummy row height which is used when no rowTemplate is available.
      */
-    protected final static int DUMMY_ROW_HEIGHT = 25;
+    private final static int DUMMY_ROW_HEIGHT = 25;
 
     /**
      * Dummy row width which is used when no rowTemplate is available.
      */
-    protected final static int DUMMY_ROW_WIDTH = 100;
+    private final static int DUMMY_ROW_WIDTH = 100;
 
     /**
      * Constant for an invalid index.
@@ -51,31 +51,32 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * The id of the area to which is rendered by this component.
      */
     @NotNull
-    protected final AreaId id;
+    private final AreaId id;
 
     /**
      * Used to guard the access to the internal api.
      */
     @NotNull
-    protected final Object internalApiAccessToken;
+    private final Object internalApiAccessToken;
 
     /**
-     * The api instance which allows to set hidden properties which are not accessible from the outside.
+     * The api instance which allows to set hidden properties which are not accessible from outside.
      * To access this api, an access token is required which is only known by the owner which created the component.
      */
     @Nullable
     protected RowBasedView.InternalApi internalApi;
 
     /**
-     * The template to use to render the bytes in rows.
+     * Describes the layout of a row.
      */
     @Nullable
     protected T rowTemplate;
 
     /**
-     * The number of total rows provided by the view.
+     * Number of rows that can be shown.
+     * This value is used to calculate the final height of the component.
      */
-    protected int rowCount;
+    private int rowCount;
 
     /**
      * The delegate used to paint the rows of this view.
@@ -96,7 +97,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Not implement, throws an exception.
+     * Not implemented, throws an exception.
      *
      * @param comp        ignored
      * @param constraints ignored
@@ -109,7 +110,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return the id of the area to which is rendered by this component.
+     * @return the id of the area rendered by this component.
      */
     @NotNull
     public AreaId getId()
@@ -118,7 +119,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * @return the row template used to align the bytes in rows.
+     * @return the row template that describes the layout of a row.
      */
     @NotNull
     public Optional<T> template()
@@ -136,8 +137,6 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
     /**
      * @return The number of total rows provided by the component.
-     * This isn't the number of currently displayed rows.
-     * For example this value can be 123456 but this component displays currently 5 rows at a time.
      */
     public int rowCount()
     {
@@ -145,7 +144,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     }
 
     /**
-     * Returns the delegate which paints the rows of the component.
+     * Returns the delegate used to paint the rows of the component.
      *
      * @return the current paint delegate.
      */
@@ -157,8 +156,11 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
     /**
      * Returns the bounds of a row.
+     * <p/>
+     * This method always return the rect of the row even if the row specified by the rowIndex is outside of the
+     * current component bounds.
      *
-     * @param rowIndex the index of the row.
+     * @param rowIndex the index of the row, &gt;= 0.
      * @return a rectangle with the bounds of the specified row.
      */
     @NotNull
@@ -179,9 +181,9 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
      * @return the range of intersection.
      */
     @NotNull
-    public Range getRowRange(@NotNull final Rectangle rectangle)
+    public Range getIntersectingRows(@NotNull final Rectangle rectangle)
     {
-        if(rectangle.isEmpty())
+        if (rectangle.isEmpty())
         {
             return Range.INVALID;
         }
@@ -236,14 +238,21 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
         return rowTemplate != null ? Math.max(1, rowTemplate.height()) : DUMMY_ROW_HEIGHT;
     }
 
+    /**
+     * @return the current width of a single row in this component, &gt;= 1.
+     */
+    public int rowWidth()
+    {
+        return rowTemplate != null ? Math.max(1, rowTemplate.width()) : DUMMY_ROW_WIDTH;
+    }
+
     @NotNull
     @Override
     public Dimension getPreferredSize()
     {
         final Insets insets = getInsets();
 
-        int width = (rowTemplate != null) ? rowTemplate.width() : DUMMY_ROW_WIDTH;
-        width += insets.left + insets.right;
+        final int width = rowWidth() + insets.left + insets.right;
 
         long height = (rowHeight() * rowCount) + insets.top + insets.bottom;
         // check for overflow
@@ -291,7 +300,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
     /**
      * Internal api.
      *
-     * @param rowTemplate the template to use to align the bytes in rows, can be <code>null</code>.
+     * @param rowTemplate the template that describes the layout of a row, can be <code>null</code>.
      * @see InternalApi#setRowTemplate(IRowTemplate)
      */
     void setRowTemplate(@Nullable final T rowTemplate)
@@ -364,10 +373,11 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
         }
 
         /**
-         * Sets the row template.
+         * Sets the row template which describes the layout of a row
+         * <p/>
          * Setting this property results in a complete repaint.
          *
-         * @param rowTemplate the template to use to align the bytes in rows, can be <code>null</code>.
+         * @param rowTemplate the new row layout, can be <code>null</code>.
          */
         public void setRowTemplate(@Nullable final T rowTemplate)
         {
@@ -376,6 +386,8 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
         /**
          * Set the number of total rows.
+         * Used to calculate the final height of the component.
+         * <p/>
          * Setting this property in a complete repaint.
          *
          * @param rowCount the number of total rows.
@@ -387,6 +399,7 @@ public abstract class RowBasedView<T extends IRowTemplate> extends BorderlessJCo
 
         /**
          * Sets the delegate which is responsible for painting the rows of the component.
+         * <p/>
          * Setting a delegate results in a complete repaint.
          *
          * @param newPaintDelegate the new delegate, can be <code>null</code>.

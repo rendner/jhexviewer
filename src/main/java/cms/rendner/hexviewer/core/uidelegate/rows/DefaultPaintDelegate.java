@@ -101,7 +101,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
     {
         if (rowsView.hasTemplate())
         {
-            final Range dirtyRows = rowsView.getRowRange(g.getClipBounds());
+            final Range dirtyRows = rowsView.getIntersectingRows(g.getClipBounds());
 
             if (dirtyRows.isValid())
             {
