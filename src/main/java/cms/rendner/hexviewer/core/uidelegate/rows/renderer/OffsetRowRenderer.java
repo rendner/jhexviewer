@@ -70,12 +70,12 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
     {
         if (hexViewer.isShowOffsetCaretIndicator())
         {
-            hexViewer.getCaret().map(caret ->
+            return hexViewer.getCaret().map(caret ->
             {
                 final int caretIndex = caret.getDot().getIndex();
                 final int caretRowIndex = hexViewer.byteIndexToRowIndex(caretIndex);
                 return rowData.rowIndex() == caretRowIndex ? caretIndex : rowData.offset();
-            });
+            }).orElseGet(rowData::offset);
         }
 
         return rowData.offset();
