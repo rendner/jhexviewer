@@ -835,16 +835,10 @@ public class JHexViewer extends JComponent
 
             dataModel = newModel;
 
+            byteRowsViewContainer.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
             if (caret != null)
             {
-                if (caret.getDot().getIndex() != 0)
-                {
-                    caret.setDot(0);
-                }
-                else
-                {
-                    byteRowsViewContainer.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-                }
+                caret.setDot(0);
             }
 
             getHighlighter().ifPresent(IHighlighter::removeAllHighlights);
