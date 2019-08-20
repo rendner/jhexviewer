@@ -1,6 +1,9 @@
 package cms.rendner.hexviewer.support.data.visitor.consumer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * Consumes all content into a single string.
@@ -20,6 +23,31 @@ public final class ToStringConsumer implements IConsumer
     @NotNull
     private String result = "";
 
+    /**
+     * The result consumer.
+     */
+    @Nullable
+    private final Consumer<String> resultConsumer;
+
+    /**
+     * Creates a new instance, without a result consumer.
+     */
+    public ToStringConsumer()
+    {
+        this(null);
+    }
+
+    /**
+     * Creates a new instance with the specified result consumer.
+     *
+     * @param resultConsumer the consumer to be called when the final result is available.
+     */
+    public ToStringConsumer(@Nullable final Consumer<String> resultConsumer)
+    {
+        super();
+        this.resultConsumer = resultConsumer;
+    }
+
     @Override
     public void start()
     {
@@ -37,6 +65,11 @@ public final class ToStringConsumer implements IConsumer
     {
         result = resultBuilder != null ? resultBuilder.toString() : "";
         resultBuilder = null;
+
+        if (resultConsumer != null)
+        {
+            resultConsumer.accept(content());
+        }
     }
 
     /**

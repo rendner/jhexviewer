@@ -175,9 +175,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer();
+                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
                 visitSelectedBytes(hexViewer, new ByteVisitor(consumer, hexViewer.getHexValueFormatter()));
-                copyToClipboard(consumer.content());
             }
         }));
 
@@ -185,9 +184,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer();
+                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
                 visitSelectedBytes(hexViewer, new ByteVisitor(consumer, hexViewer.getAsciiValueFormatter()));
-                copyToClipboard(consumer.content());
             }
         }));
 
@@ -197,27 +195,24 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer();
+                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, true, false));
-                copyToClipboard(consumer.content());
             }
         }));
         copyMenu.add(new JMenuItem(new AbstractAction("offset ascii")
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer();
+                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, false, true));
-                copyToClipboard(consumer.content());
             }
         }));
         copyMenu.add(new JMenuItem(new AbstractAction("offset hex ascii")
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer();
+                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, true, true));
-                copyToClipboard(consumer.content());
             }
         }));
     }
