@@ -17,15 +17,16 @@ import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
 import cms.rendner.hexviewer.support.data.wrapper.IRowData;
-import cms.rendner.hexviewer.support.data.wrapper.RowData;
-import cms.rendner.hexviewer.utils.CheckUtils;
+import cms.rendner.hexviewer.support.data.wrapper.RowDataBuilder;
 import cms.rendner.hexviewer.utils.FallbackValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Default implementation which paints the rows of the three areas of the {@link JHexViewer}.
@@ -91,7 +92,6 @@ public class DefaultPaintDelegate implements IPaintDelegate
     @Override
     public void setRowColorProvider(@NotNull final AreaId id, @Nullable final IRowColorProvider newColorProvider)
     {
-        CheckUtils.checkNotNull(id);
         rowColorProviderMap.get(id).setPreferredValue(newColorProvider);
         hexViewer.getDamager().ifPresent(damager -> damager.damageArea(id));
     }
@@ -277,35 +277,20 @@ public class DefaultPaintDelegate implements IPaintDelegate
     {
         final List<RowGraphicsAndData> result = new ArrayList<>(dirtyRows.getLength());
 
-        final Rectangle dirtyRowBounds = rowsView.getRowRect(dirtyRows.getStart());
+        hexViewer.getDataModel().ifPresent(dataModel -> {
+            final Rectangle dirtyRowBounds = rowsView.getRowRect(dirtyRows.getStart());
 
-        for (int rowIndex = dirtyRows.getStart(); rowIndex <= dirtyRows.getEnd(); rowIndex++)
-        {
-            getRowData(rowIndex).ifPresent(rowData -> {
+            final RowDataBuilder rowDataBuilder = new RowDataBuilder(dataModel, hexViewer.bytesPerRow());
+            for (int rowIndex = dirtyRows.getStart(); rowIndex <= dirtyRows.getEnd(); rowIndex++)
+            {
                 final Graphics rowGraphics = g.create(dirtyRowBounds.x, dirtyRowBounds.y, dirtyRowBounds.width, dirtyRowBounds.height);
-                result.add(new RowGraphicsAndData(rowGraphics, rowData));
-            });
+                result.add(new RowGraphicsAndData(rowGraphics, rowDataBuilder.build(rowIndex)));
 
-            dirtyRowBounds.y += dirtyRowBounds.height;
-        }
+                dirtyRowBounds.y += dirtyRowBounds.height;
+            }
+        });
 
         return result;
-    }
-
-    /**
-     * Creates a row data object which contains only the bytes of the specified row.
-     *
-     * @param rowIndex the index of the row.
-     * @return the bytes of the specified row, never <code>null</code>.
-     */
-    @NotNull
-    protected Optional<IRowData> getRowData(final int rowIndex)
-    {
-        return hexViewer.getDataModel().map(data -> {
-            final RowData result = new RowData(data, hexViewer.bytesPerRow());
-            result.setRowIndex(rowIndex);
-            return result;
-        });
     }
 
     /**

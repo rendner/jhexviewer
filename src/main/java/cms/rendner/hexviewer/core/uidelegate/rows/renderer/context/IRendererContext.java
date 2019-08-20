@@ -27,8 +27,7 @@ public interface IRendererContext
 
     /**
      * @return the data of a single row to draw. This data is automatically updated and points always to the bytes of
-     * the row to paint. The row data instance always contains all bytes of the row, it is guarantied that
-     * {@link IRowData#excludedLeadingBytes} always returns <code>0</code>.
+     * the row to paint. The row data instance always contains all bytes of the row.
      */
     @NotNull
     IRowData getRowData();

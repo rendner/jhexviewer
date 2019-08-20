@@ -23,8 +23,10 @@ public interface IRowWiseByteVisitor
     /**
      * Is called for every row of bytes to visit.
      * @param rowData data of the row to visit.
+     * @param leadingBytesToIgnore number of leading bytes to exclude from the row data.
+     * @param trailingBytesToIgnore number of trailing bytes to exclude from the row data.
      */
-    void visitRow(@NotNull IRowData rowData);
+    void visitRow(@NotNull IRowData rowData, int leadingBytesToIgnore, int trailingBytesToIgnore);
 
     /**
      * Notifies the visitor that all rows are visited.

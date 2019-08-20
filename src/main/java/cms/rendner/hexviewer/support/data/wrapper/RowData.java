@@ -8,75 +8,39 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class RowData extends DataPart implements IRowData
+public final class RowData extends DataPart implements IRowData
 {
     /**
      * The index of the row to which this data belongs.
      */
-    protected int rowIndex;
-
-    /**
-     * Number of excluded leading bytes in this row.
-     */
-    protected int excludedLeadingBytes;
-
-    /**
-     * Number of bytes per row, used to calculate the bytes which belong to the specified row.
-     */
-    protected final int bytesPerRow;
+    private final int rowIndex;
 
     /**
      * Creates a new instance which the specified properties.
      *
-     * @param dataModel   the data model which provides the bytes.
-     * @param bytesPerRow the number of bytes per row.
+     * @param dataModel the data model to use to get the bytes for the part.
+     * @param offset    index of the first byte in this part in the data model.
+     * @param size      the number of bytes in this part.
+     * @param rowIndex  the index of the row to which this data belongs.
      */
-    public RowData(@NotNull final IDataModel dataModel, final int bytesPerRow)
+    public RowData(@NotNull final IDataModel dataModel, final int offset, final int size, final int rowIndex)
     {
-        super(dataModel, 0, bytesPerRow);
-        this.bytesPerRow = bytesPerRow;
-    }
-
-    /**
-     * Adjusts the row index and updates the internal range of bytes which belong to the row index.
-     *
-     * @param rowIndex the index of the row for which this instance should provide the bytes.
-     */
-    public void setRowIndex(final int rowIndex)
-    {
+        super(dataModel, offset, size);
         this.rowIndex = rowIndex;
-        setRange(rowIndex * bytesPerRow + excludedLeadingBytes, size);
-    }
-
-    /**
-     * Adjusts the available bytes of the row
-     *
-     * @param offsetInRow the number of excluded leading bytes of the row.
-     * @param size        the number of bytes of the row.
-     */
-    public void setRowRange(final int offsetInRow, final int size)
-    {
-        excludedLeadingBytes = offsetInRow;
-
-        final int rangeOffset = rowIndex * bytesPerRow + excludedLeadingBytes;
-        setRange(rangeOffset, size);
-    }
-
-    @Override
-    public int excludedLeadingBytes()
-    {
-        return excludedLeadingBytes;
-    }
-
-    @Override
-    public int excludedTrailingBytes()
-    {
-        return bytesPerRow - (size() + excludedLeadingBytes);
     }
 
     @Override
     public int rowIndex()
     {
         return rowIndex;
+    }
+
+    /**
+     * @return the offset and size of the instance prefixed with the name of the class.
+     */
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + "[offset:" + offset() + ", size:" + size() + ", rowIndex: " + rowIndex + "]";
     }
 }

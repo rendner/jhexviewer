@@ -298,7 +298,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     @NotNull
     private RowWiseByteVisitor getConfiguredByteVisitor(@NotNull final JHexViewer hexViewer, @Nullable final IConsumer consumer, final boolean includeHexArea, final boolean includeAsciiArea)
     {
-        final RowWiseByteVisitor result = new RowWiseByteVisitor(getConfiguredByteFormatter(hexViewer), consumer);
+        final RowWiseByteVisitor result = new RowWiseByteVisitor(getConfiguredByteFormatter(hexViewer), consumer, hexViewer.bytesPerRow());
         result.setIncludeHexArea(includeHexArea);
         result.setIncludeAsciiArea(includeAsciiArea);
         return result;

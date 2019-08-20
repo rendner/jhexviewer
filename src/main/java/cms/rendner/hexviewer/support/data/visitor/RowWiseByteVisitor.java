@@ -29,6 +29,11 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     private final IConsumer consumer;
 
     /**
+     * The number of bytes in a row.
+     */
+    private final int bytesPerRow;
+
+    /**
      * Used to build a row which includes the three areas of the
      * {@link cms.rendner.hexviewer.core.JHexViewer}.
      *
@@ -66,10 +71,11 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * Creates a new instance.
      *
      * @param formatter to format byte values ​​row-based before they are written to the consumer.
+     * @param bytesPerRow the number of bytes in a row, &gt;= 0.
      */
-    public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter)
+    public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter, final int bytesPerRow)
     {
-        this(formatter, null);
+        this(formatter, null, bytesPerRow);
     }
 
     /**
@@ -77,13 +83,15 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      *
      * @param consumer  the consumer to write to, if <code>null</code> a ToConsoleConsumer will be used to write to.
      * @param formatter to format byte values ​​row-based before they are written to the consumer. Can't be <code>null</code>.
+     * @param bytesPerRow the number of bytes in a row, &gt;= 0.
      */
-    public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter, @Nullable final IConsumer consumer)
+    public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter, @Nullable final IConsumer consumer, final int bytesPerRow)
     {
         super();
 
         this.formatter = formatter;
         this.consumer = consumer == null ? new ToConsoleConsumer() : consumer;
+        this.bytesPerRow = bytesPerRow;
     }
 
     /**
@@ -127,24 +135,21 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     @Override
-    public void visitRow(@NotNull final IRowData rowData)
+    public void visitRow(@NotNull final IRowData rowData, final int leadingBytesToIgnore, final int trailingBytesToIgnore)
     {
-        int lastVisitedByteIndexInRow = rowData.excludedLeadingBytes();
+        appendBytePlaceholder(0, leadingBytesToIgnore);
 
-        if (rowData.excludedLeadingBytes() > 0)
+        int currentByteIndex = leadingBytesToIgnore;
+
+        final int printableBytesSize = Math.max(currentByteIndex, rowData.size() - trailingBytesToIgnore);
+        while(currentByteIndex < printableBytesSize )
         {
-            appendBytePlaceholder(0, rowData.excludedLeadingBytes());
+            appendByte(rowData.getByte(currentByteIndex), currentByteIndex);
+            currentByteIndex++;
         }
 
-        for (int i = 0; i < rowData.size(); i++)
-        {
-            appendByte(rowData.getByte(i), lastVisitedByteIndexInRow++);
-        }
-
-        if (rowData.excludedTrailingBytes() > 0)
-        {
-            appendBytePlaceholder(lastVisitedByteIndexInRow, rowData.excludedTrailingBytes());
-        }
+        final int missingPlaceholders = bytesPerRow - currentByteIndex;
+        appendBytePlaceholder(currentByteIndex, missingPlaceholders);
 
         consumer.consume(buildRow(rowData));
 
@@ -234,8 +239,11 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      */
     protected void appendBytePlaceholder(final int indexInRow, final int repeats)
     {
-        appendBytePlaceholderToHexArea(indexInRow, repeats);
-        appendBytePlaceholderToAsciiArea(indexInRow, repeats);
+        if(repeats > 0)
+        {
+            appendBytePlaceholderToHexArea(indexInRow, repeats);
+            appendBytePlaceholderToAsciiArea(indexInRow, repeats);
+        }
     }
 
     /**
