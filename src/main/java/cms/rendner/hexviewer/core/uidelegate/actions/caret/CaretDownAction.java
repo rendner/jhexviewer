@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.core.uidelegate.actions.caret;
 
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.geom.IndexPosition;
 import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.ActionEvent;
 
@@ -21,11 +21,9 @@ public class CaretDownAction extends AbstractHexViewerAction
     }
 
     @Override
-    public void actionPerformed(final ActionEvent event)
+    public void actionPerformed(@NotNull final ActionEvent event)
     {
-        final JHexViewer hexViewer = getHexViewer(event);
-        if (hexViewer != null)
-        {
+        getHexViewer(event).ifPresent(hexViewer ->
             hexViewer.getCaret().ifPresent(caret ->
             {
                 final IndexPosition dotPosition = caret.getDot();
@@ -39,7 +37,7 @@ public class CaretDownAction extends AbstractHexViewerAction
                 {
                     caret.setDot(newDotIndex);
                 }
-            });
-        }
+            })
+        );
     }
 }

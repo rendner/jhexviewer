@@ -8,6 +8,7 @@ import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
 import cms.rendner.hexviewer.utils.IndexUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,37 +31,35 @@ public class VerticalPageAction extends AbstractHexViewerAction
     }
 
     @Override
-    public void actionPerformed(final ActionEvent event)
+    public void actionPerformed(@NotNull final ActionEvent event)
     {
-        final JHexViewer hexViewer = getHexViewer(event);
-        if (hexViewer != null)
-        {
+        getHexViewer(event).ifPresent(hexViewer ->
             hexViewer.getCaret().ifPresent(
-                    caret -> {
-                        final AreaId id = hexViewer.getFocusedArea();
-                        final ScrollableContainer scrollableByteRowsContainer = hexViewer.getScrollableByteRowsContainer();
-                        final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
+                caret -> {
+                    final AreaId id = hexViewer.getFocusedArea();
+                    final ScrollableContainer scrollableByteRowsContainer = hexViewer.getScrollableByteRowsContainer();
+                    final ByteRowsView rowsView = hexViewer.getByteRowsView(id);
 
-                        final Rectangle visibleRect = scrollableByteRowsContainer.getVisibleRect();
-                        final Rectangle newVisibleRect = getNewVisibleRect(scrollableByteRowsContainer, visibleRect);
-                        final int newCaretPosition = getNewCaretIndex(hexViewer, rowsView, visibleRect, newVisibleRect);
+                    final Rectangle visibleRect = scrollableByteRowsContainer.getVisibleRect();
+                    final Rectangle newVisibleRect = getNewVisibleRect(scrollableByteRowsContainer, visibleRect);
+                    final int newCaretPosition = getNewCaretIndex(hexViewer, rowsView, visibleRect, newVisibleRect);
 
-                        snapToRow(rowsView, newVisibleRect, newCaretPosition);
+                    snapToRow(rowsView, newVisibleRect, newCaretPosition);
 
-                        // setting the new caret position results in scrolling automatically to the new caret position
-                        if (select)
-                        {
-                            caret.moveDot(newCaretPosition);
-                        }
-                        else
-                        {
-                            caret.setDot(newCaretPosition);
-                        }
+                    // setting the new caret position results in scrolling automatically to the new caret position
+                    if (select)
+                    {
+                        caret.moveDot(newCaretPosition);
+                    }
+                    else
+                    {
+                        caret.setDot(newCaretPosition);
+                    }
 
-                        // scroll to newVisibleRect to overwrite the automatic scrolling of the caret
-                        scrollableByteRowsContainer.scrollRectToVisible(newVisibleRect);
-            });
-        }
+                    // scroll to newVisibleRect to overwrite the automatic scrolling of the caret
+                    scrollableByteRowsContainer.scrollRectToVisible(newVisibleRect);
+            })
+        );
     }
 
     private void snapToRow(final ByteRowsView rowsView, final Rectangle newVisibleRect, final int newCaretPosition)

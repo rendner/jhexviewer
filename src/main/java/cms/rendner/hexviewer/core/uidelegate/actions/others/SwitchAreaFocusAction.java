@@ -1,10 +1,11 @@
 package cms.rendner.hexviewer.core.uidelegate.actions.others;
 
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
 import cms.rendner.hexviewer.core.JHexViewer;
+import cms.rendner.hexviewer.core.uidelegate.actions.AbstractHexViewerAction;
+import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.swing.scrollable.ScrollableContainer;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,10 +17,9 @@ import java.awt.event.ActionEvent;
 public class SwitchAreaFocusAction extends AbstractHexViewerAction
 {
     @Override
-    public void actionPerformed(final ActionEvent event)
+    public void actionPerformed(@NotNull final ActionEvent event)
     {
-        final JHexViewer hexViewer = getHexViewer(event);
-        if (hexViewer != null)
+        getHexViewer(event).ifPresent(hexViewer ->
         {
             final AreaId oldFocusedArea = hexViewer.getFocusedArea();
             hexViewer.setFocusedArea(getUnfocusedAreaId(oldFocusedArea));
@@ -27,7 +27,7 @@ public class SwitchAreaFocusAction extends AbstractHexViewerAction
 
             final ByteRowsView rowsView = hexViewer.getByteRowsView(newFocusedArea);
             rowsView.scrollRectToVisible(computeScrollRect(hexViewer, rowsView));
-        }
+        });
     }
 
     private AreaId getUnfocusedAreaId(final AreaId focusedAreaId)

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * // todo: add comment
@@ -42,15 +43,14 @@ public abstract class AbstractHexViewerAction extends AbstractAction implements 
      * @param event the ActionEvent
      * @return the component
      */
-    @Nullable
-    protected final JHexViewer getHexViewer(@NotNull final ActionEvent event)
+    @NotNull
+    protected final Optional<JHexViewer> getHexViewer(@NotNull final ActionEvent event)
     {
-        // todo: return optional
         final Object source = event.getSource();
         if (source instanceof JHexViewer)
         {
-            return (JHexViewer) source;
+            return Optional.of((JHexViewer) source);
         }
-        return null;
+        return Optional.empty();
     }
 }
