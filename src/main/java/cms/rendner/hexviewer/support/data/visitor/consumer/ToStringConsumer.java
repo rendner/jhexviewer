@@ -7,17 +7,18 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class ToStringConsumer implements IConsumer
+public final class ToStringConsumer implements IConsumer
 {
     /**
      * Used to build a string from the consumed content.
      */
-    protected StringBuilder resultBuilder;
+    private StringBuilder resultBuilder;
 
     /**
      * The final result.
      */
-    protected String result = "";
+    @NotNull
+    private String result = "";
 
     @Override
     public void start()

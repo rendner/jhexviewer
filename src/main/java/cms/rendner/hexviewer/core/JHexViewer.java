@@ -32,7 +32,6 @@ import cms.rendner.hexviewer.swing.separator.JSeparatedView;
 import cms.rendner.hexviewer.swing.separator.JSeparatedViewport;
 import cms.rendner.hexviewer.swing.separator.Separator;
 import cms.rendner.hexviewer.swing.separator.VSeparatorPlaceholder;
-import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.FallbackValue;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import org.jetbrains.annotations.NotNull;
@@ -786,7 +785,6 @@ public class JHexViewer extends JComponent
      */
     public boolean isByteArea(@NotNull final AreaId id)
     {
-        CheckUtils.checkNotNull(id);
         return AreaId.HEX.equals(id) || AreaId.ASCII.equals(id);
     }
 
@@ -1139,8 +1137,6 @@ public class JHexViewer extends JComponent
      */
     protected void registerInternalHandler(@NotNull final InternalHandler handler)
     {
-        CheckUtils.checkNotNull(handler);
-
         hexRowsView.addMouseListener(handler);
         asciiRowsView.addMouseListener(handler);
     }

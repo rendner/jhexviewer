@@ -11,9 +11,9 @@ import java.awt.*;
 /**
  * @author rendner
  */
-public class DefaultRowColorProvider extends AbstractRowColorProvider
+public final class DefaultRowColorProvider extends AbstractRowColorProvider
 {
-    private Color gray = new Color(0xF4F4F4);
+    private final Color gray = new Color(0xF4F4F4);
 
     @Nullable
     @Override

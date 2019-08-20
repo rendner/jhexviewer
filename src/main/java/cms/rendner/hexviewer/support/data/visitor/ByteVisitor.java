@@ -13,19 +13,19 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author rendner
  */
-public class ByteVisitor implements IByteVisitor
+public final class ByteVisitor implements IByteVisitor
 {
     /**
      * Used to format visited bytes before passing them to the consumer.
      */
     @NotNull
-    protected final IValueFormatter formatter;
+    private final IValueFormatter formatter;
 
     /**
      * Used to consume the formatted value of the visited bytes.
      */
     @NotNull
-    protected final IConsumer consumer;
+    private final IConsumer consumer;
 
     /**
      * Creates a new instance.

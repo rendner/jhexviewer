@@ -15,7 +15,7 @@ import java.awt.*;
  *
  * @author rendner
  */
-public class VirtualBytesRow
+public final class VirtualBytesRow
 {
     /**
      * Constant for an invalid index.

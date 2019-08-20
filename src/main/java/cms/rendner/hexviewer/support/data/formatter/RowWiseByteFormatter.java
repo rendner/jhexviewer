@@ -16,58 +16,30 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
      * Used to format the values of the offset-area.
      */
     @NotNull
-    protected final IOffsetValueFormatter offsetFormatter;
+    private final IOffsetValueFormatter offsetFormatter;
 
     /**
      * Used to format the byte values of the hex-area.
      */
     @NotNull
-    protected final IValueFormatter hexByteFormatter;
+    private final IValueFormatter hexByteFormatter;
 
     /**
      * Used to format the byte values of the ascii-area.
      */
     @NotNull
-    protected final IValueFormatter asciiByteFormatter;
+    private final IValueFormatter asciiByteFormatter;
 
     /**
      * Used to separate rows.
      */
     @NotNull
-    protected final String rowSeparator = System.lineSeparator();
+    private final String rowSeparator = System.lineSeparator();
 
     /**
      * Used to separate areas.
      */
-    protected final String areaSeparator = " | ";
-
-    /**
-     * Used to separate bytes of the hex-area.
-     */
-    @NotNull
-    protected final String hexByteSeparator = " ";
-
-    // todo add comment
-    @NotNull
-    protected final String hexByteDoubleSeparator = "  ";
-
-    /**
-     * Used to separate bytes of the ascii-area.
-     */
-    @NotNull
-    protected final String asciiByteSeparator = "";
-
-    /**
-     * Used to print an excluded byte of the hex-area.
-     */
-    @NotNull
-    protected final String hexBytePlaceholder = "  ";
-
-    /**
-     * Used to print an excluded byte of the ascii-area.
-     */
-    @NotNull
-    protected final String asciiBytePlaceholder = ".";
+    private final String areaSeparator = " | ";
 
     /**
      * Creates a new instance.
@@ -124,33 +96,28 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
             return "";
         }
 
-        return isMultipleOf(indexOfByteInRow, 8) ? hexByteDoubleSeparator : hexByteSeparator;
+        return isMultipleOf(indexOfByteInRow, 8) ? "  " : " ";
     }
 
     @NotNull
     @Override
     public String asciiByteSeparator(final int indexOfByteInRow)
     {
-        if (indexOfByteInRow == 0)
-        {
-            return "";
-        }
-
-        return asciiByteSeparator;
+        return "";
     }
 
     @NotNull
     @Override
     public String hexBytePlaceholder(final int indexInRow)
     {
-        return hexBytePlaceholder;
+        return "  ";
     }
 
     @NotNull
     @Override
     public String asciiBytePlaceholder(final int indexInRow)
     {
-        return asciiBytePlaceholder;
+        return  ".";
     }
 
     @NotNull
@@ -168,7 +135,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
     }
 
     // todo add comment
-    protected boolean isMultipleOf(final int multipleToCheck, final int value)
+    private boolean isMultipleOf(final int multipleToCheck, final int value)
     {
         return (multipleToCheck % value) == 0;
     }

@@ -12,18 +12,18 @@ import java.util.Optional;
  *
  * @author rendner
  */
-public class ScrollableRowsContainer extends ScrollableContainer
+public final class ScrollableRowsContainer extends ScrollableContainer
 {
     /**
      * The number of preferred visible rows displayed in the JHexViewer.
      */
-    protected int preferredVisibleRowCount = 8;
+    private int preferredVisibleRowCount = 8;
 
     /**
      * The component forwards all "questions about how to scroll" to this delegate.
      */
     @Nullable
-    protected IScrollableDelegate scrollableDelegate;
+    private IScrollableDelegate scrollableDelegate;
 
     /**
      * Returns the number of rows which should be displayed.

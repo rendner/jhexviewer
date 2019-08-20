@@ -5,7 +5,6 @@ import cms.rendner.hexviewer.core.geom.HorizontalDimension;
 import cms.rendner.hexviewer.core.geom.Range;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
-import cms.rendner.hexviewer.utils.CheckUtils;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +27,6 @@ public class DefaultHighlighter extends AbstractHighlighter
     @Override
     public void setDefaultColor(@NotNull final Color newColor)
     {
-        CheckUtils.checkNotNull(newColor);
-
         defaultPainter = new DefaultHighlightPainter(newColor);
 
         // damage all highlights which are painted by the default highlighter

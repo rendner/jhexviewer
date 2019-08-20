@@ -17,7 +17,7 @@ import java.nio.file.Paths;
  *
  * @author rendner
  */
-public class FileData implements IDataModel
+public final class FileData implements IDataModel
 {
     /**
      * The bytes of the loaded file.
@@ -61,7 +61,7 @@ public class FileData implements IDataModel
      * @return the data of the file.
      * @throws IOException if reading content from the file fails.
      */
-    protected byte[] readContent(@NotNull final File file) throws IOException
+    private byte[] readContent(@NotNull final File file) throws IOException
     {
         final Path path = Paths.get(file.getAbsolutePath());
         return Files.readAllBytes(path);

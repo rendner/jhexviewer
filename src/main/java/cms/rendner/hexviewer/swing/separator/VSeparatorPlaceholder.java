@@ -1,6 +1,7 @@
 package cms.rendner.hexviewer.swing.separator;
 
 import cms.rendner.hexviewer.swing.BorderlessJComponent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -11,7 +12,7 @@ import java.awt.*;
  *
  * @author rendner
  */
-public class VSeparatorPlaceholder extends BorderlessJComponent
+public final class VSeparatorPlaceholder extends BorderlessJComponent
 {
     /**
      * The wrapped separator.
@@ -33,7 +34,7 @@ public class VSeparatorPlaceholder extends BorderlessJComponent
      *
      * @param separator the separator to wrap.
      */
-    public VSeparatorPlaceholder(final Separator separator)
+    public VSeparatorPlaceholder(@Nullable final Separator separator)
     {
         super();
         setSeparator(separator);
@@ -65,7 +66,7 @@ public class VSeparatorPlaceholder extends BorderlessJComponent
      * @param g ignored.
      */
     @Override
-    protected void paintComponent(final Graphics g)
+    protected void paintComponent(@NotNull final Graphics g)
     {
         // do nothing
     }

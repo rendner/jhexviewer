@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author rendner
  */
-public class RowWiseByteVisitor implements IRowWiseByteVisitor
+public final class RowWiseByteVisitor implements IRowWiseByteVisitor
 {
     /**
      * Used to format visited rows of bytes.
@@ -165,7 +165,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @return a string which represents the formatted row, including the enabled areas.
      */
     @NotNull
-    protected String buildRow(@NotNull final RowData rowData)
+    private String buildRow(@NotNull final RowData rowData)
     {
         rowBuilder.append(formatter.formatRowOffset(rowData.rowIndex(), rowData.offset()));
 
@@ -192,7 +192,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param value          byte value to add.
      * @param byteIndexInRow the index of the byte in the current row.
      */
-    protected void appendByte(final int value, final int byteIndexInRow)
+    private void appendByte(final int value, final int byteIndexInRow)
     {
         appendByteToHexArea(value, byteIndexInRow);
         appendByteToAsciiArea(value, byteIndexInRow);
@@ -205,7 +205,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param value          byte value to add.
      * @param byteIndexInRow the index of the byte in the current row.
      */
-    protected void appendByteToHexArea(final int value, final int byteIndexInRow)
+    private void appendByteToHexArea(final int value, final int byteIndexInRow)
     {
         if (includeHexArea)
         {
@@ -221,7 +221,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param value          byte value to add.
      * @param byteIndexInRow the index of the byte in the current row.
      */
-    protected void appendByteToAsciiArea(final int value, final int byteIndexInRow)
+    private void appendByteToAsciiArea(final int value, final int byteIndexInRow)
     {
         if (includeAsciiArea)
         {
@@ -237,7 +237,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param indexInRow the index in the current row from where to start.
      * @param repeats    number of placeholders to add.
      */
-    protected void appendBytePlaceholder(final int indexInRow, final int repeats)
+    private void appendBytePlaceholder(final int indexInRow, final int repeats)
     {
         if(repeats > 0)
         {
@@ -253,7 +253,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param indexInRow the index in the current row from where to start.
      * @param repeats    number of placeholders to add.
      */
-    protected void appendBytePlaceholderToHexArea(final int indexInRow, final int repeats)
+    private void appendBytePlaceholderToHexArea(final int indexInRow, final int repeats)
     {
         if (includeHexArea)
         {
@@ -272,7 +272,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @param indexInRow the index in the current row from where to start.
      * @param repeats    number of placeholders to add.
      */
-    protected void appendBytePlaceholderToAsciiArea(final int indexInRow, final int repeats)
+    private void appendBytePlaceholderToAsciiArea(final int indexInRow, final int repeats)
     {
         if (includeAsciiArea)
         {

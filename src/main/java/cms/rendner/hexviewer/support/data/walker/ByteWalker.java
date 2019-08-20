@@ -10,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class ByteWalker
+public final class ByteWalker
 {
     /**
      * Provides the data that is iterated over.
      */
     @NotNull
-    protected final IDataModel dataModel;
+    private final IDataModel dataModel;
 
     /**
      * Creates a new instance.
@@ -59,7 +59,7 @@ public class ByteWalker
      * @return the part which only contains the bytes of the specified range.
      */
     @NotNull
-    protected DataPart createDataPart(final int start, final int end)
+    private DataPart createDataPart(final int start, final int end)
     {
         final int size = end - start + 1;
         return new DataPart(dataModel, start, size);

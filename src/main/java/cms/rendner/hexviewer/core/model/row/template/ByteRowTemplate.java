@@ -119,7 +119,7 @@ public final class ByteRowTemplate extends RowTemplate implements IByteRowTempla
      * @param xPosition the x position which should be checked.
      * @return the index of the element which intersects with the position.
      */
-    protected int elementIndexForXPosition(final int xPosition)
+    private int elementIndexForXPosition(final int xPosition)
     {
         final int lastElementIndex = elements.size() - 1;
 

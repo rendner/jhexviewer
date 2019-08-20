@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author rendner
  */
-public class ToFileConsumer implements IConsumer
+public final class ToFileConsumer implements IConsumer
 {
     /**
      * Specifies after how many characters the collected content should be written to the file.
@@ -21,12 +21,13 @@ public class ToFileConsumer implements IConsumer
     /**
      * Target file to write to.
      */
-    protected File file;
+    @NotNull
+    private final File file;
 
     /**
      * Used to consume all content before writing it to the file.
      */
-    protected StringBuilder stringConsumer;
+    private StringBuilder stringConsumer;
 
     /**
      * Creates a new instance.

@@ -6,8 +6,6 @@ import example.themes.ThemeFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author rendner
@@ -16,16 +14,10 @@ public class Main
 {
     public static void main(@NotNull String[] args)
     {
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                displayJFrame();
-            }
-        });
+        SwingUtilities.invokeLater(Main::displayJFrame);
     }
 
-    static void displayJFrame()
+    private static void displayJFrame()
     {
         final Main main = new Main();
 
@@ -41,15 +33,10 @@ public class Main
         final JFrame frame = new JFrame("JHexViewer");
 
         final JComponent content = main.createHexViewer();
-        content.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(final PropertyChangeEvent event)
+        content.addPropertyChangeListener(event -> {
+            if (event.getPropertyName().equals(JHexViewer.PROPERTY_ROW_TEMPLATE_CONFIGURATION))
             {
-                if (event.getPropertyName().equals(JHexViewer.PROPERTY_ROW_TEMPLATE_CONFIGURATION))
-                {
-                    frame.pack();
-                }
+                frame.pack();
             }
         });
 

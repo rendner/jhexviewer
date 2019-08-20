@@ -12,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class RowWiseByteWalker
+public final class RowWiseByteWalker
 {
     /**
      * Provides the data that is iterated over.
      */
     @NotNull
-    protected final IDataModel dataModel;
+    private final IDataModel dataModel;
 
     /**
      * The number of bytes displayed in one row

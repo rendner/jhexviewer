@@ -1,9 +1,9 @@
 package cms.rendner.hexviewer.core.uidelegate.datatransfer;
 
+import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.core.model.data.file.FileData;
 import cms.rendner.hexviewer.core.model.data.file.MappedFileData;
-import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.utils.ByteSizeConstants;
 
 import javax.swing.*;
@@ -46,7 +46,7 @@ public class FileTransferHandler extends TransferHandler
             return false;
         }
 
-        if (data != null && !data.isEmpty())
+        if (!data.isEmpty())
         {
             for (final File file : data)
             {

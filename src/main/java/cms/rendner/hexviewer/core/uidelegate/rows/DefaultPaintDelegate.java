@@ -310,7 +310,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
      * Helper object which holds a Graphics instance which has the bounds of a row and the data to be rendered by the row.
      * Drawing outside the bounds of the Graphics instance doesn't damage other rows.
      */
-    protected class RowGraphicsAndData
+    protected static class RowGraphicsAndData
     {
         /**
          * The Graphics instance with the dimension and coordinates of the specified row.

@@ -1,7 +1,6 @@
 package cms.rendner.hexviewer.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility to check for required values.
@@ -78,20 +77,6 @@ public final class CheckUtils
         if (value > maxValue)
         {
             throw new IllegalArgumentException(errorMessage);
-        }
-    }
-
-    /**
-     * Checks if an instance is not <code>null</code>.
-     *
-     * @param value value to check
-     * @throws IllegalArgumentException if value is <code>null</code>.
-     */
-    public static void checkNotNull(@Nullable final Object value)
-    {
-        if (value == null)
-        {
-            throw new IllegalArgumentException("Invalid value, value can't be null.");
         }
     }
 

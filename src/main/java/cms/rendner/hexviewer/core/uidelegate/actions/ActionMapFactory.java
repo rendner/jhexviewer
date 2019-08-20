@@ -7,7 +7,6 @@ import cms.rendner.hexviewer.core.uidelegate.actions.font.IncreaseFontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.others.OthersAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.others.SwitchAreaFocusAction;
 import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
-import cms.rendner.hexviewer.utils.CheckUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -43,8 +42,6 @@ public class ActionMapFactory
 
     protected static void addAction(@NotNull final ActionMap actionMap, @NotNull final IActionTypeId actionTypeId)
     {
-        CheckUtils.checkNotNull(actionTypeId);
-
         AbstractHexViewerAction action = null;
 
         if (actionTypeId instanceof CaretAction)
