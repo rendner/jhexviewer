@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class DataPart implements IDataPart
+public class DataPart
 {
     /**
      * Number of bytes in this part.
@@ -40,25 +40,36 @@ public class DataPart implements IDataPart
         this.size = size;
     }
 
-    @Override
+    /**
+     * @return the number of bytes in this part.
+     */
     public final int size()
     {
         return size;
     }
 
-    @Override
+    /**
+     * @return <code>true</code> if this part contains no byte.
+     */
     public final boolean isEmpty()
     {
         return size <= 0;
     }
 
-    @Override
+    /**
+     * @return index of the first byte in this part in the data model of the {@link cms.rendner.hexviewer.core.JHexViewer}.
+     */
     public final int offset()
     {
         return offset;
     }
 
-    @Override
+    /**
+     * Returns the byte value for the index as int (a signed byte is -128 to 127, but we want a range of 0 to 255).
+     *
+     * @param indexInPart the index in the data part, in the range [0, size()-1].
+     * @return the value at the <code>indexInPart</code>.
+     */
     public final int getByte(final int indexInPart)
     {
         if(isEmpty() || indexInPart < 0 || indexInPart >= size)

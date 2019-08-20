@@ -5,7 +5,7 @@ import cms.rendner.hexviewer.core.model.row.template.IByteRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ public class ByteRowRenderer extends AbstractRowRenderer<IByteRowTemplate>
     @Override
     public void paintForeground(@NotNull final Graphics g, @NotNull final IByteRowTemplate rowTemplate, @NotNull final IRendererContext context)
     {
-        final IRowData rowData = context.getRowData();
+        final RowData rowData = context.getRowData();
 
         if (!rowData.isEmpty())
         {

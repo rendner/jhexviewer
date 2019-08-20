@@ -2,7 +2,7 @@ package cms.rendner.hexviewer.support.data.walker;
 
 import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.support.data.visitor.IRowWiseByteVisitor;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import cms.rendner.hexviewer.support.data.wrapper.RowDataBuilder;
 import cms.rendner.hexviewer.utils.IndexUtils;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class RowWiseByteWalker
 
         while (currentRowIndex <= lastRowIndex)
         {
-            final IRowData rowData = rowDataBuilder.build(currentRowIndex);
+            final RowData rowData = rowDataBuilder.build(currentRowIndex);
             final int leadingBytesToIgnore = Math.max(0, start - rowData.offset());
             final int trailingBytesToIgnore = Math.max(0, (rowData.offset() + rowData.size() - 1) - end);
 

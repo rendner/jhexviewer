@@ -5,7 +5,7 @@ import cms.rendner.hexviewer.utils.IndexUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Simplifies the creation of {@link IRowData} instances.
+ * Simplifies the creation of {@link RowData} instances.
  *
  * @author rendner
  */
@@ -41,7 +41,7 @@ public final class RowDataBuilder
      * @return the data of the row.
      */
     @NotNull
-    public IRowData build(final int rowIndex)
+    public RowData build(final int rowIndex)
     {
         final int lastPossibleByteIndex = Math.max(0, dataModel.size() - 1);
         final int offsetOfFirstRowByte = Math.min(lastPossibleByteIndex, IndexUtils.rowIndexToByteIndex(rowIndex, bytesPerRow));

@@ -16,7 +16,7 @@ import cms.rendner.hexviewer.core.view.areas.ByteRowsView;
 import cms.rendner.hexviewer.core.view.areas.OffsetRowsView;
 import cms.rendner.hexviewer.core.view.areas.RowBasedView;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import cms.rendner.hexviewer.support.data.wrapper.RowDataBuilder;
 import cms.rendner.hexviewer.utils.FallbackValue;
 import org.jetbrains.annotations.NotNull;
@@ -322,7 +322,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
          * The data to render for the row.
          */
         @NotNull
-        final IRowData rowData;
+        final RowData rowData;
 
         /**
          * Creates a new instance with the specified parameters.
@@ -330,7 +330,7 @@ public class DefaultPaintDelegate implements IPaintDelegate
          * @param g     the Graphics instance used to repaint the row.
          * @param rowData the data to render for the row.
          */
-        public RowGraphicsAndData(@NotNull final Graphics g, @NotNull final IRowData rowData)
+        public RowGraphicsAndData(@NotNull final Graphics g, @NotNull final RowData rowData)
         {
             super();
 

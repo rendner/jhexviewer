@@ -5,7 +5,7 @@ import cms.rendner.hexviewer.core.formatter.offset.IOffsetValueFormatter;
 import cms.rendner.hexviewer.core.model.row.template.IOffsetRowTemplate;
 import cms.rendner.hexviewer.core.model.row.template.element.Element;
 import cms.rendner.hexviewer.core.uidelegate.rows.renderer.context.IRendererContext;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -22,7 +22,7 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
     {
         final int onlyDigitsCount = rowTemplate.onlyDigitsCount();
         final int ascent = rowTemplate.ascent();
-        final IRowData rowData = context.getRowData();
+        final RowData rowData = context.getRowData();
         final IOffsetValueFormatter valueFormatter = context.getHexViewer().getOffsetValueFormatter();
         final String formattedValue = valueFormatter.format(onlyDigitsCount, resolveValueToPaint(context.getHexViewer(), rowData));
         final Element element = rowTemplate.element();
@@ -66,7 +66,7 @@ public class OffsetRowRenderer extends AbstractRowRenderer<IOffsetRowTemplate>
      * @param rowData   the data of the row to paint.
      * @return the value to paint.
      */
-    protected int resolveValueToPaint(@NotNull final JHexViewer hexViewer, @NotNull final IRowData rowData)
+    protected int resolveValueToPaint(@NotNull final JHexViewer hexViewer, @NotNull final RowData rowData)
     {
         if (hexViewer.isShowOffsetCaretIndicator())
         {

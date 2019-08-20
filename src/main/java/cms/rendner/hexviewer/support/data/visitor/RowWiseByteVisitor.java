@@ -3,7 +3,7 @@ package cms.rendner.hexviewer.support.data.visitor;
 import cms.rendner.hexviewer.support.data.formatter.IRowWiseByteFormatter;
 import cms.rendner.hexviewer.support.data.visitor.consumer.IConsumer;
 import cms.rendner.hexviewer.support.data.visitor.consumer.ToConsoleConsumer;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -135,7 +135,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     @Override
-    public void visitRow(@NotNull final IRowData rowData, final int leadingBytesToIgnore, final int trailingBytesToIgnore)
+    public void visitRow(@NotNull final RowData rowData, final int leadingBytesToIgnore, final int trailingBytesToIgnore)
     {
         appendBytePlaceholder(0, leadingBytesToIgnore);
 
@@ -165,7 +165,7 @@ public class RowWiseByteVisitor implements IRowWiseByteVisitor
      * @return a string which represents the formatted row, including the enabled areas.
      */
     @NotNull
-    protected String buildRow(@NotNull final IRowData rowData)
+    protected String buildRow(@NotNull final RowData rowData)
     {
         rowBuilder.append(formatter.formatRowOffset(rowData.rowIndex(), rowData.offset()));
 

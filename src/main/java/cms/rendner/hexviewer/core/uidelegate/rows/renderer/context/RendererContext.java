@@ -3,7 +3,7 @@ package cms.rendner.hexviewer.core.uidelegate.rows.renderer.context;
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,7 +27,7 @@ public class RendererContext implements IRendererContext
     /**
      * The data to display for a specific row.
      */
-    private IRowData rowData;
+    private RowData rowData;
 
     /**
      * The area to which the context belongs.
@@ -70,7 +70,7 @@ public class RendererContext implements IRendererContext
 
     @NotNull
     @Override
-    public IRowData getRowData()
+    public RowData getRowData()
     {
         return rowData;
     }
@@ -80,7 +80,7 @@ public class RendererContext implements IRendererContext
      *
      * @param rowData data of the row to paint.
      */
-    public void setRowData(final IRowData rowData)
+    public void setRowData(final RowData rowData)
     {
         this.rowData = rowData;
     }

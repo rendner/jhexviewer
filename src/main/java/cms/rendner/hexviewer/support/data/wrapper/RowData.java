@@ -4,11 +4,11 @@ import cms.rendner.hexviewer.core.model.data.IDataModel;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Refers to data of a single row of the data model used in the {@link cms.rendner.hexviewer.core.JHexViewer}..
+ * Refers to data of a single row of the data model used in the {@link cms.rendner.hexviewer.core.JHexViewer}.
  *
  * @author rendner
  */
-public final class RowData extends DataPart implements IRowData
+public final class RowData extends DataPart
 {
     /**
      * The index of the row to which this data belongs.
@@ -29,7 +29,9 @@ public final class RowData extends DataPart implements IRowData
         this.rowIndex = rowIndex;
     }
 
-    @Override
+    /**
+     * The index of the row to which this data belongs.
+     */
     public int rowIndex()
     {
         return rowIndex;

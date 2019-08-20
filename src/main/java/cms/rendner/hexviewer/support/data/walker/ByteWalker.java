@@ -3,7 +3,6 @@ package cms.rendner.hexviewer.support.data.walker;
 import cms.rendner.hexviewer.core.model.data.IDataModel;
 import cms.rendner.hexviewer.support.data.visitor.IByteVisitor;
 import cms.rendner.hexviewer.support.data.wrapper.DataPart;
-import cms.rendner.hexviewer.support.data.wrapper.IDataPart;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -40,7 +39,7 @@ public class ByteWalker
      */
     public void walk(@NotNull final IByteVisitor visitor, final int start, final int end)
     {
-        final IDataPart data = createDataPart(start, end);
+        final DataPart data = createDataPart(start, end);
 
         visitor.start();
 
@@ -60,7 +59,7 @@ public class ByteWalker
      * @return the part which only contains the bytes of the specified range.
      */
     @NotNull
-    protected IDataPart createDataPart(final int start, final int end)
+    protected DataPart createDataPart(final int start, final int end)
     {
         final int size = end - start + 1;
         return new DataPart(dataModel, start, size);

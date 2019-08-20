@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.support.data.visitor;
 
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +26,7 @@ public interface IRowWiseByteVisitor
      * @param leadingBytesToIgnore number of leading bytes to exclude from the row data.
      * @param trailingBytesToIgnore number of trailing bytes to exclude from the row data.
      */
-    void visitRow(@NotNull IRowData rowData, int leadingBytesToIgnore, int trailingBytesToIgnore);
+    void visitRow(@NotNull RowData rowData, int leadingBytesToIgnore, int trailingBytesToIgnore);
 
     /**
      * Notifies the visitor that all rows are visited.

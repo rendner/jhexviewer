@@ -3,7 +3,7 @@ package cms.rendner.hexviewer.core.uidelegate.rows.renderer.context;
 import cms.rendner.hexviewer.core.JHexViewer;
 import cms.rendner.hexviewer.core.view.areas.AreaId;
 import cms.rendner.hexviewer.core.view.color.IRowColorProvider;
-import cms.rendner.hexviewer.support.data.wrapper.IRowData;
+import cms.rendner.hexviewer.support.data.wrapper.RowData;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,7 +30,7 @@ public interface IRendererContext
      * the row to paint. The row data instance always contains all bytes of the row.
      */
     @NotNull
-    IRowData getRowData();
+    RowData getRowData();
 
     /**
      * @return the id of the area to be rendered.
