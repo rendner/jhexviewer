@@ -64,6 +64,7 @@ Files can be loaded by **drag and drop**.
         - increase font size (`crtl + '+'`)
         - decrease font size (`crtl + '-'`)
     - switch focus between areas (`tab`)
+    - select all (`crtl + 'a'`)
 
 # Build the project
 Requires Maven and Java 8 or higher to build.

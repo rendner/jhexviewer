@@ -28,6 +28,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * @author rendner
@@ -316,8 +318,11 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     {
         hexViewer.getDataModel().ifPresent(bytes ->
                 hexViewer.getCaret().ifPresent(caret -> {
-                    final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.bytesPerRow());
-                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                    final Executor executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.bytesPerRow());
+                        walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                    });
                 })
         );
     }
@@ -326,8 +331,11 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     {
         hexViewer.getDataModel().ifPresent(bytes ->
                 hexViewer.getCaret().ifPresent(caret -> {
-                    final ByteWalker walker = new ByteWalker(bytes);
-                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                    final Executor executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        final ByteWalker walker = new ByteWalker(bytes);
+                        walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                    });
                 })
         );
     }

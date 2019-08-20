@@ -236,4 +236,9 @@ public interface ICaret
      * @param endIndex   the position of the dot.
      */
     void setSelection(int startIndex, int endIndex);
+
+    /**
+     * Selects all content without automatically moving the view to the end of the selection.
+     */
+    void selectAll();
 }

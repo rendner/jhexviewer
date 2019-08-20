@@ -5,6 +5,7 @@ import cms.rendner.hexviewer.core.uidelegate.actions.font.DecreaseFontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.font.FontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.font.IncreaseFontAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.others.OthersAction;
+import cms.rendner.hexviewer.core.uidelegate.actions.others.SelectAllAction;
 import cms.rendner.hexviewer.core.uidelegate.actions.others.SwitchAreaFocusAction;
 import cms.rendner.hexviewer.swing.scrollable.ScrollDirection;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +79,10 @@ public class ActionMapFactory
             case SWITCH_FOCUSED_AREA:
             {
                 return new SwitchAreaFocusAction();
+            }
+            case SELECT_ALL:
+            {
+                return new SelectAllAction();
             }
         }
     }

@@ -56,6 +56,7 @@ public class DefaultHexViewerUI extends BasicHexViewerUI
         if (condition == JComponent.WHEN_FOCUSED)
         {
             result.put(KeyStroke.getKeyStroke("TAB"), OthersAction.SWITCH_FOCUSED_AREA);
+            result.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK), OthersAction.SELECT_ALL);
 
             result.put(KeyStroke.getKeyStroke("LEFT"), CaretAction.MOVE_CARET_LEFT);
             result.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), CaretAction.EXPAND_SELECTION_LEFT);

@@ -8,5 +8,6 @@ import cms.rendner.hexviewer.core.uidelegate.actions.IActionTypeId;
  */
 public enum OthersAction implements IActionTypeId
 {
-    SWITCH_FOCUSED_AREA
+    SWITCH_FOCUSED_AREA,
+    SELECT_ALL
 }

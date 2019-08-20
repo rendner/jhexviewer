@@ -75,6 +75,11 @@ public abstract class AbstractCaret implements ICaret
     protected boolean caretIsVisible = true;
 
     /**
+     * Indicates if the caret should always stay visible after changing the caret.
+     */
+    protected boolean autoAdjustCaretVisibilityEnabled = true;
+
+    /**
      * The hex viewer component to which the caret was installed.
      */
     protected JHexViewer hexViewer;
@@ -332,6 +337,19 @@ public abstract class AbstractCaret implements ICaret
         }
     }
 
+    @Override
+    public void selectAll()
+    {
+        final boolean oldValue = autoAdjustCaretVisibilityEnabled;
+        autoAdjustCaretVisibilityEnabled = false;
+
+        changeDotAndMark(
+                createSanitizedPosition(0),
+                createSanitizedPosition(hexViewer.lastPossibleCaretIndex()));
+
+        autoAdjustCaretVisibilityEnabled = oldValue;
+    }
+
     /**
      * Updates the state of the blinker.
      */
@@ -495,14 +513,15 @@ public abstract class AbstractCaret implements ICaret
     }
 
     /**
-     * Scrolls the associated view (if necessary) to make
-     * the caret visible. By default
-     * the scrollRectToVisible method is called on the
-     * associated component.
+     * Scrolls the associated view (if necessary) to make the caret visible. By default the scrollRectToVisible method
+     * is called on the associated component.
      */
     protected void adjustCaretVisibility()
     {
-        hexViewer.getScrollableByteRowsContainer().scrollRectToVisible(calculateVisibleRectForCaret());
+        if(autoAdjustCaretVisibilityEnabled)
+        {
+            hexViewer.getScrollableByteRowsContainer().scrollRectToVisible(calculateVisibleRectForCaret());
+        }
     }
 
     /**
