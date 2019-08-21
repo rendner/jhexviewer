@@ -18,24 +18,15 @@ import java.nio.file.Path;
 public final class ToFileConsumer implements IConsumer
 {
     /**
-     * Specifies after how many characters the collected content should be written to the file.
-     */
-    private static final long flushDataThreshold = 32_000;
-
-    /**
      * Target file to write to.
      */
     @NotNull
     private final Path path;
 
     /**
-     * Used to consume all content before writing it to the file.
-     */
-    private StringBuilder stringConsumer;
-
-    /**
      * Writer to write to the file.
      */
+    @Nullable
     private BufferedWriter writer;
 
     /**
@@ -53,60 +44,43 @@ public final class ToFileConsumer implements IConsumer
     @Override
     public void start()
     {
-        stringConsumer = new StringBuilder();
+        writer = openQuietly(path);
     }
 
     @Override
     public void consume(@NotNull final String content)
     {
-        stringConsumer.append(content);
-
-        if (stringConsumer.length() > flushDataThreshold)
-        {
-            writeQuietly(stringConsumer);
-        }
+        writeQuietly(content);
     }
 
     @Override
     public void end()
     {
-        writeQuietly(stringConsumer);
         closeQuietly(writer);
     }
 
     /**
      * Writes a string to a file.
      *
-     * @param content content to write into the file. The length of the content will be set to <code>0</code>
-     *                after write.
+     * @param content content to write into the file.
      */
-    private void writeQuietly(@NotNull final StringBuilder content)
+    private void writeQuietly(@NotNull final String content)
     {
-        if (content.length() > 0)
+        if (writer != null)
         {
-            if (writer == null)
+            try
             {
-                writer = openQuietly(path);
+                writer.write(content);
             }
-
-            if (writer != null)
+            catch (IOException e)
             {
-                try
-                {
-                    writer.write(content.toString());
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-
-                content.setLength(0);
+                e.printStackTrace();
             }
         }
     }
 
     /**
-     * Creates a buffered writer with the char set <code>StandardCharsets.UTF_8</code> to write to the specified file.
+     * Creates a buffered writer with the charset <code>StandardCharsets.UTF_8</code> to write to the specified file.
      * <p/>
      * If the file already exists, the existing content will be replaced by the new one written to the created buffer.
      *
@@ -130,6 +104,7 @@ public final class ToFileConsumer implements IConsumer
 
     /**
      * Closes a Closeable instance.
+     *
      * @param closeable the instance to close.
      */
     private void closeQuietly(@Nullable final Closeable closeable)
