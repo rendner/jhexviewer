@@ -175,7 +175,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
+                final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
                 visitSelectedBytes(hexViewer, new ByteVisitor(consumer, hexViewer.getHexValueFormatter()));
             }
         }));
@@ -184,7 +184,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
+                final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
                 visitSelectedBytes(hexViewer, new ByteVisitor(consumer, hexViewer.getAsciiValueFormatter()));
             }
         }));
@@ -195,7 +195,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
+                final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, true, false));
             }
         }));
@@ -203,7 +203,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
+                final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, false, true));
             }
         }));
@@ -211,7 +211,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final ToStringConsumer consumer = new ToStringConsumer(result -> copyToClipboard(result));
+                final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, true, true));
             }
         }));
