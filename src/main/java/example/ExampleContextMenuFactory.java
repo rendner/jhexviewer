@@ -24,7 +24,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -229,12 +229,12 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final File file = chooseFile(hexViewer);
-                if (file != null)
+                final Path path = chooseFile(hexViewer);
+                if (path != null)
                 {
                     visitSelectedBytes(hexViewer,
                             new ByteVisitor(
-                                    new ToFileConsumer(file),
+                                    new ToFileConsumer(path),
                                     hexViewer.getHexValueFormatter()));
                 }
             }
@@ -244,12 +244,12 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final File file = chooseFile(hexViewer);
-                if (file != null)
+                final Path path = chooseFile(hexViewer);
+                if (path != null)
                 {
                     visitSelectedBytes(hexViewer,
                             new ByteVisitor(
-                                    new ToFileConsumer(file),
+                                    new ToFileConsumer(path),
                                     hexViewer.getAsciiValueFormatter()));
                 }
             }
@@ -261,10 +261,10 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final File file = chooseFile(hexViewer);
-                if (file != null)
+                final Path path = chooseFile(hexViewer);
+                if (path != null)
                 {
-                    visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, new ToFileConsumer(file), true, false));
+                    visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, new ToFileConsumer(path), true, false));
                 }
             }
         }));
@@ -272,10 +272,10 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final File file = chooseFile(hexViewer);
-                if (file != null)
+                final Path path = chooseFile(hexViewer);
+                if (path != null)
                 {
-                    visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, new ToFileConsumer(file), false, true));
+                    visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, new ToFileConsumer(path), false, true));
                 }
             }
         }));
@@ -283,10 +283,10 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final File file = chooseFile(hexViewer);
-                if (file != null)
+                final Path path = chooseFile(hexViewer);
+                if (path != null)
                 {
-                    visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, new ToFileConsumer(file), true, true));
+                    visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, new ToFileConsumer(path), true, true));
                 }
             }
         }));
@@ -343,7 +343,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     }
 
     @Nullable
-    private File chooseFile(@NotNull final JHexViewer hexViewer)
+    private Path chooseFile(@NotNull final JHexViewer hexViewer)
     {
         if (fileChooser == null)
         {
@@ -354,7 +354,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
-            return fileChooser.getSelectedFile();
+            return fileChooser.getSelectedFile().toPath();
         }
 
         return null;

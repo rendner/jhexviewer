@@ -1,15 +1,17 @@
 package cms.rendner.hexviewer.support.data.visitor.consumer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
- * Consumes all content into a File.
+ * Consumes all content into a UTF-8 encoded file.
  *
  * @author rendner
  */
@@ -24,7 +26,7 @@ public final class ToFileConsumer implements IConsumer
      * Target file to write to.
      */
     @NotNull
-    private final File file;
+    private final Path path;
 
     /**
      * Used to consume all content before writing it to the file.
@@ -32,27 +34,26 @@ public final class ToFileConsumer implements IConsumer
     private StringBuilder stringConsumer;
 
     /**
-     * Stream to write to the file.
+     * Writer to write to the file.
      */
-    private FileOutputStream outputStream;
+    private BufferedWriter writer;
 
     /**
      * Creates a new instance.
      *
-     * @param file the target file to write to.
+     * @param path the target file to write to.
      *             Already existing content in this file will be replaced with the consumed content.
      */
-    public ToFileConsumer(@NotNull final File file)
+    public ToFileConsumer(@NotNull final Path path)
     {
         super();
-        this.file = file;
+        this.path = path;
     }
 
     @Override
     public void start()
     {
         stringConsumer = new StringBuilder();
-        clearFileContent(file);
     }
 
     @Override
@@ -62,55 +63,37 @@ public final class ToFileConsumer implements IConsumer
 
         if (stringConsumer.length() > flushDataThreshold)
         {
-            appendToFile(file, stringConsumer);
+            writeQuietly(stringConsumer);
         }
     }
 
     @Override
     public void end()
     {
-        appendToFile(file, stringConsumer);
-
-        if(outputStream != null)
-        {
-            try
-            {
-                outputStream.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+        writeQuietly(stringConsumer);
+        closeQuietly(writer);
     }
 
     /**
      * Writes a string to a file.
      *
-     * @param file    file to write to.
-     * @param content content to write into the specified file. The length of the content will be set to <code>0</code>
+     * @param content content to write into the file. The length of the content will be set to <code>0</code>
      *                after write.
      */
-    private void appendToFile(@NotNull final File file, @NotNull final StringBuilder content)
+    private void writeQuietly(@NotNull final StringBuilder content)
     {
         if (content.length() > 0)
         {
-            if(outputStream == null)
+            if (writer == null)
             {
-                try
-                {
-                    outputStream = new FileOutputStream(file, true);
-                }
-                catch (FileNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
+                writer = openQuietly(path);
             }
-            if(outputStream != null)
+
+            if (writer != null)
             {
                 try
                 {
-                    outputStream.write(content.toString().getBytes(StandardCharsets.UTF_8));
+                    writer.write(content.toString());
                 }
                 catch (IOException e)
                 {
@@ -123,16 +106,44 @@ public final class ToFileConsumer implements IConsumer
     }
 
     /**
-     * Clears the existing content of a file.
-     * @param file file to clear.
+     * Creates a buffered writer with the char set <code>StandardCharsets.UTF_8</code> to write to the specified file.
+     * <p/>
+     * If the file already exists, the existing content will be replaced by the new one written to the created buffer.
+     *
+     * @param path the path to the file.
+     * @return the buffered writer, or <code>null</code> if no buffer could be created.
      */
-    private void clearFileContent(@NotNull final File file)
+    @Nullable
+    private BufferedWriter openQuietly(@NotNull final Path path)
     {
-        try (FileOutputStream output = new FileOutputStream(file))
+        try
         {
-        } catch (Exception e)
+            return Files.newBufferedWriter(path, StandardCharsets.UTF_8);
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Closes a Closeable instance.
+     * @param closeable the instance to close.
+     */
+    private void closeQuietly(@Nullable final Closeable closeable)
+    {
+        if (closeable != null)
+        {
+            try
+            {
+                closeable.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }
