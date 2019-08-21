@@ -3,7 +3,9 @@ package cms.rendner.hexviewer.support.data.visitor.consumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -16,7 +18,7 @@ public final class ToFileConsumer implements IConsumer
     /**
      * Specifies after how many characters the collected content should be written to the file.
      */
-    private static final long flushDataThreshold = 2000;
+    private static final long flushDataThreshold = 32_000;
 
     /**
      * Target file to write to.
@@ -28,6 +30,11 @@ public final class ToFileConsumer implements IConsumer
      * Used to consume all content before writing it to the file.
      */
     private StringBuilder stringConsumer;
+
+    /**
+     * Stream to write to the file.
+     */
+    private FileOutputStream outputStream;
 
     /**
      * Creates a new instance.
@@ -63,6 +70,18 @@ public final class ToFileConsumer implements IConsumer
     public void end()
     {
         appendToFile(file, stringConsumer);
+
+        if(outputStream != null)
+        {
+            try
+            {
+                outputStream.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -76,16 +95,30 @@ public final class ToFileConsumer implements IConsumer
     {
         if (content.length() > 0)
         {
-            try (FileOutputStream output = new FileOutputStream(file, true))
+            if(outputStream == null)
             {
-                output.write(content.toString().getBytes(StandardCharsets.UTF_8));
+                try
+                {
+                    outputStream = new FileOutputStream(file, true);
+                }
+                catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
             }
-            catch (Exception e)
+            if(outputStream != null)
             {
-                e.printStackTrace();
-            }
+                try
+                {
+                    outputStream.write(content.toString().getBytes(StandardCharsets.UTF_8));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
 
-            content.setLength(0);
+                content.setLength(0);
+            }
         }
     }
 
