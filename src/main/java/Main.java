@@ -1,5 +1,4 @@
-import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.model.row.template.configuration.values.EMValue;
+import cms.rendner.hexviewer.view.JHexViewer;
 import example.DataModelFactory;
 import example.ExampleContextMenuFactory;
 import example.themes.ThemeFactory;
@@ -12,7 +11,7 @@ import javax.swing.*;
  */
 public class Main
 {
-    public static void main(@NotNull String[] args)
+    public static void main(@NotNull final String[] args)
     {
         SwingUtilities.invokeLater(Main::displayJFrame);
     }
@@ -31,43 +30,22 @@ public class Main
         }
 
         final JFrame frame = new JFrame("JHexViewer");
-
-        final JComponent content = main.createHexViewer();
-        content.addPropertyChangeListener(event -> {
-            if (event.getPropertyName().equals(JHexViewer.PROPERTY_ROW_TEMPLATE_CONFIGURATION))
-            {
-                frame.pack();
-            }
-        });
-
-        frame.getContentPane().add(content);
+        frame.getContentPane().add(main.createHexViewer());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
 
     @NotNull
-    private JComponent createHexViewer()
+    private JHexViewer createHexViewer()
     {
         final JHexViewer hexViewer = new JHexViewer();
         hexViewer.setShowOffsetCaretIndicator(true);
-        hexViewer.setDataModel(DataModelFactory.createRandomDataModel());
         hexViewer.setPreferredVisibleRowCount(23);
+        hexViewer.setBytesPerRow(16);
         hexViewer.setContextMenuFactory(new ExampleContextMenuFactory());
-
+        hexViewer.setDataModel(DataModelFactory.createRandomDataModel(hexViewer.getBytesPerRow()));
         ThemeFactory.applyRandomTheme(hexViewer);
-
-        hexViewer.getRowTemplateConfiguration().ifPresent(configuration ->
-                hexViewer.setRowTemplateConfiguration(
-                        configuration.toBuilder()
-                                .bytesPerRow(16)
-                                .bytesPerGroup(2)
-                                .spaceBetweenGroups(new EMValue(1))
-                                .build()
-                )
-        );
-
-        hexViewer.getHighlighter().ifPresent(highlighter -> highlighter.setPaintSelectionBehindHighlights(false));
         return hexViewer;
     }
 }

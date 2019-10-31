@@ -1,21 +1,21 @@
 package example;
 
-import cms.rendner.hexviewer.core.JHexViewer;
-import cms.rendner.hexviewer.core.view.IContextMenuFactory;
-import cms.rendner.hexviewer.core.view.areas.AreaId;
-import cms.rendner.hexviewer.core.view.caret.ICaret;
-import cms.rendner.hexviewer.core.view.highlight.IHighlighter;
-import cms.rendner.hexviewer.support.data.formatter.IRowWiseByteFormatter;
-import cms.rendner.hexviewer.support.data.formatter.RowWiseByteFormatter;
-import cms.rendner.hexviewer.support.data.visitor.ByteVisitor;
-import cms.rendner.hexviewer.support.data.visitor.IByteVisitor;
-import cms.rendner.hexviewer.support.data.visitor.IRowWiseByteVisitor;
-import cms.rendner.hexviewer.support.data.visitor.RowWiseByteVisitor;
-import cms.rendner.hexviewer.support.data.visitor.consumer.IConsumer;
-import cms.rendner.hexviewer.support.data.visitor.consumer.ToFileConsumer;
-import cms.rendner.hexviewer.support.data.visitor.consumer.ToStringConsumer;
-import cms.rendner.hexviewer.support.data.walker.ByteWalker;
-import cms.rendner.hexviewer.support.data.walker.RowWiseByteWalker;
+import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
+import cms.rendner.hexviewer.common.data.visitor.ByteVisitor;
+import cms.rendner.hexviewer.common.data.visitor.IByteVisitor;
+import cms.rendner.hexviewer.common.data.visitor.IRowWiseByteVisitor;
+import cms.rendner.hexviewer.common.data.visitor.RowWiseByteVisitor;
+import cms.rendner.hexviewer.common.data.visitor.consumer.IDataConsumer;
+import cms.rendner.hexviewer.common.data.visitor.consumer.ToFileConsumer;
+import cms.rendner.hexviewer.common.data.visitor.consumer.ToStringConsumer;
+import cms.rendner.hexviewer.common.data.visitor.formatter.IRowWiseByteFormatter;
+import cms.rendner.hexviewer.common.data.visitor.formatter.RowWiseByteFormatter;
+import cms.rendner.hexviewer.common.data.walker.ByteWalker;
+import cms.rendner.hexviewer.common.data.walker.RowWiseByteWalker;
+import cms.rendner.hexviewer.view.JHexViewer;
+import cms.rendner.hexviewer.view.components.areas.common.AreaId;
+import cms.rendner.hexviewer.view.components.highlighter.IHighlighter;
+import cms.rendner.hexviewer.view.ui.container.IContextMenuFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,13 +25,15 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
+ * Example implementation of a context menu factory.
+ *
  * @author rendner
  */
 public class ExampleContextMenuFactory implements IContextMenuFactory
@@ -39,7 +41,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     private JFileChooser fileChooser;
 
     @NotNull
-    public JPopupMenu create(@NotNull  final JHexViewer hexViewer, @NotNull final AreaId areaId, final int byteIndex)
+    public JPopupMenu create(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int byteIndex)
     {
         final JPopupMenu menu = new JPopupMenu();
 
@@ -56,46 +58,56 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
 
     private void addHighlightMenu(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer, final int byteIndex)
     {
-        final Optional<IHighlighter> highlighter = hexViewer.getHighlighter();
-        final Optional<ICaret> caret = hexViewer.getCaret();
-
         menu.add(new JMenuItem(new AbstractAction("selection to highlight")
         {
             @Override
             public boolean isEnabled()
             {
-                return highlighter.isPresent() && caret.filter(ICaret::hasSelection).isPresent();
+                return hexViewer.getHighlighter().isPresent() && hexViewer.hasSelection();
             }
 
             public void actionPerformed(final ActionEvent e)
             {
-                highlighter.ifPresent(highlighter ->
-                        caret.ifPresent(caret ->{
-                            highlighter.addHighlight(caret.getSelectionStart(), caret.getSelectionEnd());
-                            caret.clearSelection();
-                        }));
+                selectionToHighlight();
+
+                clearSelection();
+            }
+
+            private void selectionToHighlight()
+            {
+                hexViewer.getHighlighter().ifPresent(highlighter ->
+                {
+                    hexViewer.getCaret().ifPresent(caret ->
+                    {
+                        highlighter.addHighlight(caret.getSelectionStart(), caret.getSelectionEnd());
+                    });
+                });
+            }
+
+            private void clearSelection()
+            {
+                hexViewer.getCaret().ifPresent(caret -> caret.moveCaretRelatively(0, false, false));
             }
         }));
 
-        final List<IHighlighter.IHighlight> highlightsAtByte = new ArrayList<>();
-        highlighter.ifPresent(h -> h.getHighlights().forEach(i -> {
-            if(i.getStartOffset() <= byteIndex && i.getEndOffset() >= byteIndex)
-            {
-                highlightsAtByte.add(i);
-            }
-        }));
+        final List<IHighlighter.IHighlight> highlightsAtByte = hexViewer.getHighlighter()
+                .map(h -> h.getHighlights()
+                        .stream()
+                        .filter(i -> (i.getStartOffset() <= byteIndex && i.getEndOffset() >= byteIndex))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
 
         menu.add(new JMenuItem(new AbstractAction("remove highlights under click")
         {
             @Override
             public boolean isEnabled()
             {
-                return highlighter.isPresent() && !highlightsAtByte.isEmpty();
+                return !highlightsAtByte.isEmpty();
             }
 
             public void actionPerformed(final ActionEvent e)
             {
-                highlighter.ifPresent(h ->  h.removeHighlights(highlightsAtByte));
+                hexViewer.getHighlighter().ifPresent(h -> h.removeHighlights(highlightsAtByte));
             }
         }));
 
@@ -104,29 +116,28 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             @Override
             public boolean isEnabled()
             {
-                return highlighter.filter(IHighlighter::hasHighlights).isPresent();
+                return hexViewer.getHighlighter().map(IHighlighter::hasHighlights).orElse(Boolean.FALSE);
             }
 
             public void actionPerformed(final ActionEvent e)
             {
-                highlighter.ifPresent(h ->  h.removeHighlights(h.getHighlights()));
+                hexViewer.getHighlighter().ifPresent(IHighlighter::removeAllHighlights);
             }
         }));
     }
 
     private void addCopyToConsole(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer)
     {
-        final Optional<ICaret> caret = hexViewer.getCaret();
-
-        final JMenu copyMenu = new JMenu("copy bytes to console");
-        copyMenu.setEnabled(caret.filter(ICaret::hasSelection).isPresent());
+        final JMenu copyMenu = new JMenu("copy selected bytes to console");
+        copyMenu.setEnabled(hexViewer.hasSelection());
         menu.add(copyMenu);
 
         copyMenu.add(new JMenuItem(new AbstractAction("hex stream")
         {
             public void actionPerformed(final ActionEvent e)
             {
-                visitSelectedBytes(hexViewer, new ByteVisitor(hexViewer.getHexValueFormatter()));
+                final IValueFormatter valueFormatter = hexViewer.getHexArea().getValueFormatter();
+                visitSelectedBytes(hexViewer, new ByteVisitor(valueFormatter));
             }
         }));
 
@@ -134,7 +145,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         {
             public void actionPerformed(final ActionEvent e)
             {
-                visitSelectedBytes(hexViewer, new ByteVisitor(hexViewer.getAsciiValueFormatter()));
+                final IValueFormatter valueFormatter = hexViewer.getAsciiArea().getValueFormatter();
+                visitSelectedBytes(hexViewer, new ByteVisitor(valueFormatter));
             }
         }));
 
@@ -165,10 +177,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
 
     private void addCopyToClipboard(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer)
     {
-        final @NotNull Optional<ICaret> caret = hexViewer.getCaret();
-
-        final JMenu copyMenu = new JMenu("copy bytes to clipboard");
-        copyMenu.setEnabled(caret.filter(ICaret::hasSelection).isPresent());
+        final JMenu copyMenu = new JMenu("copy selected bytes to clipboard");
+        copyMenu.setEnabled(hexViewer.hasSelection());
         menu.add(copyMenu);
 
         copyMenu.add(new JMenuItem(new AbstractAction("hex stream")
@@ -176,7 +186,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             public void actionPerformed(final ActionEvent e)
             {
                 final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
-                visitSelectedBytes(hexViewer, new ByteVisitor(consumer, hexViewer.getHexValueFormatter()));
+                final IValueFormatter valueFormatter = hexViewer.getHexArea().getValueFormatter();
+                visitSelectedBytes(hexViewer, new ByteVisitor(consumer, valueFormatter));
             }
         }));
 
@@ -185,7 +196,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             public void actionPerformed(final ActionEvent e)
             {
                 final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
-                visitSelectedBytes(hexViewer, new ByteVisitor(consumer, hexViewer.getAsciiValueFormatter()));
+                final IValueFormatter valueFormatter = hexViewer.getAsciiArea().getValueFormatter();
+                visitSelectedBytes(hexViewer, new ByteVisitor(consumer, valueFormatter));
             }
         }));
 
@@ -219,10 +231,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
 
     private void addCopyToFile(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer)
     {
-        final @NotNull Optional<ICaret> caret = hexViewer.getCaret();
-
-        final JMenu copyMenu = new JMenu("copy bytes to file");
-        copyMenu.setEnabled(caret.filter(ICaret::hasSelection).isPresent());
+        final JMenu copyMenu = new JMenu("copy selected bytes to file");
+        copyMenu.setEnabled(hexViewer.hasSelection());
         menu.add(copyMenu);
 
         copyMenu.add(new JMenuItem(new AbstractAction("hex stream")
@@ -232,10 +242,11 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 final Path path = chooseFile(hexViewer);
                 if (path != null)
                 {
+                    final IValueFormatter valueFormatter = hexViewer.getHexArea().getValueFormatter();
                     visitSelectedBytes(hexViewer,
                             new ByteVisitor(
                                     new ToFileConsumer(path),
-                                    hexViewer.getHexValueFormatter()));
+                                    valueFormatter));
                 }
             }
         }));
@@ -247,10 +258,11 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 final Path path = chooseFile(hexViewer);
                 if (path != null)
                 {
+                    final IValueFormatter valueFormatter = hexViewer.getAsciiArea().getValueFormatter();
                     visitSelectedBytes(hexViewer,
                             new ByteVisitor(
                                     new ToFileConsumer(path),
-                                    hexViewer.getAsciiValueFormatter()));
+                                    valueFormatter));
                 }
             }
         }));
@@ -293,9 +305,9 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     }
 
     @NotNull
-    private RowWiseByteVisitor getConfiguredByteVisitor(@NotNull final JHexViewer hexViewer, @Nullable final IConsumer consumer, final boolean includeHexArea, final boolean includeAsciiArea)
+    private RowWiseByteVisitor getConfiguredByteVisitor(@NotNull final JHexViewer hexViewer, @Nullable final IDataConsumer consumer, final boolean includeHexArea, final boolean includeAsciiArea)
     {
-        final RowWiseByteVisitor result = new RowWiseByteVisitor(getConfiguredByteFormatter(hexViewer), consumer, hexViewer.bytesPerRow());
+        final RowWiseByteVisitor result = new RowWiseByteVisitor(getConfiguredByteFormatter(hexViewer), consumer, hexViewer.getBytesPerRow());
         result.setIncludeHexArea(includeHexArea);
         result.setIncludeAsciiArea(includeAsciiArea);
         return result;
@@ -304,35 +316,38 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     @NotNull
     private IRowWiseByteFormatter getConfiguredByteFormatter(@NotNull final JHexViewer hexViewer)
     {
-        return new RowWiseByteFormatter(hexViewer.getOffsetValueFormatter(),
-                hexViewer.getHexValueFormatter(),
-                hexViewer.getAsciiValueFormatter());
+        final IValueFormatter offsetValueFormatter = hexViewer.getOffsetArea().getValueFormatter();
+        final IValueFormatter hexValueFormatter = hexViewer.getHexArea().getValueFormatter();
+        final IValueFormatter asciiValueFormatter = hexViewer.getAsciiArea().getValueFormatter();
+        return new RowWiseByteFormatter(offsetValueFormatter, hexValueFormatter, asciiValueFormatter);
     }
 
     private void visitSelectedBytes(@NotNull final JHexViewer hexViewer, @NotNull final IRowWiseByteVisitor visitor)
     {
         hexViewer.getDataModel().ifPresent(bytes ->
-                hexViewer.getCaret().ifPresent(caret -> {
-                    final Executor executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> {
-                        final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.bytesPerRow());
-                        walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
-                    });
-                })
-        );
+        {
+            hexViewer.getCaret().ifPresent(caret -> {
+                final Executor executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.getBytesPerRow());
+                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                });
+            });
+        });
     }
 
     private void visitSelectedBytes(@NotNull final JHexViewer hexViewer, @NotNull final IByteVisitor visitor)
     {
         hexViewer.getDataModel().ifPresent(bytes ->
-                hexViewer.getCaret().ifPresent(caret -> {
-                    final Executor executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> {
-                        final ByteWalker walker = new ByteWalker(bytes);
-                        walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
-                    });
-                })
-        );
+        {
+            hexViewer.getCaret().ifPresent(caret -> {
+                final Executor executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    final ByteWalker walker = new ByteWalker(bytes);
+                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                });
+            });
+        });
     }
 
     private void copyToClipboard(@NotNull final String content)

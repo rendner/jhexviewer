@@ -32,24 +32,27 @@ It wasn't the goal to create a feature rich hex viewer as there are many existin
 - Drag'n'Drop to load files
 - Context menus
 - Styleable row layout
+  - insets
   - padding and spacing between bytes
   - byte grouping
     - display 1, 2, 4, 8 or 16 bytes as columns
 - Styleable row rendering
-  - use alternating background colors
+  - use alternating colors
   - render certain bytes in different colors to highlight them
+  - overwrite rendering of the background
+  - overwrite rendering of the foreground
 - Styleable highlighter
   - use different highlighters to mark ranges of bytes
   - overwrite the selection highlighter
 - Custom themes
+  - create custom themes to adjust the look of the hex viewer
 - Custom Swing UI
 - Many entry points to overwrite certain functionalities
-  - painting of the areas (JHexViewer#setPaintRowsDelegate)
+  - painting of the areas (Area#setPainter)
+  - used colors (Area#setColorProvider)
+  - formatting of the displayed bytes and offset addresses (Area#setValueFormatter)
   - the caret (JHexViewer#setCaret)
   - the highlighter (JHexViewer#setHighlighter)
-  - the scroll behavior (JHexViewer#setScrollableDelegate)
-  - the row template factory (JHexViewer#.setRowTemplateFactory)
-  - formatting of the displayed bytes or offset addresses (JHexViewer#setOffsetFormatter)
   - ...
 
 
@@ -60,11 +63,12 @@ Files can be loaded by **drag and drop**.
 	- caret actions
     	- to move the caret (`arrow keys`)
         - to start/expand a selection (`mouse` and `arrow keys`)
+        - select all (`crtl + 'a'`)
     - font actions
         - increase font size (`crtl + '+'`)
         - decrease font size (`crtl + '-'`)
     - switch focus between areas (`tab`)
-    - select all (`crtl + 'a'`)
+    - repack window (useful after increasing/decreasing the font size) (`crtl + 'r'`) 
 
 # Build the project
 Requires Maven and Java 8 or higher to build.
