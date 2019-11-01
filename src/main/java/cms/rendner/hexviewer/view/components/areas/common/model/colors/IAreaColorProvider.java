@@ -17,7 +17,7 @@ import java.awt.*;
 public interface IAreaColorProvider
 {
     /**
-     * @return the background color for the area, <code>null</code> <code>null</code> if the painter should decide which
+     * @return the background color for the area, <code>null</code> if the painter should decide which
      * color to use. The preferred behaviour of the painter would be that in case of <code>null</code> no background is
      * painted.
      */

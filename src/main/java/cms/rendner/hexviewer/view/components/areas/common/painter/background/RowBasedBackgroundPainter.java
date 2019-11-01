@@ -32,7 +32,7 @@ public class RowBasedBackgroundPainter<A extends Area<?, ?, ?>> implements IArea
     protected final A area;
 
     /**
-     * Temporary value - provides colors for rendering the offset addresses.
+     * Updated on every paint call - provides colors for rendering the offset addresses.
      */
     private IAreaColorProvider colorProvider;
 
