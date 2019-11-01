@@ -1,17 +1,20 @@
 package cms.rendner.hexviewer.view.components.areas.common.painter.background;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
+
 /**
- * Marker interface which has to be implemented by all area background painters.
- * A background painter is only responsible for painting the background of an area.
- * <p/>
- * Currently there are the following background painters available which should fulfill the most use cases:
- * <ul>
- *     <li>{@link IFullBackgroundPainter} - which paints the background in one step</li>
- *     <li>{@link IRowBasedBackgroundPainter} - which paints the background rowwise</li>
- * </ul>
+ * A background painter is responsible for painting the background of an area.
  *
  * @author rendner
  */
 public interface IAreaBackgroundPainter
 {
+    /**
+     * Paints the background of an area.
+     *
+     * @param g the Graphics2D context of the area to paint the background of the area.
+     */
+    void paint(@NotNull final Graphics2D g);
 }

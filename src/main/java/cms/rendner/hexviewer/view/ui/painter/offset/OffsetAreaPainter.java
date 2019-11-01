@@ -1,16 +1,16 @@
 package cms.rendner.hexviewer.view.ui.painter.offset;
 
 import cms.rendner.hexviewer.view.JHexViewer;
+import cms.rendner.hexviewer.view.components.areas.common.painter.BasicAreaPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.IAreaBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
 import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
-import cms.rendner.hexviewer.view.ui.painter.BasicAreaPainter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
 /**
- * This painter paints the background and foreground of the area to which the painter belongs.
+ * Paints the offset-area to which the painter belongs.
  * <p/>
  * To allow customizing of the paint process this class uses an {@link IAreaForegroundPainter} and
  * {@link IAreaBackgroundPainter} which can be exchanged during runtime.

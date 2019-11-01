@@ -7,14 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 /**
- * Default implementation of an {@link IFullBackgroundPainter}.
+ * Paints the background of an area in one single step.
  * <p/>
  * This class uses the background color provided by the {@link IAreaColorProvider#getBackground()} of the area to paint
  * the background.
  *
  * @param <A> the type of the area which is painted by this class.
  */
-public class DefaultBackgroundPainter<A extends Area<?, ?, ?>> implements IFullBackgroundPainter
+public class DefaultBackgroundPainter<A extends Area<?, ?, ?>> implements IAreaBackgroundPainter
 {
     /**
      * The area to be painted.

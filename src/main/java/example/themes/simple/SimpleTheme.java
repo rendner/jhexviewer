@@ -4,7 +4,8 @@ import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultBackgroundPainter;
-import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultRowBasedBackgroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.background.RowBasedBackgroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
 import cms.rendner.hexviewer.view.themes.AbstractTheme;
 import org.jetbrains.annotations.NotNull;
@@ -25,15 +26,15 @@ public class SimpleTheme extends AbstractTheme
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultRowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getOffsetArea())
+                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getOffsetArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
                     @Override
-                    public void paint(@NotNull Graphics2D g, int rowIndex, boolean isLastRow)
+                    public void paintRow(@NotNull final RowGraphics rowGraphics, boolean isLastRow)
                     {
-                        super.paint(g, rowIndex, isLastRow);
-                        separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getRowHeight());
+                        super.paintRow(rowGraphics, isLastRow);
+                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
                     }
                 }
         ));
@@ -43,7 +44,7 @@ public class SimpleTheme extends AbstractTheme
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
                     @Override
-                    public void paint(@NotNull Graphics2D g)
+                    public void paint(@NotNull final Graphics2D g)
                     {
                         super.paint(g);
                         separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getHeight());
@@ -56,7 +57,7 @@ public class SimpleTheme extends AbstractTheme
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
                     @Override
-                    public void paint(@NotNull Graphics2D g)
+                    public void paint(@NotNull final Graphics2D g)
                     {
                         super.paint(g);
                         separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getHeight());
@@ -98,7 +99,7 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getHexArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getHexArea())
         {
             @Override
-            public @NotNull Color getRowElementForeground(int offset, int rowIndex, int elementIndex)
+            public @NotNull Color getRowElementForeground(final int offset, final int rowIndex, final int elementIndex)
             {
                 if (isSelected(offset))
                 {

@@ -1,8 +1,6 @@
 package cms.rendner.hexviewer.view.components.areas.common.painter;
 
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.IAreaBackgroundPainter;
-import cms.rendner.hexviewer.view.components.areas.common.painter.background.IFullBackgroundPainter;
-import cms.rendner.hexviewer.view.components.areas.common.painter.background.IRowBasedBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,8 +40,6 @@ public interface IAreaPainter
      * Setting a new painter results in a repaint of the area.
      *
      * @param backgroundPainter the new background painter, if <code>null</code> no background will be painted.
-     *                          Has to implement the {@link IFullBackgroundPainter} or
-     *                          {@link IRowBasedBackgroundPainter} interface.
      */
     void setBackgroundPainter(@Nullable final IAreaBackgroundPainter backgroundPainter);
 }

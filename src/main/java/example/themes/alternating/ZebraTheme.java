@@ -3,7 +3,8 @@ package example.themes.alternating;
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
-import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultRowBasedBackgroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.background.RowBasedBackgroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
 import cms.rendner.hexviewer.view.themes.AbstractTheme;
 import org.jetbrains.annotations.NotNull;
@@ -23,41 +24,41 @@ public class ZebraTheme extends AbstractTheme
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultRowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getOffsetArea())
+                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getOffsetArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
                     @Override
-                    public void paint(@NotNull Graphics2D g, int rowIndex, boolean isLastRow)
+                    public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
                     {
-                        super.paint(g, rowIndex, isLastRow);
-                        separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getRowHeight());
+                        super.paintRow(rowGraphics, isLastRow);
+                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
                     }
                 })
         );
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultRowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getHexArea())
+                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getHexArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
                     @Override
-                    public void paint(@NotNull Graphics2D g, int rowIndex, boolean isLastRow)
+                    public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
                     {
-                        super.paint(g, rowIndex, isLastRow);
-                        separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getRowHeight());
+                        super.paintRow(rowGraphics, isLastRow);
+                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
                     }
                 })
         );
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultRowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getAsciiArea())
+                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getAsciiArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
                     @Override
-                    public void paint(@NotNull Graphics2D g, int rowIndex, boolean isLastRow)
+                    public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
                     {
-                        super.paint(g, rowIndex, isLastRow);
-                        separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getRowHeight());
+                        super.paintRow(rowGraphics, isLastRow);
+                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
                     }
                 })
         );
@@ -102,7 +103,7 @@ public class ZebraTheme extends AbstractTheme
 
             @NotNull
             @Override
-            public Color getRowBackground(int rowIndex)
+            public Color getRowBackground(final int rowIndex)
             {
                 return IndexUtils.isEven(rowIndex) ? evenRowBackground : oddRowBackground;
             }

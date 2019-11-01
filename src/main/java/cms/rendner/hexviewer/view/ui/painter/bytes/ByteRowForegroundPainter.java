@@ -9,13 +9,16 @@ import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
+import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.List;
 
 /**
- * Paints the rows foreground of a byte-area.
+ * Paints the foreground of a byte-area rowwise.
  *
  * @author rendner
  */
@@ -33,21 +36,22 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     private final JHexViewer hexViewer;
 
     /**
-     * Temporary value - used to format the bytes, of the data model of the {@link JHexViewer}, displayed in the area.
+     * Updated on every paint call - the font ascent to align the text vertically.
+     */
+    private int ascent;
+    /**
+     * Updated on every paint call - used to format the bytes, of the data model of the {@link JHexViewer}, displayed in the area.
      */
     private IValueFormatter valueFormatter;
     /**
-     * Temporary value - describes where the bytes should be painted.
+     * Updated on every paint call - describes where the bytes should be painted.
      */
     private IByteRowTemplate rowTemplate;
     /**
-     * Temporary value - provides colors for rendering the bytes.
+     * Updated on every paint call - provides colors for rendering the bytes.
      */
+    @Nullable
     private IByteColorProvider colorProvider;
-    /**
-     * Temporary value - produces a list of bytes which should be displayed in a specific row.
-     */
-    private RowDataBuilder rowDataBuilder;
 
     /**
      * Creates a new instance which paints the foreground of the byte-area.
@@ -63,56 +67,54 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     @Override
-    public void prePaint()
+    public void paint(final @NotNull Graphics2D g)
     {
         rowTemplate = area.getRowTemplate().orElse(null);
+        final RowDataBuilder rowDataBuilder = hexViewer.getDataModel()
+                .map(dataModel -> new RowDataBuilder(dataModel, hexViewer.getBytesPerRow()))
+                .orElse(null);
+
+        final boolean canPaint = rowTemplate != null && rowDataBuilder != null;
+        if (!canPaint)
+        {
+            return;
+        }
+
+        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, area);
+        if (rowGraphicsList.isEmpty())
+        {
+            return;
+        }
+
         valueFormatter = area.getValueFormatter();
+        ascent = rowTemplate.fontMetrics().getAscent();
         colorProvider = area.getColorProvider().orElse(null);
-        hexViewer.getDataModel().ifPresent(dataModel -> rowDataBuilder = new RowDataBuilder(dataModel, hexViewer.getBytesPerRow()));
-    }
 
-    @Override
-    public boolean canPaint()
-    {
-        return rowTemplate != null && rowDataBuilder != null;
-    }
-
-    @Override
-    public void postPaint()
-    {
-        rowTemplate = null;
-        valueFormatter = null;
-        colorProvider = null;
-        rowDataBuilder = null;
-    }
-
-    @Override
-    public void paint(final @NotNull Graphics2D g, final int rowIndex)
-    {
-        paintRowElementsBackground(g, rowIndex);
-        paintRowElementsForeground(g, rowIndex);
+        rowGraphicsList.forEach(rowGraphics -> {
+            final RowData bytes = rowDataBuilder.build(rowGraphics.rowIndex);
+            paintRowElementsBackground(rowGraphics, bytes.size());
+            paintRowElementsForeground(rowGraphics, bytes);
+            rowGraphics.dispose();
+        });
     }
 
     /**
      * Paints the foreground of the row elements.
      *
-     * @param g        the Graphics2D object to paint into.
-     * @param rowIndex the index of the row to paint.
+     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
+     * @param bytes       the date which should be displayed by the row.
      */
-    protected void paintRowElementsForeground(@NotNull final Graphics2D g, final int rowIndex)
+    private void paintRowElementsForeground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
     {
-        final int ascent = rowTemplate.fontMetrics().getAscent();
-        final RowData bytes = rowDataBuilder.build(rowIndex);
-
-        int byteOffset = hexViewer.rowIndexToByteIndex(rowIndex);
+        int byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 
         for (int i = 0; i < bytes.size(); i++)
         {
             final Element byteElement = rowTemplate.element(i);
             final String byteToDraw = valueFormatter.format(bytes.getByte(i));
 
-            g.setColor(getForegroundColor(byteOffset, rowIndex, i));
-            g.drawString(byteToDraw, byteElement.x(), ascent + byteElement.y());
+            rowGraphics.g.setColor(getForegroundColor(byteOffset, rowGraphics.rowIndex, i));
+            rowGraphics.g.drawString(byteToDraw, byteElement.x(), ascent + byteElement.y());
 
             byteOffset++;
         }
@@ -121,25 +123,24 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Paints the background of the row elements.
      *
-     * @param g        the Graphics2D object to paint into.
-     * @param rowIndex the index of the row to paint.
+     * @param rowGraphics     the rowGraphics instance which belongs to the row to paint.
+     * @param elementsToPaint the number of elements to paint. This can be less as the number of elements provided by the
+     *                        {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
+     *                        to display.
      */
-    protected void paintRowElementsBackground(@NotNull final Graphics2D g, final int rowIndex)
+    private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, final int elementsToPaint)
     {
-        int byteOffset = hexViewer.rowIndexToByteIndex(rowIndex);
+        int byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 
-        final int offsetOfLastByteInRow = Math.min(hexViewer.getLastPossibleByteIndex(), (byteOffset + hexViewer.getBytesPerRow() - 1));
-        final int bytesToPaint = 1 + (offsetOfLastByteInRow - byteOffset);
-
-        for (int i = 0; i < bytesToPaint; i++)
+        for (int i = 0; i < elementsToPaint; i++)
         {
-            final Color color = getBackgroundColor(byteOffset, rowIndex, i);
+            final Color color = getBackgroundColor(byteOffset, rowGraphics.rowIndex, i);
             if (color != null)
             {
                 final Element byteElement = rowTemplate.element(i);
 
-                g.setColor(color);
-                g.fillRect(byteElement.x(), byteElement.y(), byteElement.width(), byteElement.height());
+                rowGraphics.g.setColor(color);
+                rowGraphics.g.fillRect(byteElement.x(), byteElement.y(), byteElement.width(), byteElement.height());
             }
 
             byteOffset++;
