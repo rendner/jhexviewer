@@ -7,13 +7,20 @@ import cms.rendner.hexviewer.model.rowtemplate.configuration.values.IValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A row template configuration defines the layout of a row.
- * Each row of the {@link cms.rendner.hexviewer.view.components.areas.bytes.HexArea} is painted using a description of a
- * row, called a row-template. The layout of the rows can be changed during runtime by applying a new configuration to
- * the {@link cms.rendner.hexviewer.view.JHexViewer}.
+ * This row template configuration allows to alter the row template of the {@link cms.rendner.hexviewer.view.components.areas.bytes.HexArea}.
  * <p/>
- * All row template configuration instances are immutable. To create a modified or new version use the builder
- * provided by the concrete instance.
+ * Each row of the area is painted using a description of a row, called a row template. The layout of the rows can be
+ * changed during runtime by applying a new configuration to the {@link cms.rendner.hexviewer.view.JHexViewer}.
+ * <p/>
+ * Row template configuration instances are immutable. To create a modified or new version use the builder provided by
+ * this class or instance:
+ * <pre>
+ *     // create a new builder
+ *     HexRowTemplateConfiguration.newBuilder();
+ *
+ *     // create a builder pre-initialized with the state of the instance
+ *     configurationInstance.toBuilder();
+ * </pre>
  *
  * @author rendner
  */
@@ -49,6 +56,21 @@ public final class HexRowTemplateConfiguration
     public static Builder newBuilder()
     {
         return new Builder();
+    }
+
+    /**
+     * Returns a new builder for this class initialized with the values of this instance.
+     *
+     * @return the new builder instance.
+     */
+    @NotNull
+    public Builder toBuilder()
+    {
+        return new Builder()
+                .caretWidth(caretWidth)
+                .insets(insets)
+                .bytesPerGroup(bytesPerGroup)
+                .spaceBetweenGroups(spaceBetweenGroups);
     }
 
     /**
