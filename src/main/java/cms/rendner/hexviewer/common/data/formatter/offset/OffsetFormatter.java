@@ -36,20 +36,30 @@ public class OffsetFormatter implements IOffsetFormatter
     {
         this.uppercasedOffset = uppercasedOffset;
         this.suffix = suffix;
-        adjustFormatString(0);
+        adjustPadSize(0);
     }
 
     @Override
-    public void adjustFormatString(final int leadingZeros)
+    public void adjustPadSize(final int padSize)
     {
-        if (leadingZeros > 0)
+        if (padSize > 0)
         {
-            this.format = "%0" + leadingZeros + (uppercasedOffset ? "X" : "x") + suffix;
+            this.format = "%0" + padSize + (uppercasedOffset ? "X" : "x") + suffix;
         }
         else
         {
             this.format = "%" + (uppercasedOffset ? "X" : "x") + suffix;
         }
+    }
+
+    @Override
+    public int calculateFormattedValueLength(final int padSize, final int value)
+    {
+        final String currentFormat = format;
+        adjustPadSize(padSize);
+        final String result = format(value);
+        format = currentFormat;
+        return result.length();
     }
 
     @Override

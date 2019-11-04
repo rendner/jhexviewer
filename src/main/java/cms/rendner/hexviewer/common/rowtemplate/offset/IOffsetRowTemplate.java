@@ -22,7 +22,7 @@ public interface IOffsetRowTemplate extends IRowTemplate
     Element element();
 
     /**
-     * @return the number of expected leading zeros of the values displayed by an row o the offset-area.
+     * @return the number of chars included in the element dimension for displaying a padded offset value.
      */
-    int numberOfLeadingZeros();
+    int padSize();
 }

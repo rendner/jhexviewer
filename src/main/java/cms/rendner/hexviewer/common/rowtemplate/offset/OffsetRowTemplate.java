@@ -24,9 +24,9 @@ public class OffsetRowTemplate extends BaseRowTemplate implements IOffsetRowTemp
     private final Element element;
 
     /**
-     * Number of leading zeros to render left padded offset values.
+     * The number of chars included in the element dimension for displaying a padded offset value.
      */
-    private final int leadingZeros;
+    private final int padSize;
 
     /**
      * Hide the constructor.
@@ -38,7 +38,7 @@ public class OffsetRowTemplate extends BaseRowTemplate implements IOffsetRowTemp
     {
         super(builder.dimension, builder.fontMetrics);
         this.element = builder.element;
-        this.leadingZeros = builder.leadingZeros;
+        this.padSize = builder.padSize;
     }
 
     /**
@@ -52,22 +52,16 @@ public class OffsetRowTemplate extends BaseRowTemplate implements IOffsetRowTemp
         return new Builder();
     }
 
-    /**
-     * @return the single element used to align an offset address inside the row.
-     */
     @Override
     public @NotNull Element element()
     {
         return element;
     }
 
-    /**
-     * @return Number of leading zeros to render left padded offset values.
-     */
     @Override
-    public int numberOfLeadingZeros()
+    public int padSize()
     {
-        return leadingZeros;
+        return padSize;
     }
 
     /**
@@ -112,9 +106,9 @@ public class OffsetRowTemplate extends BaseRowTemplate implements IOffsetRowTemp
         FontMetrics fontMetrics;
 
         /**
-         * Number of leading zeros to render left padded offset values.
+         * The number of chars included in the element dimension for displaying a padded offset value.
          */
-        int leadingZeros;
+        int padSize;
 
         /**
          * Hide the constructor.
@@ -170,16 +164,16 @@ public class OffsetRowTemplate extends BaseRowTemplate implements IOffsetRowTemp
         }
 
         /**
-         * Sets the number of leading zeros.
+         * Sets the number of chars included in the element dimension for displaying a padded offset value.
          *
-         * @param leadingZeros number of leading zeros to render left padded offset values.
+         * @param padSize the pad size included in the element bounds, &gt;= 0 and &lt;= 32.
          * @return the builder instance.
          */
-        public Builder numberOfLeadingZeros(final int leadingZeros)
+        public Builder padSize(final int padSize)
         {
-            CheckUtils.checkMinValue(leadingZeros, 0);
-            CheckUtils.checkMaxValue(leadingZeros, 32);
-            this.leadingZeros = leadingZeros;
+            CheckUtils.checkMinValue(padSize, 0);
+            CheckUtils.checkMaxValue(padSize, 32);
+            this.padSize = padSize;
             return this;
         }
 

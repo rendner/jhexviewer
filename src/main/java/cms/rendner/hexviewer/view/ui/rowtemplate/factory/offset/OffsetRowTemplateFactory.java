@@ -44,10 +44,8 @@ public final class OffsetRowTemplateFactory
         {
             result = hexViewer.getRowContentFont().map(font -> {
                 final FontMetrics fontMetrics = hexViewer.getFontMetrics(font);
-                final int maxOffset = calculateMaxOffset(hexViewer);
-                final int totalCharsCount = hexViewer.getOffsetArea().getValueFormatter().format(maxOffset).length();
-                final int leadingZeros = Math.max(0, String.valueOf(maxOffset).length() - 1);
-
+                final int padSize = calculateRequiredPadSize(hexViewer);
+                final int totalCharsCount = hexViewer.getOffsetArea().getValueFormatter().calculateFormattedValueLength(padSize, 1);
                 final HInsets rowInsets = configuration.insets();
                 final Dimension elementDimension = ComputeUtils.computeElementDimension(totalCharsCount, fontMetrics);
                 final Element element = createRowElement(rowInsets, elementDimension, fontMetrics);
@@ -56,7 +54,7 @@ public final class OffsetRowTemplateFactory
 
                 return OffsetRowTemplate.newBuilder()
                         .dimension(width, height)
-                        .numberOfLeadingZeros(leadingZeros)
+                        .padSize(padSize)
                         .fontMetrics(fontMetrics)
                         .element(element)
                         .buildUIResource();
@@ -67,12 +65,16 @@ public final class OffsetRowTemplateFactory
         return result;
     }
 
-    private int calculateMaxOffset(@NotNull final JHexViewer hexViewer)
+    /**
+     * Calculates the pad size depending on the size of the data model of the {@link JHexViewer}.
+     *
+     * @param hexViewer the hexViewer component to which the offset-area belongs.
+     * @return the pad size.
+     */
+    private int calculateRequiredPadSize(@NotNull final JHexViewer hexViewer)
     {
-        final int lastCaretIndex = hexViewer.getLastPossibleCaretIndex();
-        final int minLeadingZeros = configuration.minLeadingZeros();
-        final String lastIndexWithLeadingZeros = String.format("%0" + minLeadingZeros + "d", lastCaretIndex);
-        return Integer.parseInt(lastIndexWithLeadingZeros.replaceAll("[0-9]", "9"));
+        final int digitsOfLastCaretIndex = Integer.toHexString(hexViewer.getLastPossibleCaretIndex()).length();
+        return Math.max(digitsOfLastCaretIndex, configuration.minPadSize());
     }
 
     /**

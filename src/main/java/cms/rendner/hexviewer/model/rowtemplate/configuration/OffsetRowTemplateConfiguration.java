@@ -26,7 +26,7 @@ public final class OffsetRowTemplateConfiguration
     /**
      * The number of minimum leading zeros when displaying an offset address.
      */
-    private final int minLeadingZeros;
+    private final int minPadSize;
 
     /**
      * Returns a new builder for this class.
@@ -49,20 +49,19 @@ public final class OffsetRowTemplateConfiguration
     }
 
     /**
-     * Returns the number of minimal leading zeros, used to render left padded offset values.
-     *
-     * @return the number of minimal leading zeros, &gt;= 0.
+     * @return the minimum number of chars to include in the element dimension for displaying a padded offset value,
+     * &gt;= 0 and &lt;= 32.
      */
-    public int minLeadingZeros()
+    public int minPadSize()
     {
-        return minLeadingZeros;
+        return minPadSize;
     }
 
     private OffsetRowTemplateConfiguration(@NotNull final Builder builder)
     {
         super();
         this.insets = builder.insets;
-        this.minLeadingZeros = builder.minLeadingZeros;
+        this.minPadSize = builder.minPadSize;
     }
 
     /**
@@ -72,7 +71,10 @@ public final class OffsetRowTemplateConfiguration
     {
         private HInsets insets;
 
-        private int minLeadingZeros = 4;
+        /**
+         * The minimum number of chars included in the element dimension for displaying a padded offset value.
+         */
+        private int minPadSize = 4;
 
         private Builder()
         {
@@ -91,16 +93,16 @@ public final class OffsetRowTemplateConfiguration
         }
 
         /**
-         * Sets the number of minimal zeros to render left padded offset values.
+         * Sets the minimum number of chars to included in the element dimension for displaying a padded offset value
          *
-         * @param value the new number of minimal zeros.
+         * @param value the minimum pad size to include in the element bounds, &gt;= 0 and &lt;= 32.
          * @return the builder instance.
          */
-        public Builder minLeadingZeros(final int value)
+        public Builder minPadSize(final int value)
         {
             CheckUtils.checkMinValue(value, 0);
             CheckUtils.checkMaxValue(value, 32);
-            this.minLeadingZeros = value;
+            this.minPadSize = value;
             return this;
         }
 

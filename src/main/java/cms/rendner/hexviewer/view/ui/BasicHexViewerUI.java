@@ -482,19 +482,19 @@ public class BasicHexViewerUI extends HexViewerUI
         final IOffsetRowTemplate rowTemplate = offsetRowTemplateFactory.createTemplate(hexViewer);
         hexViewer.getOffsetArea().setRowTemplate(rowTemplate);
 
-        final int leadingZeros;
+        final int padSize;
         if (rowTemplate != null)
         {
-            leadingZeros = rowTemplate.numberOfLeadingZeros();
+            padSize = rowTemplate.padSize();
         }
         else
         {
-            leadingZeros = hexViewer.getOffsetRowTemplateConfiguration()
-                    .map(OffsetRowTemplateConfiguration::minLeadingZeros)
+            padSize = hexViewer.getOffsetRowTemplateConfiguration()
+                    .map(OffsetRowTemplateConfiguration::minPadSize)
                     .orElse(4);
         }
 
-        hexViewer.getOffsetArea().getValueFormatter().adjustFormatString(leadingZeros);
+        hexViewer.getOffsetArea().getValueFormatter().adjustPadSize(padSize);
     }
 
     /**
