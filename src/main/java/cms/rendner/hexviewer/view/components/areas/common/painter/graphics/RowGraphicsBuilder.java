@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author rendner
  */
-public class RowGraphicsBuilder
+public final class RowGraphicsBuilder
 {
     /**
      * Creates a list of RowGraphics objects for each row which displays text content and intersects with the dirty
@@ -129,5 +129,12 @@ public class RowGraphicsBuilder
         }
 
         return result;
+    }
+
+    /**
+     * Hide constructor.
+     */
+    private RowGraphicsBuilder()
+    {
     }
 }
