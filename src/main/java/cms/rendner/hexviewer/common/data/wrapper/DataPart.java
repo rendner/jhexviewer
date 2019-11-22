@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public class DataPart
+public final class DataPart
 {
     /**
      * Number of bytes in this part.
      */
-    private final int size;
+    private final long size;
 
     /**
      * The data model which provides the bytes.
@@ -25,7 +25,7 @@ public class DataPart
     /**
      * Index of the first byte in this part in the data model.
      */
-    private final int offset;
+    private final long offset;
 
     /**
      * Creates a new instance.
@@ -34,7 +34,7 @@ public class DataPart
      * @param offset    index of the first byte in this part in the data model.
      * @param size      the number of bytes in this part.
      */
-    public DataPart(@NotNull final IDataModel dataModel, final int offset, final int size)
+    public DataPart(@NotNull final IDataModel dataModel, final long offset, final long size)
     {
         this.dataModel = dataModel;
         this.offset = offset;
@@ -44,7 +44,7 @@ public class DataPart
     /**
      * @return the number of bytes in this part.
      */
-    public final int size()
+    public final long size()
     {
         return size;
     }
@@ -60,7 +60,7 @@ public class DataPart
     /**
      * @return index of the first byte in this part in the data model of the {@link JHexViewer}.
      */
-    public final int offset()
+    public final long offset()
     {
         return offset;
     }
@@ -71,7 +71,7 @@ public class DataPart
      * @param indexInPart the index in the data part, in the range [0, size()-1].
      * @return the value at the <code>indexInPart</code>.
      */
-    public final int getByte(final int indexInPart)
+    public final int getByte(final long indexInPart)
     {
         if (isEmpty() || indexInPart < 0 || indexInPart >= size)
         {

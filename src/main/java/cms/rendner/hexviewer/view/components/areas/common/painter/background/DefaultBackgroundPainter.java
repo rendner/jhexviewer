@@ -14,7 +14,7 @@ import java.awt.*;
  *
  * @param <A> the type of the area which is painted by this class.
  */
-public class DefaultBackgroundPainter<A extends Area<?, ?, ?>> implements IAreaBackgroundPainter
+public class DefaultBackgroundPainter<A extends Area<?, ?>> implements IAreaBackgroundPainter
 {
     /**
      * The area to be painted.

@@ -3,6 +3,7 @@ package cms.rendner.hexviewer.common.data.visitor.formatter;
 import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
 import cms.rendner.hexviewer.common.data.formatter.bytes.AsciiByteFormatter;
 import cms.rendner.hexviewer.common.data.formatter.bytes.HexByteFormatter;
+import cms.rendner.hexviewer.common.data.formatter.offset.IOffsetFormatter;
 import cms.rendner.hexviewer.common.data.formatter.offset.OffsetFormatter;
 import cms.rendner.hexviewer.view.JHexViewer;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
      * Used to format the values of the offset-area.
      */
     @NotNull
-    private final IValueFormatter offsetFormatter;
+    private final IOffsetFormatter offsetFormatter;
 
     /**
      * Used to format the byte values of the hex-area.
@@ -72,7 +73,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
      * @param hexByteFormatter   formatter to format the values of the hex-area.
      * @param asciiByteFormatter formatter to format the values of the ascii-area.
      */
-    public RowWiseByteFormatter(@Nullable final IValueFormatter offsetFormatter,
+    public RowWiseByteFormatter(@Nullable final IOffsetFormatter offsetFormatter,
                                 @Nullable final IValueFormatter hexByteFormatter,
                                 @Nullable final IValueFormatter asciiByteFormatter)
     {
@@ -106,7 +107,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
 
     @NotNull
     @Override
-    public String formatRowOffset(final int rowIndex, final int byteOffset)
+    public String formatRowOffset(final int rowIndex, final long byteOffset)
     {
         return offsetFormatter.format(byteOffset);
     }

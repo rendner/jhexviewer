@@ -1,6 +1,5 @@
 package cms.rendner.hexviewer.view.components.areas.common.painter;
 
-import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
 import cms.rendner.hexviewer.common.rowtemplate.IRowTemplate;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
 import cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider;
@@ -23,8 +22,7 @@ import java.awt.*;
  */
 public abstract class BasicAreaPainter<A extends Area<
         ? extends IRowTemplate,
-        ? extends IAreaColorProvider,
-        ? extends IValueFormatter>> implements IAreaPainter
+        ? extends IAreaColorProvider>> implements IAreaPainter
 {
     /**
      * The area to be painted.

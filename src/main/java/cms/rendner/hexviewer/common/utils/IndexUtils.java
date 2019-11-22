@@ -19,7 +19,7 @@ public final class IndexUtils
      * @param index index to check.
      * @return <code>true</code> if index is odd otherwise <code>false</code>
      */
-    public static boolean isOdd(final int index)
+    public static boolean isOdd(final long index)
     {
         return (index & 1) != 0;
     }
@@ -31,7 +31,7 @@ public final class IndexUtils
      * @param index index to check.
      * @return <code>true</code> if index is even otherwise <code>false</code>
      */
-    public static boolean isEven(final int index)
+    public static boolean isEven(final long index)
     {
         return (index & 1) == 0;
     }
@@ -45,14 +45,14 @@ public final class IndexUtils
      * @param bytesPerRow the number of bytes per row, &gt;= 1.
      * @return the index of the first byte of the row, or <code>-1</code> if <code>rowIndex</code> or <code>bytesPerRow</code> is negative.
      */
-    public static int rowIndexToByteIndex(final int rowIndex, final int bytesPerRow)
+    public static long rowIndexToByteIndex(final int rowIndex, final int bytesPerRow)
     {
         if (rowIndex < 0 || bytesPerRow < 1)
         {
             return INVALID_INDEX;
         }
 
-        return rowIndex * bytesPerRow;
+        return (long)rowIndex * bytesPerRow;
     }
 
     /**
@@ -64,14 +64,14 @@ public final class IndexUtils
      * @param bytesPerRow the number of bytes per row, &gt;= 1.
      * @return the index of the row, or <code>-1</code> if <code>rowIndex</code> or <code>bytesPerRow</code> is negative.
      */
-    public static int byteIndexToRowIndex(final int byteIndex, final int bytesPerRow)
+    public static int byteIndexToRowIndex(final long byteIndex, final int bytesPerRow)
     {
         if (byteIndex < 0 || bytesPerRow < 1)
         {
             return INVALID_INDEX;
         }
 
-        return byteIndex / bytesPerRow;
+        return (int)(byteIndex / bytesPerRow);
     }
 
     /**
@@ -81,14 +81,14 @@ public final class IndexUtils
      * @param bytesPerRow the number of bytes per row, &gt;= 1.
      * @return the index inside a row, or <code>-1</code> if <code>rowIndex</code> or <code>bytesPerRow</code> is negative.
      */
-    public static int byteIndexToIndexInRow(final int byteIndex, final int bytesPerRow)
+    public static int byteIndexToIndexInRow(final long byteIndex, final int bytesPerRow)
     {
         if (byteIndex < 0 || bytesPerRow < 1)
         {
             return INVALID_INDEX;
         }
 
-        return byteIndex % bytesPerRow;
+        return (int)(byteIndex % bytesPerRow);
     }
 
     /**

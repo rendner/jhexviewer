@@ -63,7 +63,7 @@ public final class MappedFileData implements IDisposableModel, IDataModel
     }
 
     @Override
-    public int size()
+    public long size()
     {
         return mappedByteBuffer == null ? 0 : mappedByteBuffer.limit();
     }
@@ -75,13 +75,13 @@ public final class MappedFileData implements IDisposableModel, IDataModel
     }
 
     @Override
-    public int getByte(final int offset)
+    public int getByte(final long offset)
     {
         if (mappedByteBuffer == null)
         {
             throw new IndexOutOfBoundsException("Index '" + offset + "' is out of bounds.");
         }
-        return mappedByteBuffer.get(offset);
+        return mappedByteBuffer.get((int)offset);
     }
 
     /**

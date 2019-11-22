@@ -53,7 +53,7 @@ public class OffsetFormatter implements IOffsetFormatter
     }
 
     @Override
-    public int calculateFormattedValueLength(final int padSize, final int value)
+    public int calculateFormattedValueLength(final int padSize, final long value)
     {
         final String currentFormat = format;
         adjustPadSize(padSize);
@@ -63,7 +63,7 @@ public class OffsetFormatter implements IOffsetFormatter
     }
 
     @Override
-    public @NotNull String format(final int value)
+    public @NotNull String format(final long value)
     {
         return String.format(format, value);
     }

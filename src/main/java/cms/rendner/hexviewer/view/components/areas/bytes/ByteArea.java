@@ -22,8 +22,21 @@ import java.util.Optional;
  *
  * @author rendner
  */
-public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider, IValueFormatter>
+public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider>
 {
+    /**
+     * Constant used to determine when the <code>valueFormatter</code> property has changed.
+     * Note that either value (old and new) can also be null.
+     */
+    @NotNull
+    public static final String PROPERTY_VALUE_FORMATTER = "valueFormatter";
+
+    /**
+     * Used to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} into displayable strings.
+     */
+    @NotNull
+    private IValueFormatter valueFormatter;
+
     /**
      * Sole constructor, for invocation by subclass constructors.
      *
@@ -32,7 +45,41 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
      */
     protected ByteArea(@NotNull final AreaId id, @NotNull final IValueFormatter valueFormatter)
     {
-        super(id, valueFormatter);
+        super(id);
+        this.valueFormatter = valueFormatter;
+    }
+
+    /**
+     * Sets the new value formatter of the byte-area.
+     * The formatter will be used to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer}
+     * into displayable strings.
+     * <p/>
+     * Setting a new formatter results in a repaint of the component.
+     * <p/>
+     * A PropertyChange event {@link ByteArea#PROPERTY_VALUE_FORMATTER} is fired when a new formatter is set.
+     *
+     * @param valueFormatter the new formatter, passing <code>null</code> results into an empty area
+     *                       (no content will be rendered).
+     */
+    public void setValueFormatter(@NotNull final IValueFormatter valueFormatter)
+    {
+        if (this.valueFormatter != valueFormatter)
+        {
+            final IValueFormatter oldValue = this.valueFormatter;
+            this.valueFormatter = valueFormatter;
+            firePropertyChange(PROPERTY_VALUE_FORMATTER, oldValue, this.valueFormatter);
+            repaint();
+        }
+    }
+
+    /**
+     * @return the formatter to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer}
+     * into displayable strings.
+     */
+    @NotNull
+    public IValueFormatter getValueFormatter()
+    {
+        return valueFormatter;
     }
 
     /**
@@ -43,7 +90,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
      * @return the bounds in the view, the result will be empty if no row-template is installed.
      */
     @NotNull
-    public Rectangle getByteRect(final int byteIndex)
+    public Rectangle getByteRect(final long byteIndex)
     {
         CheckUtils.checkMinValue(byteIndex, 0);
 
@@ -71,7 +118,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
      * @return the bounds of the caret, the result will be empty if no row-template is installed.
      */
     @NotNull
-    public Rectangle getCaretRect(final int caretIndex)
+    public Rectangle getCaretRect(final long caretIndex)
     {
         final IByteRowTemplate rowTemplate = getRowTemplate().orElse(null);
         if (rowTemplate != null)
@@ -106,7 +153,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
             if (rowIndex != INVALID_INDEX && rowTemplate.containsX(x))
             {
                 final HitInfo hitInfo = rowTemplate.hitTest(x);
-                final int offsetOfFirstByteInRow = (rowIndex * rowTemplate.elementCount());
+                final long offsetOfFirstByteInRow = ((long) rowIndex * rowTemplate.elementCount());
                 return Optional.of(
                         new HitInfo(
                                 hitInfo.index() + offsetOfFirstByteInRow,

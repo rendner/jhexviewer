@@ -37,7 +37,7 @@ public final class FileData implements IDataModel
     }
 
     @Override
-    public int size()
+    public long size()
     {
         return data.length;
     }
@@ -49,9 +49,9 @@ public final class FileData implements IDataModel
     }
 
     @Override
-    public int getByte(final int offset)
+    public int getByte(final long offset)
     {
-        return data[offset];
+        return data[(int)offset];
     }
 
     /**

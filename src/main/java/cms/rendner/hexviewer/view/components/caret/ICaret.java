@@ -60,7 +60,7 @@ public interface ICaret
      * @param scrollToCaret indicates if the visible region should be adjusted to always have the caret inside the visible
      *                      region.
      */
-    void moveCaretRelatively(int offsetShift, boolean withSelection, boolean scrollToCaret);
+    void moveCaretRelatively(long offsetShift, boolean withSelection, boolean scrollToCaret);
 
     /**
      * Moves caret absolute.
@@ -70,21 +70,21 @@ public interface ICaret
      * @param scrollToCaret indicates if the visible region should be adjusted to always have the caret inside the visible
      *                      region.
      */
-    void moveCaret(int offset, boolean withSelection, boolean scrollToCaret);
+    void moveCaret(long offset, boolean withSelection, boolean scrollToCaret);
 
     /**
      * Returns the current position of the caret.
      *
      * @return the position of the dot.
      */
-    int getDot();
+    long getDot();
 
     /**
      * Returns the current position of the mark.
      *
      * @return the position of the mark.
      */
-    int getMark();
+    long getMark();
 
     /**
      * @return <code>true</code> if one or more bytes are selected.
@@ -94,10 +94,10 @@ public interface ICaret
     /**
      * @return the index of the first selected byte.
      */
-    int getSelectionStart();
+    long getSelectionStart();
 
     /**
      * @return the index of the last selected byte.
      */
-    int getSelectionEnd();
+    long getSelectionEnd();
 }

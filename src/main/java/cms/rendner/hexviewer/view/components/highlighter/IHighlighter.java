@@ -50,7 +50,7 @@ public interface IHighlighter
      * @return an object that refers to the added highlight
      */
     @NotNull
-    IHighlight addHighlight(int startByteIndex, int endByteIndex, @NotNull IHighlightPainter painter);
+    IHighlight addHighlight(long startByteIndex, long endByteIndex, @NotNull IHighlightPainter painter);
 
     /**
      * Adds a highlight to the view.
@@ -61,7 +61,7 @@ public interface IHighlighter
      * @return an object that refers to the added highlight
      */
     @NotNull
-    IHighlight addHighlight(int startByteIndex, int endByteIndex);
+    IHighlight addHighlight(long startByteIndex, long endByteIndex);
 
     /**
      * Adds a highlight to the view.
@@ -73,7 +73,7 @@ public interface IHighlighter
      * @return an object that refers to the added highlight
      */
     @NotNull
-    IHighlight addHighlight(int startByteIndex, int endByteIndex, @NotNull Color color);
+    IHighlight addHighlight(long startByteIndex, long endByteIndex, @NotNull Color color);
 
     /**
      * Removes a highlight from the view.
@@ -102,7 +102,7 @@ public interface IHighlighter
      * @param startByteIndex the beginning of the range &gt;= 0
      * @param endByteIndex   the end of the range &gt;= startByteIndex
      */
-    void changeHighlight(@NotNull IHighlight highlight, int startByteIndex, int endByteIndex);
+    void changeHighlight(@NotNull IHighlight highlight, long startByteIndex, long endByteIndex);
 
     /**
      * @return the number of highlights, excluding the selection highlight.
@@ -138,7 +138,7 @@ public interface IHighlighter
          * @param byteEndIndex          the ending offset in the configuration &gt;= byteStartIndex
          */
         void paint(@NotNull Graphics2D g, @NotNull ByteArea area,
-                   @NotNull final HDimension rowElementsHDimension, int byteStartIndex, int byteEndIndex);
+                   @NotNull final HDimension rowElementsHDimension, long byteStartIndex, long byteEndIndex);
 
     }
 
@@ -153,14 +153,14 @@ public interface IHighlighter
          *
          * @return the starting offset &gt;= 0
          */
-        int getStartOffset();
+        long getStartOffset();
 
         /**
          * Gets the ending configuration offset for the highlight.
          *
          * @return the ending offset &gt;= 0
          */
-        int getEndOffset();
+        long getEndOffset();
 
         /**
          * Gets the painter for the highlighter.

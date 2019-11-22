@@ -38,7 +38,7 @@ public final class ByteWalker
      * @param start   the start index of the byte, included in the range.
      * @param end     the end index of the byte, included in the range.
      */
-    public void walk(@NotNull final IByteVisitor visitor, final int start, final int end)
+    public void walk(@NotNull final IByteVisitor visitor, final long start, final long end)
     {
         final DataPart data = createDataPart(start, end);
 
@@ -60,9 +60,9 @@ public final class ByteWalker
      * @return the part which only contains the bytes of the specified range.
      */
     @NotNull
-    private DataPart createDataPart(final int start, final int end)
+    private DataPart createDataPart(final long start, final long end)
     {
-        final int size = end - start + 1;
+        final long size = end - start + 1;
         return new DataPart(dataModel, start, size);
     }
 }

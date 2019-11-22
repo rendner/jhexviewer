@@ -45,13 +45,13 @@ public class DefaultDamager implements IDamager
     }
 
     @Override
-    public void damageByte(final int byteIndex)
+    public void damageByte(final long byteIndex)
     {
         areas.forEach(area -> damage(area, area.getByteRect(byteIndex)));
     }
 
     @Override
-    public void damageBytes(final int byteStartIndex, final int byteEndIndex)
+    public void damageBytes(final long byteStartIndex, final long byteEndIndex)
     {
         final int startRowIndex = hexViewer.byteIndexToRowIndex(byteStartIndex);
         final int endRowIndex = hexViewer.byteIndexToRowIndex(byteEndIndex);
@@ -66,7 +66,7 @@ public class DefaultDamager implements IDamager
     }
 
     @Override
-    public void damageChangedHighlight(final int oldStart, final int oldEnd, final int newStart, final int newEnd)
+    public void damageChangedHighlight(final long oldStart, final long oldEnd, final long newStart, final long newEnd)
     {
         if (oldStart == newStart && oldEnd == newEnd)
         {
@@ -77,8 +77,8 @@ public class DefaultDamager implements IDamager
         if (oldStart == newStart)
         {
             // the end was modified
-            final int start = Math.min(oldEnd, newEnd);
-            int end = Math.max(oldEnd, newEnd);
+            final long start = Math.min(oldEnd, newEnd);
+            long end = Math.max(oldEnd, newEnd);
 
             // there can be spaces between the bytes, these spaces should also be cleared/repainted by a highlight
             // for this reason add one byte to also clear the space after the end byte
@@ -94,8 +94,8 @@ public class DefaultDamager implements IDamager
         else if (oldEnd == newEnd)
         {
             // the start was modified
-            int start = Math.min(oldStart, newStart);
-            final int end = Math.max(oldStart, newStart);
+            long start = Math.min(oldStart, newStart);
+            final long end = Math.max(oldStart, newStart);
 
             // there can be spaces between the bytes, these spaces should also be cleared/repainted by a highlight
             // for this reason subtract one byte to also clear the space before the start byte
@@ -111,14 +111,14 @@ public class DefaultDamager implements IDamager
         else
         {
             // maybe start and end was modified or we have no intersection -> create an union
-            final int start = Math.min(oldStart, newStart);
-            final int end = Math.max(oldEnd, newEnd);
+            final long start = Math.min(oldStart, newStart);
+            final long end = Math.max(oldEnd, newEnd);
             damageBytes(start, end);
         }
     }
 
     @Override
-    public void damageCaret(final int oldCaretIndex, final int newCaretIndex)
+    public void damageCaret(final long oldCaretIndex, final long newCaretIndex)
     {
         damageCaret(oldCaretIndex);
 
@@ -139,7 +139,7 @@ public class DefaultDamager implements IDamager
      *
      * @param caretIndex the position of the caret.
      */
-    private void damageCaret(final int caretIndex)
+    private void damageCaret(final long caretIndex)
     {
         areas.forEach(area -> damage(area, area.getCaretRect(caretIndex)));
     }

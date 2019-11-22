@@ -43,12 +43,12 @@ public abstract class BaseCaret implements ICaret
     /**
      * The position of the dot.
      */
-    private int dot = 0;
+    private long dot = 0L;
 
     /**
      * The position of the mark.
      */
-    private int mark = 0;
+    private long mark = 0L;
 
     /**
      * The last mouse position during drag.
@@ -122,13 +122,13 @@ public abstract class BaseCaret implements ICaret
     }
 
     @Override
-    public int getSelectionStart()
+    public long getSelectionStart()
     {
         return Math.min(dot, mark);
     }
 
     @Override
-    public int getSelectionEnd()
+    public long getSelectionEnd()
     {
         // decrement the selection end by one, because the mark/dot is always in front of a byte
         // otherwise the selection would include the byte
@@ -136,20 +136,20 @@ public abstract class BaseCaret implements ICaret
     }
 
     @Override
-    public void moveCaretRelatively(int offsetShift, boolean withSelection, final boolean scrollToCaret)
+    public void moveCaretRelatively(final long offsetShift, final boolean withSelection, final boolean scrollToCaret)
     {
         moveCaret(dot + offsetShift, withSelection, scrollToCaret);
     }
 
     @Override
-    public void moveCaret(final int offset, final boolean withSelection, final boolean scrollToCaret)
+    public void moveCaret(final long offset, final boolean withSelection, final boolean scrollToCaret)
     {
-        final int sanitizedDot = getSanitizedIndex(offset);
+        final long sanitizedDot = getSanitizedIndex(offset);
 
         if (sanitizedDot != dot || withSelection != hasSelection())
         {
-            final int oldDot = dot;
-            final int oldMark = mark;
+            final long oldDot = dot;
+            final long oldMark = mark;
 
             if (withSelection)
             {
@@ -178,13 +178,13 @@ public abstract class BaseCaret implements ICaret
     }
 
     @Override
-    public int getDot()
+    public long getDot()
     {
         return dot;
     }
 
     @Override
-    public int getMark()
+    public long getMark()
     {
         return mark;
     }
@@ -210,7 +210,7 @@ public abstract class BaseCaret implements ICaret
      * @param oldDot  the old position of the dot.
      * @param oldMark the old position of the mark.
      */
-    private void notifyListener(final int oldDot, final int oldMark)
+    private void notifyListener(final long oldDot, final long oldMark)
     {
         if (!caretListeners.isEmpty())
         {
@@ -226,7 +226,7 @@ public abstract class BaseCaret implements ICaret
      *              the beginning or to the end, respectively.
      * @return a sanitized index, &gt=0.
      */
-    private int getSanitizedIndex(final int index)
+    private long getSanitizedIndex(final long index)
     {
         return Math.min(hexViewer.getLastPossibleCaretIndex(), Math.max(index, 0));
     }
@@ -300,7 +300,7 @@ public abstract class BaseCaret implements ICaret
     @NotNull
     protected Rectangle calculateVisibleRectForCaret(@NotNull final ByteArea area)
     {
-        int indexOfLatestSelectedByte = dot;
+        long indexOfLatestSelectedByte = dot;
 
         if (indexOfLatestSelectedByte > 0)
         {
@@ -416,7 +416,7 @@ public abstract class BaseCaret implements ICaret
      * @param newIndex the new position of the caret.
      * @see IDamager
      */
-    abstract protected void damageCaret(final int oldIndex, final int newIndex);
+    abstract protected void damageCaret(final long oldIndex, final long newIndex);
 
     /**
      * Damages the selection of the caret which results in a repaint for this range of selected bytes.
@@ -427,7 +427,7 @@ public abstract class BaseCaret implements ICaret
      * @param newStartIndex the new end position of the selection.
      * @param newEndIndex   the new end position of the selection.
      */
-    abstract protected void damageSelection(final int oldStartIndex, final int oldEndIndex, final int newStartIndex, final int newEndIndex);
+    abstract protected void damageSelection(final long oldStartIndex, final long oldEndIndex, final long newStartIndex, final long newEndIndex);
 
     /**
      * Called by the blinker to update the visibility of the blinking caret.
@@ -483,7 +483,7 @@ public abstract class BaseCaret implements ICaret
 
                 final Point clampedLocation = clampLocationToArea(dragStartArea, event.getX(), event.getY());
 
-                final int caretOffset = dragStartArea
+                final long caretOffset = dragStartArea
                         .hitTest(clampedLocation.x, clampedLocation.y)
                         .map(HitInfo::insertionIndex)
                         .orElse(hexViewer.getLastPossibleCaretIndex());
@@ -510,7 +510,7 @@ public abstract class BaseCaret implements ICaret
 
             hexViewer.setCaretFocusedArea(dragStartArea);
 
-            final int caretOffset = dragStartArea
+            final long caretOffset = dragStartArea
                     .hitTest(event.getX(), event.getY())
                     .map(HitInfo::insertionIndex)
                     .orElse(hexViewer.getLastPossibleCaretIndex());

@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.view.ui.painter.offset;
 
-import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
+import cms.rendner.hexviewer.common.data.formatter.offset.IOffsetFormatter;
 import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.offset.IOffsetRowTemplate;
 import cms.rendner.hexviewer.view.JHexViewer;
@@ -41,7 +41,7 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Updated on every paint call - used to format the bytes, of the data model of the {@link JHexViewer}, displayed in the area.
      */
-    private IValueFormatter valueFormatter;
+    private IOffsetFormatter valueFormatter;
     /**
      * Updated on every paint call - provides colors for rendering the offset addresses.
      */
@@ -113,7 +113,7 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
      */
     private void paintRowElementForeground(@NotNull final RowGraphics rowGraphics, @NotNull final Element element)
     {
-        final int value = rowIndexToOffset(rowGraphics.rowIndex);
+        final long value = rowIndexToOffset(rowGraphics.rowIndex);
         final String formattedValue = valueFormatter.format(value);
 
         rowGraphics.g.setColor(getForegroundColor(rowGraphics.rowIndex));
@@ -127,15 +127,15 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
      * @return the offset of the {@link cms.rendner.hexviewer.view.components.caret.ICaret caret} if the offset should
      * be displayed and the row contains the caret, otherwise the index of the row.
      */
-    private int rowIndexToOffset(final int rowIndex)
+    private long rowIndexToOffset(final int rowIndex)
     {
-        final int offset = hexViewer.rowIndexToByteIndex(rowIndex);
+        final long offset = hexViewer.rowIndexToByteIndex(rowIndex);
 
         if (hexViewer.isShowOffsetCaretIndicator())
         {
             return hexViewer.getCaret().map(caret ->
             {
-                final int caretIndex = caret.getDot();
+                final long caretIndex = caret.getDot();
                 final int caretRowIndex = hexViewer.byteIndexToRowIndex(caretIndex);
                 return rowIndex == caretRowIndex ? caretIndex : offset;
             }).orElse(offset);

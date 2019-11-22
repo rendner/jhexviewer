@@ -53,6 +53,21 @@ public final class CheckUtils
     }
 
     /**
+     * Checks if a value is not smaller than required.
+     *
+     * @param value    value to check.
+     * @param minValue minimal expected value.
+     * @throws IllegalArgumentException if value is smaller than expected.
+     */
+    public static void checkMinValue(final long value, final long minValue)
+    {
+        if (value < minValue)
+        {
+            throw new IllegalArgumentException("Invalid value '" + value + "', value should at least '" + minValue + "'.");
+        }
+    }
+
+    /**
      * Checks if a value is not greater than required.
      *
      * @param value    value to check.

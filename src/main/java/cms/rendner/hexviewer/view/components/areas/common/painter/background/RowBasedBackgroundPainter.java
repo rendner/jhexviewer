@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @param <A> the type of the area which is painted by this class.
  */
-public class RowBasedBackgroundPainter<A extends Area<?, ?, ?>> implements IAreaBackgroundPainter
+public class RowBasedBackgroundPainter<A extends Area<?, ?>> implements IAreaBackgroundPainter
 {
     /**
      * Is re-used for fetching the bounds of a Graphics2D object.

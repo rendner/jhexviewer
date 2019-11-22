@@ -87,7 +87,7 @@ public abstract class AbstractHighlighter implements IHighlighter
      * @param start the start of the byte range which should be damaged.
      * @param end   the end of the byte range which should be damaged.
      */
-    protected void damageBytes(final int start, final int end)
+    protected void damageBytes(final long start, final long end)
     {
         hexViewer.getDamager().ifPresent(damager -> damager.damageBytes(start, end));
     }

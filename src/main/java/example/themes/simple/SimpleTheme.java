@@ -26,7 +26,7 @@ public class SimpleTheme extends AbstractTheme
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getOffsetArea())
+                new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
@@ -39,7 +39,7 @@ public class SimpleTheme extends AbstractTheme
                 }
         ));
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<Area<?, ?, ?>>(hexViewer.getHexArea())
+                new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
@@ -52,7 +52,7 @@ public class SimpleTheme extends AbstractTheme
                 }
         ));
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<Area<?, ?, ?>>(hexViewer.getAsciiArea())
+                new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
@@ -88,7 +88,7 @@ public class SimpleTheme extends AbstractTheme
             {
                 return hexViewer.getCaret().map(caret ->
                 {
-                    final int caretIndex = caret.getDot();
+                    final long caretIndex = caret.getDot();
                     final int caretRowIndex = hexViewer.byteIndexToRowIndex(caretIndex);
                     return rowIndex == caretRowIndex;
                 }).orElse(Boolean.FALSE);
@@ -99,7 +99,7 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getHexArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getHexArea())
         {
             @Override
-            public @NotNull Color getRowElementForeground(final int offset, final int rowIndex, final int elementIndex)
+            public @NotNull Color getRowElementForeground(final long offset, final int rowIndex, final int elementIndex)
             {
                 if (isSelected(offset))
                 {
@@ -108,7 +108,7 @@ public class SimpleTheme extends AbstractTheme
                 return IndexUtils.isEven(elementIndex) ? Color.gray : Color.blue;
             }
 
-            private boolean isSelected(final int offset)
+            private boolean isSelected(final long offset)
             {
                 return hexViewer.getCaret()
                         .map(caret -> caret.hasSelection() && caret.getSelectionStart() <= offset && offset <= caret.getSelectionEnd())

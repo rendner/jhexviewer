@@ -25,7 +25,7 @@ public interface IByteColorProvider extends IAreaColorProvider
      * preferred behaviour of the painter would be that in case of <code>null</code> no background is painted.
      */
     @Nullable
-    default Color getRowElementBackground(int offset, int rowIndex, int elementIndex)
+    default Color getRowElementBackground(long offset, int rowIndex, int elementIndex)
     {
         return null;
     }
@@ -40,7 +40,7 @@ public interface IByteColorProvider extends IAreaColorProvider
      * preferred behaviour would be that in case of <code>null</code> a default color is used to draw the foreground.
      */
     @Nullable
-    default Color getRowElementForeground(int offset, int rowIndex, int elementIndex)
+    default Color getRowElementForeground(long offset, int rowIndex, int elementIndex)
     {
         return Color.black;
     }

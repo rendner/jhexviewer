@@ -93,13 +93,13 @@ public class DefaultCaret extends BaseCaret
     }
 
     @Override
-    protected void damageCaret(final int oldIndex, final int newIndex)
+    protected void damageCaret(final long oldIndex, final long newIndex)
     {
         hexViewer.getDamager().ifPresent(damager -> damager.damageCaret(oldIndex, newIndex));
     }
 
     @Override
-    protected void damageSelection(final int oldStartIndex, final int oldEndIndex, final int newStartIndex, final int newEndIndex)
+    protected void damageSelection(final long oldStartIndex, final long oldEndIndex, final long newStartIndex, final long newEndIndex)
     {
         hexViewer.getDamager().ifPresent(damager -> {
             damager.damageChangedHighlight(

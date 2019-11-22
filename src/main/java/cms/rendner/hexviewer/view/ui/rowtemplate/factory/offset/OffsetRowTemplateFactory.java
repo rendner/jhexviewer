@@ -73,7 +73,7 @@ public final class OffsetRowTemplateFactory
      */
     private int calculateRequiredPadSize(@NotNull final JHexViewer hexViewer)
     {
-        final int digitsOfLastCaretIndex = Integer.toHexString(hexViewer.getLastPossibleCaretIndex()).length();
+        final int digitsOfLastCaretIndex = Long.toHexString(hexViewer.getLastPossibleCaretIndex()).length();
         return Math.max(digitsOfLastCaretIndex, configuration.minPadSize());
     }
 

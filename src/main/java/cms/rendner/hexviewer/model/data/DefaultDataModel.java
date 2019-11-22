@@ -41,7 +41,7 @@ public class DefaultDataModel implements IDataModel
     }
 
     @Override
-    public int size()
+    public long size()
     {
         return data.length;
     }
@@ -53,8 +53,8 @@ public class DefaultDataModel implements IDataModel
     }
 
     @Override
-    public int getByte(final int offset)
+    public int getByte(final long offset)
     {
-        return data[offset] & 0xFF;
+        return data[(int)offset] & 0xFF;
     }
 }

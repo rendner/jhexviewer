@@ -43,8 +43,8 @@ public final class RowDataBuilder
     @NotNull
     public RowData build(final int rowIndex)
     {
-        final int lastPossibleByteIndex = Math.max(0, dataModel.size() - 1);
-        final int offsetOfFirstRowByte = IndexUtils.rowIndexToByteIndex(rowIndex, bytesPerRow);
+        final long lastPossibleByteIndex = Math.max(0, dataModel.size() - 1);
+        final long offsetOfFirstRowByte = IndexUtils.rowIndexToByteIndex(rowIndex, bytesPerRow);
 
         if (offsetOfFirstRowByte > lastPossibleByteIndex)
         {
@@ -53,8 +53,8 @@ public final class RowDataBuilder
         }
         else
         {
-            final int offsetOfLastRowByte = Math.min(lastPossibleByteIndex, offsetOfFirstRowByte + bytesPerRow - 1);
-            final int numberOfRowBytes = Math.max(0, 1 + (offsetOfLastRowByte - offsetOfFirstRowByte));
+            final long offsetOfLastRowByte = Math.min(lastPossibleByteIndex, offsetOfFirstRowByte + bytesPerRow - 1);
+            final int numberOfRowBytes = (int)Math.max(0, 1 + (offsetOfLastRowByte - offsetOfFirstRowByte));
             return new RowData(dataModel, offsetOfFirstRowByte, numberOfRowBytes, rowIndex);
         }
     }

@@ -47,7 +47,7 @@ public final class RowWiseByteWalker
      * @param start   the start index of the byte, included in the range.
      * @param end     the end index of the byte, included in the range.
      */
-    public void walk(@NotNull final IRowWiseByteVisitor visitor, final int start, final int end)
+    public void walk(@NotNull final IRowWiseByteVisitor visitor, final long start, final long end)
     {
         visitor.start();
 
@@ -58,8 +58,8 @@ public final class RowWiseByteWalker
         while (currentRowIndex <= lastRowIndex)
         {
             final RowData rowData = rowDataBuilder.build(currentRowIndex);
-            final int leadingBytesToIgnore = Math.max(0, start - rowData.offset());
-            final int trailingBytesToIgnore = Math.max(0, (rowData.offset() + rowData.size() - 1) - end);
+            final int leadingBytesToIgnore = (int)Math.max(0, start - rowData.offset());
+            final int trailingBytesToIgnore = (int)Math.max(0, (rowData.offset() + rowData.size() - 1) - end);
 
             visitor.visitRow(rowData, leadingBytesToIgnore, trailingBytesToIgnore);
 

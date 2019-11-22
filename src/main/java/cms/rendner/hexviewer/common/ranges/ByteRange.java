@@ -1,4 +1,4 @@
-package cms.rendner.hexviewer.common.geom;
+package cms.rendner.hexviewer.common.ranges;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public final class Range
+public final class ByteRange
 {
     /**
      * Constant for an invalid value.
@@ -17,22 +17,22 @@ public final class Range
     /**
      * An invalid instance.
      */
-    public static final Range INVALID = new Range(MIN_VALID_INDEX - 1, MIN_VALID_INDEX - 1);
+    public static final ByteRange INVALID = new ByteRange(MIN_VALID_INDEX - 1, MIN_VALID_INDEX - 1);
 
     /**
      * The start value of the range.
      */
-    private final int start;
+    private final long start;
 
     /**
      * The end value of the range.
      */
-    private final int end;
+    private final long end;
 
     /**
      * Creates a new instance with an start and end set to 0.
      */
-    public Range()
+    public ByteRange()
     {
         this(MIN_VALID_INDEX, MIN_VALID_INDEX);
     }
@@ -46,7 +46,7 @@ public final class Range
      * @param start the start value, should be &gt;= 0 otherwise the range is invalid.
      * @param end   the end value, should be &gt;= 0 otherwise the range is invalid.
      */
-    public Range(final int start, final int end)
+    public ByteRange(final long start, final long end)
     {
         super();
         this.start = Math.min(start, end);
@@ -56,7 +56,7 @@ public final class Range
     /**
      * @return the start value of the range.
      */
-    public int getStart()
+    public long getStart()
     {
         return start;
     }
@@ -64,7 +64,7 @@ public final class Range
     /**
      * @return the end value of the range.
      */
-    public int getEnd()
+    public long getEnd()
     {
         return end;
     }
@@ -76,7 +76,7 @@ public final class Range
      *
      * @return the length of the range, &gt;= 0.
      */
-    public int getLength()
+    public long getLength()
     {
         return isValid() ? 1 + end - start : 0;
     }
@@ -100,7 +100,7 @@ public final class Range
      * @param end   the end value to check.
      * @return <code>true</code> if range is valid.
      */
-    private boolean isValid(final int start, final int end)
+    private boolean isValid(final long start, final long end)
     {
         return start >= MIN_VALID_INDEX && end >= MIN_VALID_INDEX && start <= end;
     }
@@ -111,7 +111,7 @@ public final class Range
      * @param value the value to check.
      * @return <code>true</code> if <code>value &gt;= 0 && value &gt;= start && value &lt;= end</code>.
      */
-    public boolean contains(final int value)
+    public boolean contains(final long value)
     {
         if (value <= MIN_VALID_INDEX)
         {
@@ -130,15 +130,15 @@ public final class Range
      * @return the intersection of the two ranges.
      */
     @NotNull
-    public Range computeIntersection(final int otherStart, final int otherEnd)
+    public ByteRange computeIntersection(final long otherStart, final long otherEnd)
     {
         if (!isValid())
         {
-            return Range.INVALID;
+            return ByteRange.INVALID;
         }
         else if (!isValid(otherStart, otherEnd))
         {
-            return Range.INVALID;
+            return ByteRange.INVALID;
         }
 
         final boolean startIsInRange = otherStart >= start && otherStart <= end;
@@ -147,22 +147,22 @@ public final class Range
 
         if (startsBeforeAndEndsAfter)
         {
-            return new Range(start, end);
+            return new ByteRange(start, end);
         }
         if (startIsInRange && endIsInRange)
         {
-            return new Range(otherStart, otherEnd);
+            return new ByteRange(otherStart, otherEnd);
         }
         else if (startIsInRange)
         {
-            return new Range(otherStart, end);
+            return new ByteRange(otherStart, end);
         }
         else if (endIsInRange)
         {
-            return new Range(start, otherEnd);
+            return new ByteRange(start, otherEnd);
         }
 
-        return Range.INVALID;
+        return ByteRange.INVALID;
     }
 
     /**
@@ -173,18 +173,18 @@ public final class Range
      * @return the union.
      */
     @NotNull
-    public Range computeUnion(final int otherStart, final int otherEnd)
+    public ByteRange computeUnion(final long otherStart, final long otherEnd)
     {
         if (!isValid())
         {
-            return Range.INVALID;
+            return ByteRange.INVALID;
         }
         else if (!isValid(otherStart, otherEnd))
         {
-            return Range.INVALID;
+            return ByteRange.INVALID;
         }
 
-        return new Range(Math.min(start, otherStart), Math.max(end, otherEnd));
+        return new ByteRange(Math.min(start, otherStart), Math.max(end, otherEnd));
     }
 
     /**

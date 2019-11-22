@@ -25,5 +25,5 @@ public interface IContextMenuFactory
      * @return a popup menu or <code>null</code> if no popup menu should be shown.
      */
     @Nullable
-    JPopupMenu create(@NotNull JHexViewer hexViewer, @NotNull AreaId areaId, int byteIndex);
+    JPopupMenu create(@NotNull JHexViewer hexViewer, @NotNull AreaId areaId, long byteIndex);
 }

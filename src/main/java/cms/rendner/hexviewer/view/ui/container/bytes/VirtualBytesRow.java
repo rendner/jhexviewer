@@ -1,6 +1,5 @@
 package cms.rendner.hexviewer.view.ui.container.bytes;
 
-import cms.rendner.hexviewer.common.rowtemplate.bytes.HitInfo;
 import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import org.jetbrains.annotations.NotNull;
@@ -92,7 +91,7 @@ final class VirtualBytesRow
     private int virtualXLocationToElementIndex(@NotNull final ByteArea area, final int virtualXLocation)
     {
         final int xInRowTemplate = virtualXLocation - area.getX();
-        return area.hitTest(xInRowTemplate, 0).map(HitInfo::index).orElse(INVALID_INDEX);
+        return area.hitTest(xInRowTemplate, 0).map(hitInfo -> (int)hitInfo.index()).orElse(INVALID_INDEX);
     }
 
     /**

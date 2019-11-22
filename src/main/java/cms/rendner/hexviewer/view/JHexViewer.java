@@ -778,7 +778,7 @@ public class JHexViewer extends JComponent
      *
      * @return the index of the last byte.
      */
-    public int getLastPossibleByteIndex()
+    public long getLastPossibleByteIndex()
     {
         return dataModel == null ? 0 : Math.max(0, dataModel.size() - 1);
     }
@@ -789,7 +789,7 @@ public class JHexViewer extends JComponent
      *
      * @return the index of the last possible caret position, &gt;= 0.
      */
-    public int getLastPossibleCaretIndex()
+    public long getLastPossibleCaretIndex()
     {
         return dataModel == null ? 0 : dataModel.size();
     }
@@ -802,7 +802,7 @@ public class JHexViewer extends JComponent
      * @param byteIndex the byte index to convert.
      * @return the index of the row, or <code>-1</code> if <code>rowIndex</code> is negative.
      */
-    public int byteIndexToRowIndex(final int byteIndex)
+    public int byteIndexToRowIndex(final long byteIndex)
     {
         return IndexUtils.byteIndexToRowIndex(byteIndex, getBytesPerRow());
     }
@@ -815,7 +815,7 @@ public class JHexViewer extends JComponent
      * @param rowIndex the row index to convert.
      * @return the index of the first byte of the row, or <code>-1</code> if <code>rowIndex</code> is negative.
      */
-    public int rowIndexToByteIndex(final int rowIndex)
+    public long rowIndexToByteIndex(final int rowIndex)
     {
         return IndexUtils.rowIndexToByteIndex(rowIndex, getBytesPerRow());
     }
@@ -826,7 +826,7 @@ public class JHexViewer extends JComponent
      * @param byteIndex the byte index to convert.
      * @return the index inside a row, or <code>-1</code> if <code>rowIndex</code> is negative.
      */
-    public int byteIndexToIndexInRow(final int byteIndex)
+    public int byteIndexToIndexInRow(final long byteIndex)
     {
         return IndexUtils.byteIndexToIndexInRow(byteIndex, getBytesPerRow());
     }

@@ -41,14 +41,14 @@ public interface IDamager
      * @param oldCaretIndex the position of the caret before a change.
      * @param newCaretIndex the position of the caret after a change.
      */
-    void damageCaret(int oldCaretIndex, int newCaretIndex);
+    void damageCaret(long oldCaretIndex, long newCaretIndex);
 
     /**
      * Damages a byte of the area.
      *
      * @param byteIndex the index of the byte which should be damaged.
      */
-    void damageByte(int byteIndex);
+    void damageByte(long byteIndex);
 
     /**
      * Damages a range of bytes of the area.
@@ -56,7 +56,7 @@ public interface IDamager
      * @param byteStartIndex the start of the byte range which should be damaged.
      * @param byteEndIndex   the end of the byte range which should be damaged.
      */
-    void damageBytes(int byteStartIndex, int byteEndIndex);
+    void damageBytes(long byteStartIndex, long byteEndIndex);
 
     /**
      * Damages the whole region of the area.
@@ -71,5 +71,5 @@ public interface IDamager
      * @param newStart the new start of the highlight.
      * @param newEnd   the new end of the highlight.
      */
-    void damageChangedHighlight(int oldStart, int oldEnd, int newStart, int newEnd);
+    void damageChangedHighlight(long oldStart, long oldEnd, long newStart, long newEnd);
 }

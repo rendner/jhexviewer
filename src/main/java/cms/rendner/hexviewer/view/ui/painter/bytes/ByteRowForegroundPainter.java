@@ -106,7 +106,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
      */
     private void paintRowElementsForeground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
     {
-        int byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
+        long byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 
         for (int i = 0; i < bytes.size(); i++)
         {
@@ -130,7 +130,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
      */
     private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, final int elementsToPaint)
     {
-        int byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
+        long byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 
         for (int i = 0; i < elementsToPaint; i++)
         {
@@ -148,7 +148,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     @NotNull
-    private Color getForegroundColor(final int offset, final int rowIndex, final int elementIndex)
+    private Color getForegroundColor(final long offset, final int rowIndex, final int elementIndex)
     {
         Color color = null;
         if (colorProvider != null)
@@ -159,7 +159,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     @Nullable
-    private Color getBackgroundColor(final int offset, final int rowIndex, final int elementIndex)
+    private Color getBackgroundColor(final long offset, final int rowIndex, final int elementIndex)
     {
         if (colorProvider != null)
         {

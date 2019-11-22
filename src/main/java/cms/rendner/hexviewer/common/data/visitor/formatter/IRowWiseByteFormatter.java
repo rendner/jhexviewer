@@ -37,7 +37,7 @@ public interface IRowWiseByteFormatter
      * @return a printable representation of the offset.
      */
     @NotNull
-    String formatRowOffset(int rowIndex, int byteOffset);
+    String formatRowOffset(int rowIndex, long byteOffset);
 
     /**
      * @return Returns the row separator string. Usually this is the line separator.

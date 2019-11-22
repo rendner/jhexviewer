@@ -1,7 +1,8 @@
 package cms.rendner.hexviewer.view.components.highlighter;
 
 import cms.rendner.hexviewer.common.geom.HDimension;
-import cms.rendner.hexviewer.common.geom.Range;
+import cms.rendner.hexviewer.common.ranges.ByteRange;
+import cms.rendner.hexviewer.common.ranges.RowRange;
 import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
 import cms.rendner.hexviewer.common.utils.ObjectUtils;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
@@ -31,7 +32,7 @@ public class DefaultHighlighter extends AbstractHighlighter
 
     @NotNull
     @Override
-    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex)
+    public IHighlight addHighlight(final long startByteIndex, final long endByteIndex)
     {
         final HighlightInfo info = new HighlightInfo(startByteIndex, endByteIndex, null);
         highlights.add(info);
@@ -41,14 +42,14 @@ public class DefaultHighlighter extends AbstractHighlighter
 
     @NotNull
     @Override
-    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex, @NotNull final Color color)
+    public IHighlight addHighlight(final long startByteIndex, final long endByteIndex, @NotNull final Color color)
     {
         return addHighlight(startByteIndex, endByteIndex, new DefaultHighlightPainter(color));
     }
 
     @NotNull
     @Override
-    public IHighlight addHighlight(final int startByteIndex, final int endByteIndex, @NotNull final IHighlightPainter painter)
+    public IHighlight addHighlight(final long startByteIndex, final long endByteIndex, @NotNull final IHighlightPainter painter)
     {
         final HighlightInfo info = new HighlightInfo(startByteIndex, endByteIndex, painter);
         highlights.add(info);
@@ -57,7 +58,7 @@ public class DefaultHighlighter extends AbstractHighlighter
     }
 
     @Override
-    public void changeHighlight(@NotNull final IHighlight highlight, final int startByteIndex, final int endByteIndex)
+    public void changeHighlight(@NotNull final IHighlight highlight, final long startByteIndex, final long endByteIndex)
     {
         if (highlight instanceof HighlightInfo)
         {
@@ -73,7 +74,7 @@ public class DefaultHighlighter extends AbstractHighlighter
     {
         if (!highlights.isEmpty())
         {
-            final Range visibleBytes = computeVisibleBytes(area);
+            final ByteRange visibleBytes = computeVisibleBytes(area);
 
             if (visibleBytes.isValid())
             {
@@ -94,12 +95,12 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @param visibleBytes          the range of visible bytes.
      * @param rowElementsHDimension the bounds of all elements in the row.
      */
-    protected void paintHighlight(@NotNull final Graphics2D g, @NotNull final IHighlight highlight, @NotNull final ByteArea area, @NotNull final Range visibleBytes, @NotNull final HDimension rowElementsHDimension)
+    protected void paintHighlight(@NotNull final Graphics2D g, @NotNull final IHighlight highlight, @NotNull final ByteArea area, @NotNull final ByteRange visibleBytes, @NotNull final HDimension rowElementsHDimension)
     {
-        final int start = highlight.getStartOffset();
-        final int end = highlight.getEndOffset();
+        final long start = highlight.getStartOffset();
+        final long end = highlight.getEndOffset();
 
-        final Range visibleHighlightedBytes = visibleBytes.computeIntersection(start, end);
+        final ByteRange visibleHighlightedBytes = visibleBytes.computeIntersection(start, end);
 
         if (visibleHighlightedBytes.isValid())
         {
@@ -133,19 +134,19 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @return the number of potentially visible bytes inside the rows-view
      */
     @NotNull
-    protected Range computeVisibleBytes(@NotNull final ByteArea area)
+    protected ByteRange computeVisibleBytes(@NotNull final ByteArea area)
     {
         final Rectangle rectangle = area.getVisibleRect();
-        final Range rowRange = area.getIntersectingRows(rectangle);
+        final RowRange rowRange = area.getIntersectingRows(rectangle);
 
         if (rowRange.isValid())
         {
-            final int firstByte = hexViewer.rowIndexToByteIndex(rowRange.getStart());
-            final int lastByte = hexViewer.rowIndexToByteIndex(rowRange.getEnd() + hexViewer.getBytesPerRow() - 1);
-            return new Range(firstByte, lastByte);
+            final long firstByte = hexViewer.rowIndexToByteIndex(rowRange.getStart());
+            final long lastByte = hexViewer.rowIndexToByteIndex(rowRange.getEnd() + hexViewer.getBytesPerRow() - 1);
+            return new ByteRange(firstByte, lastByte);
         }
 
-        return rowRange;
+        return ByteRange.INVALID;
     }
 
     /**
@@ -157,7 +158,7 @@ public class DefaultHighlighter extends AbstractHighlighter
      * @param newStart the new start offset of the updated highlight.
      * @param newEnd   the new end offset of the updated highlight.
      */
-    protected void damageChangedHighlight(final int oldStart, final int oldEnd, final int newStart, final int newEnd)
+    protected void damageChangedHighlight(final long oldStart, final long oldEnd, final long newStart, final long newEnd)
     {
         hexViewer.getDamager().ifPresent(damager -> damager.damageChangedHighlight(
                 Math.min(oldStart, oldEnd),
@@ -213,7 +214,7 @@ public class DefaultHighlighter extends AbstractHighlighter
 
         @Override
         public void paint(@NotNull final Graphics2D g, @NotNull final ByteArea area,
-                          @NotNull final HDimension rowElementsHDimension, final int byteStartIndex, final int byteEndIndex)
+                          @NotNull final HDimension rowElementsHDimension, final long byteStartIndex, final long byteEndIndex)
         {
             g.setColor(ObjectUtils.ifNotNullOtherwise(getColor(area), fallbackColor));
 
@@ -260,12 +261,12 @@ public class DefaultHighlighter extends AbstractHighlighter
         /**
          * The start offset for this highlight.
          */
-        int start;
+        long start;
 
         /**
          * The end offset for this highlight.
          */
-        int end;
+        long end;
 
         /**
          * Creates a new instance with a custom painter.
@@ -274,7 +275,7 @@ public class DefaultHighlighter extends AbstractHighlighter
          * @param end     the end offset for the highlight.
          * @param painter painter to use to paint this highlight.
          */
-        HighlightInfo(final int start, final int end, @Nullable final IHighlighter.IHighlightPainter painter)
+        HighlightInfo(final long start, final long end, @Nullable final IHighlighter.IHighlightPainter painter)
         {
             super();
             this.start = start;
@@ -282,12 +283,12 @@ public class DefaultHighlighter extends AbstractHighlighter
             this.painter = painter;
         }
 
-        public int getStartOffset()
+        public long getStartOffset()
         {
             return start;
         }
 
-        public int getEndOffset()
+        public long getEndOffset()
         {
             return end;
         }

@@ -17,7 +17,7 @@ public interface IDataModel
      *
      * @return the number of total available bytes, &gt;= 0.
      */
-    int size();
+    long size();
 
     /**
      * @return <code>true</code> if the model contains no data, otherwise <code>false</code>.
@@ -30,5 +30,5 @@ public interface IDataModel
      * @param offset the offset in the internal data array, in the range [0, size()-1].
      * @return the value at the <code>offset</code>.
      */
-    int getByte(int offset);
+    int getByte(long offset);
 }

@@ -23,7 +23,7 @@ public final class HitInfo
     /**
      * The index of the element which was hit.
      */
-    private final int index;
+    private final long index;
 
     /**
      * Creates a new instance.
@@ -32,7 +32,7 @@ public final class HitInfo
      * @param isLeadingEdge indicates if the leading edge of an element was hit.
      * @param wasInside     indicates if the hit was inside of the bounding box of the element.
      */
-    public HitInfo(final int index, final boolean isLeadingEdge, boolean wasInside)
+    public HitInfo(final long index, final boolean isLeadingEdge, boolean wasInside)
     {
         this.index = index;
         this.isLeadingEdge = isLeadingEdge;
@@ -57,7 +57,7 @@ public final class HitInfo
      *
      * @return the insertion index.
      */
-    public int insertionIndex()
+    public long insertionIndex()
     {
         return isLeadingEdge ? index : index + 1;
     }
@@ -67,7 +67,7 @@ public final class HitInfo
      *
      * @return the index of the element.
      */
-    public int index()
+    public long index()
     {
         return index;
     }

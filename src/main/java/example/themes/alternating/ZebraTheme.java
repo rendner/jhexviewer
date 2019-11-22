@@ -24,7 +24,7 @@ public class ZebraTheme extends AbstractTheme
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getOffsetArea())
+                new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
@@ -37,7 +37,7 @@ public class ZebraTheme extends AbstractTheme
                 })
         );
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getHexArea())
+                new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
@@ -50,7 +50,7 @@ public class ZebraTheme extends AbstractTheme
                 })
         );
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<Area<?, ?, ?>>(hexViewer.getAsciiArea())
+                new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
 
@@ -112,7 +112,7 @@ public class ZebraTheme extends AbstractTheme
             {
                 return hexViewer.getCaret().map(caret ->
                 {
-                    final int caretIndex = caret.getDot();
+                    final long caretIndex = caret.getDot();
                     final int caretRowIndex = hexViewer.byteIndexToRowIndex(caretIndex);
                     return rowIndex == caretRowIndex;
                 }).orElse(Boolean.FALSE);

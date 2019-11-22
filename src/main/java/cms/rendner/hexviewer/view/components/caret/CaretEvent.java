@@ -11,10 +11,10 @@ import java.util.EventObject;
  */
 public final class CaretEvent extends EventObject
 {
-    private final int oldDot;
-    private final int newDot;
-    private final int oldMark;
-    private final int newMark;
+    private final long oldDot;
+    private final long newDot;
+    private final long oldMark;
+    private final long newMark;
 
     /**
      * Creates a new instance with the specified values.
@@ -26,10 +26,10 @@ public final class CaretEvent extends EventObject
      * @param newMark the new position of the mark.
      */
     public CaretEvent(@NotNull final ICaret caret,
-                      final int oldDot,
-                      final int oldMark,
-                      final int newDot,
-                      final int newMark)
+                      final long oldDot,
+                      final long oldMark,
+                      final long newDot,
+                      final long newMark)
     {
         super(caret);
         this.oldDot = oldDot;
@@ -51,7 +51,7 @@ public final class CaretEvent extends EventObject
     /**
      * @return the previous position of the dot.
      */
-    public int getOldDot()
+    public long getOldDot()
     {
         return oldDot;
     }
@@ -59,7 +59,7 @@ public final class CaretEvent extends EventObject
     /**
      * @return the new position of the dot.
      */
-    public int getNewDot()
+    public long getNewDot()
     {
         return newDot;
     }
@@ -67,7 +67,7 @@ public final class CaretEvent extends EventObject
     /**
      * @return the previous position of the mark.
      */
-    public int getOldMark()
+    public long getOldMark()
     {
         return oldMark;
     }
@@ -75,7 +75,7 @@ public final class CaretEvent extends EventObject
     /**
      * @return the new position of the mark.
      */
-    public int getNewMark()
+    public long getNewMark()
     {
         return newMark;
     }

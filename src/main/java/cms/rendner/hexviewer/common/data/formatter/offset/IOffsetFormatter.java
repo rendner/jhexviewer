@@ -1,14 +1,24 @@
 package cms.rendner.hexviewer.common.data.formatter.offset;
 
 import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Formats an offset value.
  *
  * @author rendner
  */
-public interface IOffsetFormatter extends IValueFormatter
+public interface IOffsetFormatter
 {
+    /**
+     * Formats a value into a string representation.
+     *
+     * @param value the value to be converted.
+     * @return the converted result.
+     */
+    @NotNull
+    String format(long value);
+
     /**
      * Adjusts the pad size used to format the value passed to {@link IValueFormatter#format(int)}.
      * <p/>
@@ -33,5 +43,5 @@ public interface IOffsetFormatter extends IValueFormatter
      * @param value   the value to format.
      * @return the length of the formatted value.
      */
-    int calculateFormattedValueLength(final int padSize, final int value);
+    int calculateFormattedValueLength(int padSize, long value);
 }

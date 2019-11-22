@@ -1,6 +1,7 @@
 package example;
 
 import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
+import cms.rendner.hexviewer.common.data.formatter.offset.IOffsetFormatter;
 import cms.rendner.hexviewer.common.data.visitor.ByteVisitor;
 import cms.rendner.hexviewer.common.data.visitor.IByteVisitor;
 import cms.rendner.hexviewer.common.data.visitor.IRowWiseByteVisitor;
@@ -41,7 +42,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     private JFileChooser fileChooser;
 
     @NotNull
-    public JPopupMenu create(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final int byteIndex)
+    public JPopupMenu create(@NotNull final JHexViewer hexViewer, @NotNull final AreaId areaId, final long byteIndex)
     {
         final JPopupMenu menu = new JPopupMenu();
 
@@ -56,7 +57,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         return menu;
     }
 
-    private void addHighlightMenu(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer, final int byteIndex)
+    private void addHighlightMenu(@NotNull final JPopupMenu menu, @NotNull final JHexViewer hexViewer, final long byteIndex)
     {
         menu.add(new JMenuItem(new AbstractAction("selection to highlight")
         {
@@ -316,7 +317,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     @NotNull
     private IRowWiseByteFormatter getConfiguredByteFormatter(@NotNull final JHexViewer hexViewer)
     {
-        final IValueFormatter offsetValueFormatter = hexViewer.getOffsetArea().getValueFormatter();
+        final IOffsetFormatter offsetValueFormatter = hexViewer.getOffsetArea().getValueFormatter();
         final IValueFormatter hexValueFormatter = hexViewer.getHexArea().getValueFormatter();
         final IValueFormatter asciiValueFormatter = hexViewer.getAsciiArea().getValueFormatter();
         return new RowWiseByteFormatter(offsetValueFormatter, hexValueFormatter, asciiValueFormatter);

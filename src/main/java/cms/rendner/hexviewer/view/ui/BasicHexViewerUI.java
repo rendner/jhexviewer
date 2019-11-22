@@ -654,8 +654,8 @@ public class BasicHexViewerUI extends HexViewerUI
     private ICaretListener createCaretListener()
     {
         return event -> {
-            final int oldIndex = event.getOldDot();
-            final int newIndex = event.getNewDot();
+            final long oldIndex = event.getOldDot();
+            final long newIndex = event.getNewDot();
             if (oldIndex != newIndex)
             {
                 if (hexViewer.isShowOffsetCaretIndicator())
@@ -710,8 +710,8 @@ public class BasicHexViewerUI extends HexViewerUI
     private void showContextMenu(@NotNull final ByteArea area, @NotNull final Point locationInRowsView)
     {
         hexViewer.getContextMenuFactory().ifPresent(factory -> {
-                    final int maxByteIndex = hexViewer.getLastPossibleByteIndex();
-                    final int byteIndex = area
+                    final long maxByteIndex = hexViewer.getLastPossibleByteIndex();
+                    final long byteIndex = area
                             .hitTest(locationInRowsView.x, locationInRowsView.y)
                             .map(byteHitInfo -> Math.min(byteHitInfo.index(), maxByteIndex))
                             .orElse(maxByteIndex);

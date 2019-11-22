@@ -1,7 +1,6 @@
 package cms.rendner.hexviewer.view.components.areas.common;
 
-import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
-import cms.rendner.hexviewer.common.geom.Range;
+import cms.rendner.hexviewer.common.ranges.RowRange;
 import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.IRowTemplate;
 import cms.rendner.hexviewer.common.utils.CheckUtils;
@@ -22,13 +21,11 @@ import java.util.Optional;
  *
  * @param <T> the row-template describing the layout of the rows displayed by the area.
  * @param <P> the color provider used by several other classes to allow customizing of the used colors.
- * @param <F> the formatter used to transform the row content into displayable strings.
  * @author rendner
  */
 public abstract class Area<
         T extends IRowTemplate,
-        P extends IAreaColorProvider,
-        F extends IValueFormatter
+        P extends IAreaColorProvider
         > extends BorderlessJComponent
 {
     /**
@@ -37,13 +34,6 @@ public abstract class Area<
      */
     @NotNull
     public static final String PROPERTY_PAINTER = "painter";
-
-    /**
-     * Constant used to determine when the <code>valueFormatter</code> property has changed.
-     * Note that either value (old and new) can also be null.
-     */
-    @NotNull
-    public static final String PROPERTY_VALUE_FORMATTER = "valueFormatter";
 
     /**
      * Constant used to determine when the <code>colorProvider</code> property has changed.
@@ -99,12 +89,6 @@ public abstract class Area<
     private P colorProvider;
 
     /**
-     * Used to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} into displayable strings.
-     */
-    @NotNull
-    private F valueFormatter;
-
-    /**
      * The id of the area.
      */
     @NotNull
@@ -124,13 +108,11 @@ public abstract class Area<
     /**
      * Creates a new instance with the provided values.
      *
-     * @param id             the id of the area.
-     * @param valueFormatter the formatter used to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} into displayable strings.
+     * @param id the id of the area.
      */
-    protected Area(@NotNull final AreaId id, @NotNull final F valueFormatter)
+    protected Area(@NotNull final AreaId id)
     {
         this.id = id;
-        this.valueFormatter = valueFormatter;
     }
 
     /**
@@ -184,38 +166,6 @@ public abstract class Area<
             revalidate();
             repaint();
         }
-    }
-
-    /**
-     * Sets the new value formatter of the area.
-     * The formatter will be used to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer}
-     * into displayable strings.
-     * <p/>
-     * Setting a new formatter results in a repaint of the component.
-     * <p/>
-     * A PropertyChange event {@link Area#PROPERTY_VALUE_FORMATTER} is fired when a new formatter is set.
-     *
-     * @param valueFormatter the new formatter, passing <code>null</code> results into an empty area
-     *                       (no content will be rendered).
-     */
-    public void setValueFormatter(@NotNull final F valueFormatter)
-    {
-        if (this.valueFormatter != valueFormatter)
-        {
-            final IValueFormatter oldValue = this.valueFormatter;
-            this.valueFormatter = valueFormatter;
-            firePropertyChange(PROPERTY_VALUE_FORMATTER, oldValue, this.valueFormatter);
-            repaint();
-        }
-    }
-
-    /**
-     * @return the formatter to transform the data of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} into displayable strings.
-     */
-    @NotNull
-    public F getValueFormatter()
-    {
-        return valueFormatter;
     }
 
     /**
@@ -314,11 +264,11 @@ public abstract class Area<
      * @return the range of intersection.
      */
     @NotNull
-    public Range getIntersectingRows(@NotNull final Rectangle rectangle)
+    public RowRange getIntersectingRows(@NotNull final Rectangle rectangle)
     {
         if (rectangle.isEmpty())
         {
-            return Range.INVALID;
+            return RowRange.INVALID;
         }
 
         final int topRowIndex = verticalLocationToRowIndex(rectangle.y);
@@ -333,10 +283,10 @@ public abstract class Area<
                 bottomRowIndex = Math.max(0, rowCount - 1);
             }
 
-            return new Range(topRowIndex, bottomRowIndex);
+            return new RowRange(topRowIndex, bottomRowIndex);
         }
 
-        return Range.INVALID;
+        return RowRange.INVALID;
     }
 
     /**
