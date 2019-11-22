@@ -148,22 +148,22 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     @NotNull
-    private Color getForegroundColor(final long offset, final int rowIndex, final int elementIndex)
+    private Color getForegroundColor(final long offset, final int rowIndex, final int elementInRowIndex)
     {
         Color color = null;
         if (colorProvider != null)
         {
-            color = colorProvider.getRowElementForeground(offset, rowIndex, elementIndex);
+            color = colorProvider.getRowElementForeground(offset, rowIndex, elementInRowIndex);
         }
         return color == null ? Color.white : color;
     }
 
     @Nullable
-    private Color getBackgroundColor(final long offset, final int rowIndex, final int elementIndex)
+    private Color getBackgroundColor(final long offset, final int rowIndex, final int elementInRowIndex)
     {
         if (colorProvider != null)
         {
-            return colorProvider.getRowElementBackground(offset, rowIndex, elementIndex);
+            return colorProvider.getRowElementBackground(offset, rowIndex, elementInRowIndex);
         }
 
         return null;

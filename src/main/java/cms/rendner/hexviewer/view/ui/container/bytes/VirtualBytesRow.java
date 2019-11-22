@@ -59,11 +59,11 @@ final class VirtualBytesRow
     int virtualXLocationToVirtualByteIndex(final int virtualXLocation)
     {
         final ByteArea area = virtualXLocationToArea(virtualXLocation);
-        final int elementIndex = virtualXLocationToElementIndex(area, virtualXLocation);
-        if (elementIndex != INVALID_INDEX)
+        final int elementInRowIndex = virtualXLocationToElementIndex(area, virtualXLocation);
+        if (elementInRowIndex != INVALID_INDEX)
         {
-            final int indexOffset = leftArea == area ? 0 : getBytesPerRow();
-            return indexOffset + elementIndex;
+            final int elementsInFrontOfArea = leftArea == area ? 0 : getBytesPerRow();
+            return elementsInFrontOfArea + elementInRowIndex;
         }
 
         return INVALID_INDEX;

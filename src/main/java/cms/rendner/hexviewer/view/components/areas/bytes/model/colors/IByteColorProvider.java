@@ -20,12 +20,12 @@ public interface IByteColorProvider extends IAreaColorProvider
      *
      * @param offset       the offset of the byte to paint.
      * @param rowIndex     the row index of the element.
-     * @param elementIndex the index of the element in the row.
+     * @param elementInRowIndex the index of the element in the row.
      * @return the color to use, <code>null</code> if the area painter should decide which color to use. The
      * preferred behaviour of the painter would be that in case of <code>null</code> no background is painted.
      */
     @Nullable
-    default Color getRowElementBackground(long offset, int rowIndex, int elementIndex)
+    default Color getRowElementBackground(long offset, int rowIndex, int elementInRowIndex)
     {
         return null;
     }
@@ -35,12 +35,12 @@ public interface IByteColorProvider extends IAreaColorProvider
      *
      * @param offset       the offset of the byte to paint.
      * @param rowIndex     the row index of the element.
-     * @param elementIndex the index of the element in the row.
+     * @param elementInRowIndex the index of the element in the row.
      * @return the color to use, <code>null</code> if the area painter should decide which color to use. The
      * preferred behaviour would be that in case of <code>null</code> a default color is used to draw the foreground.
      */
     @Nullable
-    default Color getRowElementForeground(long offset, int rowIndex, int elementIndex)
+    default Color getRowElementForeground(long offset, int rowIndex, int elementInRowIndex)
     {
         return Color.black;
     }

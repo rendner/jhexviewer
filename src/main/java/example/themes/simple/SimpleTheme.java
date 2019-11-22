@@ -99,13 +99,13 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getHexArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getHexArea())
         {
             @Override
-            public @NotNull Color getRowElementForeground(final long offset, final int rowIndex, final int elementIndex)
+            public @NotNull Color getRowElementForeground(final long offset, final int rowIndex, final int elementInRowIndex)
             {
                 if (isSelected(offset))
                 {
-                    return IndexUtils.isEven(elementIndex) ? Color.white : Color.blue;
+                    return IndexUtils.isEven(elementInRowIndex) ? Color.white : Color.blue;
                 }
-                return IndexUtils.isEven(elementIndex) ? Color.gray : Color.blue;
+                return IndexUtils.isEven(elementInRowIndex) ? Color.gray : Color.blue;
             }
 
             private boolean isSelected(final long offset)
