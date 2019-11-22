@@ -564,7 +564,7 @@ public class BasicHexViewerUI extends HexViewerUI
      * @return the area painter.
      */
     @Nullable
-    protected BasicAreaPainter createOffsetAreaPainter()
+    protected BasicAreaPainter<? extends OffsetArea> createOffsetAreaPainter()
     {
         return new OffsetAreaPainterUIResource(hexViewer);
     }
@@ -602,7 +602,7 @@ public class BasicHexViewerUI extends HexViewerUI
      * @return the area painter.
      */
     @Nullable
-    protected BasicAreaPainter createByteAreaPainter(@NotNull final ByteArea area)
+    protected BasicAreaPainter<? extends ByteArea> createByteAreaPainter(@NotNull final ByteArea area)
     {
         return new ByteAreaPainterUIResource(hexViewer, area);
     }

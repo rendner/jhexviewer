@@ -29,7 +29,7 @@ public final class RowGraphicsBuilder
      * @return a list of RowGraphics objects.
      */
     @NotNull
-    public static List<RowGraphics> buildForegroundRowGraphics(@NotNull final Graphics2D g, @NotNull final Area area)
+    public static List<RowGraphics> buildForegroundRowGraphics(@NotNull final Graphics2D g, @NotNull final Area<?, ?> area)
     {
         return getRowGraphics(g, area, getRangeOfDirtyForegroundRows(g, area));
     }
@@ -46,7 +46,7 @@ public final class RowGraphicsBuilder
      * @return a list of RowGraphics objects.
      */
     @NotNull
-    public static List<RowGraphics> buildBackgroundRowGraphics(@NotNull final Graphics2D g, @NotNull final Area area)
+    public static List<RowGraphics> buildBackgroundRowGraphics(@NotNull final Graphics2D g, @NotNull final Area<?, ?> area)
     {
         return getRowGraphics(g, area, getRangeOfDirtyBackgroundRows(g, area));
     }
@@ -59,7 +59,7 @@ public final class RowGraphicsBuilder
      * @return a range describing the rows to be repainted.
      */
     @NotNull
-    private static RowRange getRangeOfDirtyBackgroundRows(@NotNull final Graphics2D g, @NotNull final Area area)
+    private static RowRange getRangeOfDirtyBackgroundRows(@NotNull final Graphics2D g, @NotNull final Area<?, ?> area)
     {
         final Rectangle bounds = g.getClipBounds();
         final int rowHeight = area.getRowHeight();
@@ -76,7 +76,7 @@ public final class RowGraphicsBuilder
      * @return a range describing the rows to be repainted.
      */
     @NotNull
-    private static RowRange getRangeOfDirtyForegroundRows(@NotNull final Graphics2D g, @NotNull final Area area)
+    private static RowRange getRangeOfDirtyForegroundRows(@NotNull final Graphics2D g, @NotNull final Area<?, ?> area)
     {
         return area.getIntersectingRows(g.getClipBounds());
     }
@@ -96,7 +96,7 @@ public final class RowGraphicsBuilder
      * @return a list of RowGraphics objects for each row which lies in the specified range, or an empty list if the range is invalid.
      */
     @NotNull
-    private static List<RowGraphics> getRowGraphics(@NotNull final Graphics2D g, @NotNull final Area area, @NotNull final RowRange rowRange)
+    private static List<RowGraphics> getRowGraphics(@NotNull final Graphics2D g, @NotNull final Area<?, ?> area, @NotNull final RowRange rowRange)
     {
         if (rowRange.isValid())
         {
@@ -115,7 +115,7 @@ public final class RowGraphicsBuilder
      * @return a list of RowGraphics objects for each row which lies in the specified range.
      */
     @NotNull
-    private static List<RowGraphics> createRowGraphics(@NotNull final Graphics2D g, @NotNull final Area area, @NotNull final RowRange rowRange)
+    private static List<RowGraphics> createRowGraphics(@NotNull final Graphics2D g, @NotNull final Area<?, ?> area, @NotNull final RowRange rowRange)
     {
         final List<RowGraphics> result = new ArrayList<>(rowRange.getLength());
         final Rectangle rowBounds = area.getRowRect(rowRange.getStart());
