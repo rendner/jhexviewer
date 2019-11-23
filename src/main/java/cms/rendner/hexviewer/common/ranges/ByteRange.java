@@ -12,7 +12,7 @@ public final class ByteRange
     /**
      * Constant for an invalid value.
      */
-    private static final int MIN_VALID_INDEX = 0;
+    private static final long MIN_VALID_INDEX = 0L;
 
     /**
      * An invalid instance.

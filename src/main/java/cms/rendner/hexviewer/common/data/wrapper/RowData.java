@@ -86,7 +86,7 @@ public final class RowData
      * @param indexInPart the index in the data part, in the range [0, size()-1].
      * @return the value at the <code>indexInPart</code>.
      */
-    public final int getByte(final long indexInPart)
+    public final int getByte(final int indexInPart)
     {
         if (isEmpty() || indexInPart < 0 || indexInPart >= size)
         {
