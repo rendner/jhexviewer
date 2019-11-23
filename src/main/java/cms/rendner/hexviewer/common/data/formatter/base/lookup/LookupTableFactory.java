@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.common.data.formatter.base.lookup;
 
+import cms.rendner.hexviewer.common.utils.AsciiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyEvent;
@@ -135,7 +136,7 @@ public final class LookupTableFactory
         for (int i = 0; i < result.length; i++)
         {
             c = (char) i;
-            if (isPrintableAsciiChar(c))
+            if (AsciiUtils.isPrintable(c))
             {
                 result[i] = String.valueOf(c);
             }
@@ -155,11 +156,6 @@ public final class LookupTableFactory
                 c != KeyEvent.CHAR_UNDEFINED &&
                 block != null &&
                 block != Character.UnicodeBlock.SPECIALS;
-    }
-
-    private static boolean isPrintableAsciiChar(final char c)
-    {
-        return c >= 0x20 && c < 0x7F;
     }
 
     /**
