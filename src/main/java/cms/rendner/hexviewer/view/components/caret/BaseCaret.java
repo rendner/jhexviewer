@@ -1,8 +1,8 @@
 package cms.rendner.hexviewer.view.components.caret;
 
-import cms.rendner.hexviewer.common.rowtemplate.bytes.HitInfo;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.hit.ByteHitInfo;
 import cms.rendner.hexviewer.view.components.damager.IDamager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -485,7 +485,7 @@ public abstract class BaseCaret implements ICaret
 
                 final long caretOffset = dragStartArea
                         .hitTest(clampedLocation.x, clampedLocation.y)
-                        .map(HitInfo::insertionIndex)
+                        .map(ByteHitInfo::insertionIndex)
                         .orElse(hexViewer.getLastPossibleCaretIndex());
 
                 moveCaret(caretOffset, true, true);
@@ -512,7 +512,7 @@ public abstract class BaseCaret implements ICaret
 
             final long caretOffset = dragStartArea
                     .hitTest(event.getX(), event.getY())
-                    .map(HitInfo::insertionIndex)
+                    .map(ByteHitInfo::insertionIndex)
                     .orElse(hexViewer.getLastPossibleCaretIndex());
 
             moveCaret(caretOffset, false, true);

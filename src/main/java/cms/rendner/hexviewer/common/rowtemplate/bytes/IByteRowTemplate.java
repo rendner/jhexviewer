@@ -2,6 +2,7 @@ package cms.rendner.hexviewer.common.rowtemplate.bytes;
 
 import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.IRowTemplate;
+import cms.rendner.hexviewer.common.rowtemplate.bytes.hit.RowHitInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -47,13 +48,13 @@ public interface IByteRowTemplate extends IRowTemplate
      * <p/>
      * If <code>xPosition</code> is located before the first element the hit is counted as hit on the first element.
      * If <code>xPosition</code> is located after the element char the hit is counted as hit on the last element.
-     * In such a case to check if a real hit has occurred check <code>{@link HitInfo#wasInside()}</code>.
+     * In such a case to check if a real hit has occurred check <code>{@link RowHitInfo#wasInside()}</code>.
      *
      * @param xPosition the x position to check.
      * @return an info object which describes which element was hit.
      */
     @NotNull
-    HitInfo hitTest(int xPosition);
+    RowHitInfo hitTest(int xPosition);
 
     /**
      * Computes an union of the bounds of the elements in range of [<code>firstElementIndex</code>, <code>lastElementIndex</code>].

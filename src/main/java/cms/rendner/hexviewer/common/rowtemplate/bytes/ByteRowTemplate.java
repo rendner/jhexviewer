@@ -3,6 +3,7 @@ package cms.rendner.hexviewer.common.rowtemplate.bytes;
 import cms.rendner.hexviewer.common.geom.Dimension;
 import cms.rendner.hexviewer.common.rowtemplate.BaseRowTemplate;
 import cms.rendner.hexviewer.common.rowtemplate.Element;
+import cms.rendner.hexviewer.common.rowtemplate.bytes.hit.RowHitInfo;
 import cms.rendner.hexviewer.common.utils.CheckUtils;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import org.jetbrains.annotations.NotNull;
@@ -101,7 +102,7 @@ public class ByteRowTemplate extends BaseRowTemplate implements IByteRowTemplate
 
     @NotNull
     @Override
-    public HitInfo hitTest(final int xPosition)
+    public RowHitInfo hitTest(final int xPosition)
     {
         final int elementIndex = elementIndexForXPosition(xPosition);
         final Element element = elements.get(elementIndex);
@@ -110,7 +111,7 @@ public class ByteRowTemplate extends BaseRowTemplate implements IByteRowTemplate
         final boolean isLeadingEdge = xPosition < (element.right() - halfWidth);
         final boolean wasInside = element.containsX(xPosition);
 
-        return new HitInfo(elementIndex, isLeadingEdge, wasInside);
+        return new RowHitInfo(elementIndex, isLeadingEdge, wasInside);
     }
 
     /**
