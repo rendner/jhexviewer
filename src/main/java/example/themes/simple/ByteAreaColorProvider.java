@@ -47,7 +47,7 @@ public class ByteAreaColorProvider implements IByteColorProvider
 
     @NotNull
     @Override
-    public Color getRowElementForeground(final long offset, final int rowIndex, final int elementInRowIndex)
+    public Color getRowElementForeground(final int byteValue, final long offset, final int rowIndex, final int elementInRowIndex)
     {
         return Color.darkGray;
     }

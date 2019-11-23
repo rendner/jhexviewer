@@ -99,7 +99,7 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getHexArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getHexArea())
         {
             @Override
-            public @NotNull Color getRowElementForeground(final long offset, final int rowIndex, final int elementInRowIndex)
+            public @NotNull Color getRowElementForeground(final int byteValue, final long offset, final int rowIndex, final int elementInRowIndex)
             {
                 if (isSelected(offset))
                 {

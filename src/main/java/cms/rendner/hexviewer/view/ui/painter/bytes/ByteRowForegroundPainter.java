@@ -92,7 +92,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
 
         rowGraphicsList.forEach(rowGraphics -> {
             final RowData bytes = rowDataBuilder.build(rowGraphics.rowIndex);
-            paintRowElementsBackground(rowGraphics, bytes.size());
+            paintRowElementsBackground(rowGraphics, bytes);
             paintRowElementsForeground(rowGraphics, bytes);
             rowGraphics.dispose();
         });
@@ -102,7 +102,9 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
      * Paints the foreground of the row elements.
      *
      * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
-     * @param bytes       the date which should be displayed by the row.
+     * @param bytes       the data which should be displayed by the row. This can be less as the number of elements provided by the
+     *                             {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
+     *                              to display.
      */
     private void paintRowElementsForeground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
     {
@@ -110,10 +112,11 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
 
         for (int i = 0; i < bytes.size(); i++)
         {
+            final int byteValue = bytes.getByte(i);
             final Element byteElement = rowTemplate.element(i);
-            final String byteToDraw = valueFormatter.format(bytes.getByte(i));
+            final String byteToDraw = valueFormatter.format(byteValue);
 
-            rowGraphics.g.setColor(getForegroundColor(byteOffset, rowGraphics.rowIndex, i));
+            rowGraphics.g.setColor(getForegroundColor(byteValue, byteOffset, rowGraphics.rowIndex, i));
             rowGraphics.g.drawString(byteToDraw, byteElement.x(), ascent + byteElement.y());
 
             byteOffset++;
@@ -124,17 +127,17 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
      * Paints the background of the row elements.
      *
      * @param rowGraphics     the rowGraphics instance which belongs to the row to paint.
-     * @param elementsToPaint the number of elements to paint. This can be less as the number of elements provided by the
-     *                        {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
-     *                        to display.
+     * @param bytes       the data which should be displayed by the row. This can be less as the number of elements provided by the
+     *                                  {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
+     *                                   to display.
      */
-    private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, final int elementsToPaint)
+    private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
     {
         long byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 
-        for (int i = 0; i < elementsToPaint; i++)
+        for (int i = 0; i < bytes.size(); i++)
         {
-            final Color color = getBackgroundColor(byteOffset, rowGraphics.rowIndex, i);
+            final Color color = getBackgroundColor(bytes.getByte(i), byteOffset, rowGraphics.rowIndex, i);
             if (color != null)
             {
                 final Element byteElement = rowTemplate.element(i);
@@ -148,22 +151,22 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     @NotNull
-    private Color getForegroundColor(final long offset, final int rowIndex, final int elementInRowIndex)
+    private Color getForegroundColor(final int byteValue, final long offset, final int rowIndex, final int elementInRowIndex)
     {
         Color color = null;
         if (colorProvider != null)
         {
-            color = colorProvider.getRowElementForeground(offset, rowIndex, elementInRowIndex);
+            color = colorProvider.getRowElementForeground(byteValue, offset, rowIndex, elementInRowIndex);
         }
         return color == null ? Color.white : color;
     }
 
     @Nullable
-    private Color getBackgroundColor(final long offset, final int rowIndex, final int elementInRowIndex)
+    private Color getBackgroundColor(final int byteValue, final long offset, final int rowIndex, final int elementInRowIndex)
     {
         if (colorProvider != null)
         {
-            return colorProvider.getRowElementBackground(offset, rowIndex, elementInRowIndex);
+            return colorProvider.getRowElementBackground(byteValue, offset, rowIndex, elementInRowIndex);
         }
 
         return null;
