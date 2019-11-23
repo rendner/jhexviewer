@@ -3,7 +3,7 @@ package cms.rendner.hexviewer.view.components.areas.bytes;
 import cms.rendner.hexviewer.common.data.formatter.base.IValueFormatter;
 import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
-import cms.rendner.hexviewer.common.rowtemplate.bytes.hit.RowHitInfo;
+import cms.rendner.hexviewer.common.rowtemplate.bytes.hit.ElementHitInfo;
 import cms.rendner.hexviewer.common.utils.CheckUtils;
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.components.areas.bytes.hit.ByteHitInfo;
@@ -153,13 +153,13 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
 
             if (rowIndex != INVALID_INDEX && rowTemplate.containsX(x))
             {
-                final RowHitInfo rowHitInfo = rowTemplate.hitTest(x);
+                final ElementHitInfo elementHitInfo = rowTemplate.hitTest(x);
                 final long offsetOfFirstByteInRow = ((long) rowIndex * rowTemplate.elementCount());
                 return Optional.of(
                         new ByteHitInfo(
-                                rowHitInfo.index() + offsetOfFirstByteInRow,
-                                rowHitInfo.isLeadingEdge(),
-                                rowHitInfo.wasInside()
+                                elementHitInfo.index() + offsetOfFirstByteInRow,
+                                elementHitInfo.isLeadingEdge(),
+                                elementHitInfo.wasInside()
                         )
                 );
             }

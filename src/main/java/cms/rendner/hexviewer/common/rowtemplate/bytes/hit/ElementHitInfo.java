@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author rendner
  */
-public final class RowHitInfo extends BaseHitInfo
+public final class ElementHitInfo extends BaseHitInfo
 {
     /**
      * The index of the element which was hit.
@@ -24,7 +24,7 @@ public final class RowHitInfo extends BaseHitInfo
      * @param isLeadingEdge indicates if the leading edge of an element was hit.
      * @param wasInside     indicates if the hit was inside of the bounding box of the element.
      */
-    public RowHitInfo(final int index, final boolean isLeadingEdge, boolean wasInside)
+    public ElementHitInfo(final int index, final boolean isLeadingEdge, boolean wasInside)
     {
         super(isLeadingEdge, wasInside);
         this.index = index;
@@ -73,7 +73,7 @@ public final class RowHitInfo extends BaseHitInfo
         {
             return false;
         }
-        final RowHitInfo that = (RowHitInfo) o;
+        final ElementHitInfo that = (ElementHitInfo) o;
         return index == that.index;
     }
 
