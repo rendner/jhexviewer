@@ -22,7 +22,7 @@ public final class ByteAreaColorProvider implements IByteColorProvider
     private @NotNull final Color caret = new Color(0x5A6063);
     private @NotNull final Color focusedSelection = new Color(0xEBCFC4);
     private @NotNull final Color selection = new Color(0x7DF8DCD1, true);
-    private @NotNull final Color evenRowBackground = Color.white;
+    private @NotNull final Color evenRowBackground = Color.WHITE;
     private @NotNull final Color oddRowBackground = new Color(0xECECE1);
     private @NotNull final Color highlight = new Color(0xB5E9FF);
     private @NotNull final Color rowElementForeground = new Color(0x999999);

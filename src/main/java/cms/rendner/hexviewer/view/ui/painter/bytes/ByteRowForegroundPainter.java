@@ -158,7 +158,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
         {
             color = colorProvider.getRowElementForeground(byteValue, offset, rowIndex, elementInRowIndex);
         }
-        return color == null ? Color.white : color;
+        return color == null ? Color.WHITE : color;
     }
 
     @Nullable

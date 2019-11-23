@@ -18,7 +18,7 @@ import java.awt.*;
  * Highlight which doesn't specify a own painter are painted by an internal default one. The paint color for this default
  * painter are retrieved from the {@link cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider IAreaColorProvider}
  * of the byte-area in which the highlights are painted. If the {@link cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider IAreaColorProvider}
- * returns {@code null} then the color {@code Color.yellow} will be used to paint such highlights.
+ * returns {@code null} then the color {@code Color.YELLOW} will be used to paint such highlights.
  *
  * @author rendner
  */
@@ -184,7 +184,7 @@ public class DefaultHighlighter extends AbstractHighlighter
          */
         public DefaultHighlightPainter()
         {
-            this(Color.yellow);
+            this(Color.YELLOW);
         }
 
         /**

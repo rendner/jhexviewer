@@ -28,7 +28,7 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
                     @Override
                     public void paintRow(@NotNull final RowGraphics rowGraphics, boolean isLastRow)
@@ -41,7 +41,7 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
@@ -54,7 +54,7 @@ public class SimpleTheme extends AbstractTheme
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
@@ -75,13 +75,13 @@ public class SimpleTheme extends AbstractTheme
             @Override
             public Color getRowElementForeground(final int rowIndex)
             {
-                return hexViewer.isShowOffsetCaretIndicator() && isCaretRowIndex(rowIndex) ? Color.darkGray : Color.gray;
+                return hexViewer.isShowOffsetCaretIndicator() && isCaretRowIndex(rowIndex) ? Color.DARK_GRAY : Color.GRAY;
             }
 
             @Override
             public @Nullable Color getRowBackground(final int rowIndex)
             {
-                return hexViewer.isShowOffsetCaretIndicator() && isCaretRowIndex(rowIndex) ? Color.white : Color.lightGray;
+                return hexViewer.isShowOffsetCaretIndicator() && isCaretRowIndex(rowIndex) ? Color.WHITE : Color.LIGHT_GRAY;
             }
 
             private boolean isCaretRowIndex(final int rowIndex)
@@ -103,9 +103,9 @@ public class SimpleTheme extends AbstractTheme
             {
                 if (isSelected(offset))
                 {
-                    return IndexUtils.isEven(elementInRowIndex) ? Color.white : Color.blue;
+                    return IndexUtils.isEven(elementInRowIndex) ? Color.WHITE : Color.BLUE;
                 }
-                return IndexUtils.isEven(elementInRowIndex) ? Color.gray : Color.blue;
+                return IndexUtils.isEven(elementInRowIndex) ? Color.GRAY : Color.BLUE;
             }
 
             private boolean isSelected(final long offset)

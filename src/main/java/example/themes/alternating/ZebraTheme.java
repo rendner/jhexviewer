@@ -26,7 +26,7 @@ public class ZebraTheme extends AbstractTheme
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
                     @Override
                     public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
@@ -39,7 +39,7 @@ public class ZebraTheme extends AbstractTheme
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
                     @Override
                     public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
@@ -52,7 +52,7 @@ public class ZebraTheme extends AbstractTheme
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.lightGray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
                     @Override
                     public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
@@ -72,7 +72,7 @@ public class ZebraTheme extends AbstractTheme
 
         final int inset = 2;
         final Border outsideBorder = BorderFactory.createEmptyBorder(inset, inset, inset, inset);
-        final Border insideBorder = BorderFactory.createLineBorder(Color.white);
+        final Border insideBorder = BorderFactory.createLineBorder(Color.WHITE);
         hexViewer.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
     }
 
@@ -82,7 +82,7 @@ public class ZebraTheme extends AbstractTheme
         final IOffsetColorProvider offsetColorProvider = new IOffsetColorProvider()
         {
             private @NotNull
-            final Color rowElementForegroundWhenCaretInRow = Color.black;
+            final Color rowElementForegroundWhenCaretInRow = Color.BLACK;
             private @NotNull
             final Color rowElementForeground = new Color(0x999999);
             private @NotNull

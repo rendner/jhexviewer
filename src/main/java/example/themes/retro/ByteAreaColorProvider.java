@@ -17,7 +17,7 @@ public final class ByteAreaColorProvider implements IByteColorProvider
     private @NotNull final ByteArea area;
     private @NotNull final JHexViewer hexViewer;
 
-    private @NotNull final Color focusedCaret = Color.darkGray;
+    private @NotNull final Color focusedCaret = Color.DARK_GRAY;
     private @NotNull final Color caret = new Color(0xABB6B9);
     private @NotNull final Color focusedSelection = new Color(0xFFA11D);
     private @NotNull final Color selection = new Color(0x41FFA11D, true);

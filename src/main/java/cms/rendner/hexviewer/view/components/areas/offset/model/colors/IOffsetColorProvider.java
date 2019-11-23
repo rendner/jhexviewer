@@ -38,6 +38,6 @@ public interface IOffsetColorProvider extends IAreaColorProvider
     @Nullable
     default Color getRowElementForeground(int rowIndex)
     {
-        return Color.black;
+        return Color.BLACK;
     }
 }

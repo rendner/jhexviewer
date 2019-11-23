@@ -44,7 +44,7 @@ public interface IByteColorProvider extends IAreaColorProvider
     @Nullable
     default Color getRowElementForeground(int byteValue, long offset, int rowIndex, int elementInRowIndex)
     {
-        return Color.black;
+        return Color.BLACK;
     }
 
     /**
@@ -55,7 +55,7 @@ public interface IByteColorProvider extends IAreaColorProvider
     @Nullable
     default Color getCaret()
     {
-        return Color.gray;
+        return Color.GRAY;
     }
 
     /**
@@ -66,7 +66,7 @@ public interface IByteColorProvider extends IAreaColorProvider
     @Nullable
     default Color getSelection()
     {
-        return Color.darkGray;
+        return Color.DARK_GRAY;
     }
 
     /**
@@ -77,6 +77,6 @@ public interface IByteColorProvider extends IAreaColorProvider
     @Nullable
     default Color getDefaultHighlight()
     {
-        return Color.yellow;
+        return Color.YELLOW;
     }
 }

@@ -152,7 +152,7 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
         {
             color = colorProvider.getRowElementForeground(rowIndex);
         }
-        return color == null ? Color.white : color;
+        return color == null ? Color.WHITE : color;
     }
 
     @Nullable

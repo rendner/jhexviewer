@@ -24,7 +24,7 @@ public class ConsoleTheme extends AbstractTheme
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.white);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
@@ -37,7 +37,7 @@ public class ConsoleTheme extends AbstractTheme
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.white);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
@@ -50,7 +50,7 @@ public class ConsoleTheme extends AbstractTheme
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.white);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
@@ -70,7 +70,7 @@ public class ConsoleTheme extends AbstractTheme
 
         final int inset = 2;
         final Border outsideBorder = BorderFactory.createEmptyBorder(inset, inset, inset, inset);
-        final Border insideBorder = BorderFactory.createLineBorder(Color.white);
+        final Border insideBorder = BorderFactory.createLineBorder(Color.WHITE);
         hexViewer.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
     }
 

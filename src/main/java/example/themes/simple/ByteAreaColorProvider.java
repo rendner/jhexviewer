@@ -18,12 +18,12 @@ public class ByteAreaColorProvider implements IByteColorProvider
     private @NotNull final ByteArea area;
     private @NotNull final JHexViewer hexViewer;
 
-    private @NotNull final Color focusedCaret = Color.darkGray;
+    private @NotNull final Color focusedCaret = Color.DARK_GRAY;
     private @NotNull final Color caret = new Color(0xABB6B9);
     private @NotNull final Color focusedSelection = new Color(0xA7D3FB);
     private @NotNull final Color selection = new Color(0x8788CFFB, true);
     private @NotNull final Color highlight = new Color(0x41FFA11D, true);
-    private @NotNull final Color background = Color.white;
+    private @NotNull final Color background = Color.WHITE;
 
     public ByteAreaColorProvider(@NotNull final JHexViewer hexViewer, @NotNull final ByteArea area)
     {
@@ -49,7 +49,7 @@ public class ByteAreaColorProvider implements IByteColorProvider
     @Override
     public Color getRowElementForeground(final int byteValue, final long offset, final int rowIndex, final int elementInRowIndex)
     {
-        return Color.darkGray;
+        return Color.DARK_GRAY;
     }
 
     @NotNull

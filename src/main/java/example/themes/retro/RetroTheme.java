@@ -24,7 +24,7 @@ public class RetroTheme extends AbstractTheme
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.gray);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.GRAY);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
@@ -37,7 +37,7 @@ public class RetroTheme extends AbstractTheme
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.white);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.WHITE);
 
                     @Override
                     public void paint(@NotNull Graphics2D g)
@@ -50,7 +50,7 @@ public class RetroTheme extends AbstractTheme
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
                 new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
                 {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.white);
+                    private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.WHITE);
 
                     @Override
                     public void paint(@NotNull Graphics2D g)

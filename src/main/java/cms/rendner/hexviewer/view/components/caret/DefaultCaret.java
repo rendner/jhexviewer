@@ -68,7 +68,7 @@ public class DefaultCaret extends BaseCaret
     {
         return area.getColorProvider()
                 .map(IByteColorProvider::getCaret)
-                .orElse(Color.white);
+                .orElse(Color.WHITE);
     }
 
     @NotNull

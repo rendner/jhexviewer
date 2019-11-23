@@ -95,6 +95,6 @@ public class RowBasedBackgroundPainter<A extends Area<?, ?>> implements IAreaBac
         {
             color = colorProvider.getRowBackground(rowIndex);
         }
-        return color == null ? Color.white : color;
+        return color == null ? Color.WHITE : color;
     }
 }
