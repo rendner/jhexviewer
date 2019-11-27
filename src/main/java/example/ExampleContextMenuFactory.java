@@ -320,7 +320,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         final IOffsetFormatter offsetValueFormatter = hexViewer.getOffsetArea().getValueFormatter();
         final IValueFormatter hexValueFormatter = hexViewer.getHexArea().getValueFormatter();
         final IValueFormatter asciiValueFormatter = hexViewer.getAsciiArea().getValueFormatter();
-        return new RowWiseByteFormatter(offsetValueFormatter, hexValueFormatter, asciiValueFormatter);
+        return new RowWiseByteFormatter(hexViewer.getBytesPerRow(), offsetValueFormatter, hexValueFormatter, asciiValueFormatter);
     }
 
     private void visitSelectedBytes(@NotNull final JHexViewer hexViewer, @NotNull final IRowWiseByteVisitor visitor)

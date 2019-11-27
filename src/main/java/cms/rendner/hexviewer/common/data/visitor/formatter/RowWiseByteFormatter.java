@@ -5,6 +5,7 @@ import cms.rendner.hexviewer.common.data.formatter.bytes.AsciiByteFormatter;
 import cms.rendner.hexviewer.common.data.formatter.bytes.HexByteFormatter;
 import cms.rendner.hexviewer.common.data.formatter.offset.IOffsetFormatter;
 import cms.rendner.hexviewer.common.data.formatter.offset.OffsetFormatter;
+import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,16 +48,23 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
     private final String areaSeparator = " | ";
 
     /**
+     * Indicates if a separator should be used to separate multiples of 8 bytes.
+     */
+    private final boolean useMultipleOf8Separator;
+
+    /**
      * Creates a new instance which uses the following value formatter:
      * <ul>
      *     <li>offset-area: {@link OffsetFormatter}</li>
      *     <li>hex-area: {@link HexByteFormatter}</li>
      *     <li>ascii-area: {@link AsciiByteFormatter}</li>
      * </ul>
+     *
+     * @param bytesPerRow number of bytes per row.
      */
-    public RowWiseByteFormatter()
+    public RowWiseByteFormatter(final int bytesPerRow)
     {
-        this(null, null, null);
+        this(bytesPerRow, null, null, null);
     }
 
     /**
@@ -69,11 +77,13 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
      *     <li>ascii-area: {@link AsciiByteFormatter}</li>
      * </ul>
      *
+     * @param bytesPerRow        number of bytes per row.
      * @param offsetFormatter    formatter to format the values of the offset-area.
      * @param hexByteFormatter   formatter to format the values of the hex-area.
      * @param asciiByteFormatter formatter to format the values of the ascii-area.
      */
-    public RowWiseByteFormatter(@Nullable final IOffsetFormatter offsetFormatter,
+    public RowWiseByteFormatter(final int bytesPerRow,
+                                @Nullable final IOffsetFormatter offsetFormatter,
                                 @Nullable final IValueFormatter hexByteFormatter,
                                 @Nullable final IValueFormatter asciiByteFormatter)
     {
@@ -82,6 +92,8 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
         this.offsetFormatter = offsetFormatter == null ? new OffsetFormatter(true, "h") : offsetFormatter;
         this.hexByteFormatter = hexByteFormatter == null ? new HexByteFormatter() : hexByteFormatter;
         this.asciiByteFormatter = asciiByteFormatter == null ? new AsciiByteFormatter() : asciiByteFormatter;
+
+        this.useMultipleOf8Separator = IndexUtils.isMultipleOf(bytesPerRow, 8);
     }
 
     @NotNull
@@ -121,7 +133,12 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
             return "";
         }
 
-        return isMultipleOf(indexOfByteInRow, 8) ? "  " : " ";
+        if (useMultipleOf8Separator && IndexUtils.isMultipleOf(indexOfByteInRow, 8))
+        {
+            return " ┊ ";
+        }
+
+        return " ";
     }
 
     @NotNull
@@ -157,10 +174,5 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
     public String hexAsciiSeparator()
     {
         return areaSeparator;
-    }
-
-    private boolean isMultipleOf(final int multipleToCheck, final int value)
-    {
-        return (multipleToCheck % value) == 0;
     }
 }

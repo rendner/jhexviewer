@@ -1,5 +1,6 @@
 package example.themes.console;
 
+import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
@@ -40,12 +41,34 @@ public class ConsoleTheme extends AbstractTheme
                 new DefaultBackgroundPainter<HexArea>(hexViewer.getHexArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
+                    private final Border subSeparator = BorderFactory.createDashedBorder(Color.GRAY, 3.0F, 5.0F);
 
                     @Override
                     public void paint(@NotNull final Graphics2D g)
                     {
                         super.paint(g);
+                        paintMultipleOf8Separator(g);
                         separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getHeight());
+                    }
+
+                    private void paintMultipleOf8Separator(@NotNull final Graphics2D g)
+                    {
+                        final int bytesPerRow = hexViewer.getBytesPerRow();
+                        if (!IndexUtils.isMultipleOf(bytesPerRow, 8))
+                        {
+                            return;
+                        }
+
+                        int leftByteIndex = 8 - 1;
+                        final int separatorsToPaint = (bytesPerRow / 8) - 1;
+                        for (int i = 0; i < separatorsToPaint; i++)
+                        {
+                            final Rectangle left = area.getByteRect(leftByteIndex);
+                            final Rectangle right = area.getByteRect(leftByteIndex + 1);
+                            final int spaceBetween = right.x - (left.x + left.width);
+                            subSeparator.paintBorder(area, g, left.x + left.width + spaceBetween / 2, 0, 1, area.getHeight());
+                            leftByteIndex += 8;
+                        }
                     }
                 })
         );
@@ -81,9 +104,12 @@ public class ConsoleTheme extends AbstractTheme
     {
         final IOffsetColorProvider offsetColorProvider = new IOffsetColorProvider()
         {
-            private @NotNull final Color rowElementForegroundWhenCaretInRow = new Color(0xFFFFFF);
-            private @NotNull final Color rowElementForeground = new Color(0xABB6B9);
-            private @NotNull final Color background = new Color(0x232629);
+            private @NotNull
+            final Color rowElementForegroundWhenCaretInRow = new Color(0xFFFFFF);
+            private @NotNull
+            final Color rowElementForeground = new Color(0xABB6B9);
+            private @NotNull
+            final Color background = new Color(0x232629);
 
             @NotNull
             @Override

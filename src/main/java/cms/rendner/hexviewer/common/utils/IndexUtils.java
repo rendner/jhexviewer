@@ -21,6 +21,10 @@ public final class IndexUtils
      */
     public static boolean isOdd(final long index)
     {
+        if (index < 0)
+        {
+            return false;
+        }
         return (index & 1) != 0;
     }
 
@@ -33,7 +37,27 @@ public final class IndexUtils
      */
     public static boolean isEven(final long index)
     {
+        if (index < 0)
+        {
+            return false;
+        }
         return (index & 1) == 0;
+    }
+
+    /**
+     * Checks if an index is a multiple of another value.
+     *
+     * @param index   index to check.
+     * @param divisor the divisor to use for the check.
+     * @return <code>true</code> when the index is a multiple, otherwise <code>false</code>
+     */
+    public static boolean isMultipleOf(final int index, final int divisor)
+    {
+        if (index < 0)
+        {
+            return false;
+        }
+        return (index % divisor) == 0;
     }
 
     /**
@@ -52,7 +76,7 @@ public final class IndexUtils
             return INVALID_INDEX;
         }
 
-        return (long)rowIndex * bytesPerRow;
+        return (long) rowIndex * bytesPerRow;
     }
 
     /**
@@ -71,7 +95,7 @@ public final class IndexUtils
             return INVALID_INDEX;
         }
 
-        return (int)(byteIndex / bytesPerRow);
+        return (int) (byteIndex / bytesPerRow);
     }
 
     /**
@@ -88,7 +112,7 @@ public final class IndexUtils
             return INVALID_INDEX;
         }
 
-        return (int)(byteIndex % bytesPerRow);
+        return (int) (byteIndex % bytesPerRow);
     }
 
     /**
