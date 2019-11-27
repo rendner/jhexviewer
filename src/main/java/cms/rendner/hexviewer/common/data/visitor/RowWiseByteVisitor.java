@@ -83,8 +83,8 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
     /**
      * Creates a new instance.
      *
-     * @param consumer    the consumer to write to, if <code>null</code> a ToConsoleConsumer will be used to write to.
      * @param formatter   to format byte values ​​row-based before they are written to the consumer. Can't be <code>null</code>.
+     * @param consumer    the consumer to write to, if <code>null</code> a ToConsoleConsumer will be used to write to.
      * @param bytesPerRow the number of bytes in a row, &gt;= 0.
      */
     public RowWiseByteVisitor(@NotNull final IRowWiseByteFormatter formatter, @Nullable final IDataConsumer consumer, final int bytesPerRow)
