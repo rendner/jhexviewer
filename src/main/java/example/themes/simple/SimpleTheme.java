@@ -2,10 +2,12 @@ package example.themes.simple;
 
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
-import cms.rendner.hexviewer.view.components.areas.common.Area;
+import cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.RowBasedBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
+import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
 import cms.rendner.hexviewer.view.themes.AbstractTheme;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,7 @@ public class SimpleTheme extends AbstractTheme
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
         hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<Area<?, ?>>(hexViewer.getOffsetArea())
+                new RowBasedBackgroundPainter<OffsetArea>(hexViewer.getOffsetArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -39,7 +41,7 @@ public class SimpleTheme extends AbstractTheme
                 }
         ));
         hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getHexArea())
+                new DefaultBackgroundPainter<HexArea>(hexViewer.getHexArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -52,7 +54,7 @@ public class SimpleTheme extends AbstractTheme
                 }
         ));
         hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<Area<?, ?>>(hexViewer.getAsciiArea())
+                new DefaultBackgroundPainter<AsciiArea>(hexViewer.getAsciiArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
