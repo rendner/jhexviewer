@@ -67,7 +67,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     @Override
-    public void paint(final @NotNull Graphics2D g)
+    public void paint(@NotNull final Graphics2D g)
     {
         rowTemplate = area.getRowTemplate().orElse(null);
         final RowDataBuilder rowDataBuilder = hexViewer.getDataModel()
@@ -80,6 +80,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
             return;
         }
 
+        applyRenderingHints(g);
         final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, area);
         if (rowGraphicsList.isEmpty())
         {
@@ -99,12 +100,24 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     }
 
     /**
+     * Sets rendering hints to allow to control the rendering quality and overall time/quality trade-off in the rendering process.
+     * Refer to the RenderingHints class for definitions of some common keys and values.
+     *
+     * @param g the Graphics2D context to be modified.
+     * @see RenderingHints
+     */
+    private void applyRenderingHints(@NotNull final Graphics2D g)
+    {
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    }
+
+    /**
      * Paints the foreground of the row elements.
      *
      * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
      * @param bytes       the data which should be displayed by the row. This can be less as the number of elements provided by the
-     *                             {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
-     *                              to display.
+     *                    {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
+     *                    to display.
      */
     private void paintRowElementsForeground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
     {
@@ -126,10 +139,10 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Paints the background of the row elements.
      *
-     * @param rowGraphics     the rowGraphics instance which belongs to the row to paint.
+     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
      * @param bytes       the data which should be displayed by the row. This can be less as the number of elements provided by the
-     *                                  {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
-     *                                   to display.
+     *                    {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
+     *                    to display.
      */
     private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
     {

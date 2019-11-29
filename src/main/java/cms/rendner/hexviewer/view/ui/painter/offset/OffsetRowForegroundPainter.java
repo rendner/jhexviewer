@@ -69,6 +69,7 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
             return;
         }
 
+        applyRenderingHints(g);
         final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, area);
         if (rowGraphicsList.isEmpty())
         {
@@ -87,6 +88,18 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
             paintRowElementForeground(rowGraphics, element);
             rowGraphics.dispose();
         });
+    }
+
+    /**
+     * Sets rendering hints to allow to control the rendering quality and overall time/quality trade-off in the rendering process.
+     * Refer to the RenderingHints class for definitions of some common keys and values.
+     *
+     * @param g the Graphics2D context to be modified.
+     * @see RenderingHints
+     */
+    private void applyRenderingHints(@NotNull final Graphics2D g)
+    {
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 
     /**
