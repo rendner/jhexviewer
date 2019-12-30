@@ -3,13 +3,13 @@ package cms.rendner.hexviewer.view.ui;
 import cms.rendner.hexviewer.common.rowtemplate.offset.IOffsetRowTemplate;
 import cms.rendner.hexviewer.common.utils.FontUtils;
 import cms.rendner.hexviewer.common.utils.UIDelegateUtils;
-import cms.rendner.hexviewer.model.rowtemplate.configuration.AsciiRowTemplateConfiguration;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.HexRowTemplateConfiguration;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.OffsetRowTemplateConfiguration;
+import cms.rendner.hexviewer.model.rowtemplate.configuration.TextRowTemplateConfiguration;
 import cms.rendner.hexviewer.view.JHexViewer;
-import cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
 import cms.rendner.hexviewer.view.components.areas.common.painter.BasicAreaPainter;
@@ -27,8 +27,8 @@ import cms.rendner.hexviewer.view.ui.container.offset.OffsetAreaContainer;
 import cms.rendner.hexviewer.view.ui.datatransfer.FileTransferHandler;
 import cms.rendner.hexviewer.view.ui.painter.bytes.ByteAreaPainter;
 import cms.rendner.hexviewer.view.ui.painter.offset.OffsetAreaPainter;
-import cms.rendner.hexviewer.view.ui.rowtemplate.factory.bytes.AsciiRowTemplateFactory;
 import cms.rendner.hexviewer.view.ui.rowtemplate.factory.bytes.HexRowTemplateFactory;
+import cms.rendner.hexviewer.view.ui.rowtemplate.factory.bytes.TextRowTemplateFactory;
 import cms.rendner.hexviewer.view.ui.rowtemplate.factory.offset.OffsetRowTemplateFactory;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +70,7 @@ public class BasicHexViewerUI extends HexViewerUI
     protected OffsetAreaContainer offsetAreaContainer;
 
     /**
-     * The container component which contains the hex and ascii-area.
+     * The container component which contains the hex and text-area.
      */
     protected ByteAreasContainer byteAreasContainer;
 
@@ -96,10 +96,10 @@ public class BasicHexViewerUI extends HexViewerUI
     private final OffsetRowTemplateFactory offsetRowTemplateFactory = new OffsetRowTemplateFactory();
 
     /**
-     * The row template factory used to create row templates for the ascii-area.
+     * The row template factory used to create row templates for the text-area.
      */
     @NotNull
-    private final AsciiRowTemplateFactory asciiRowTemplateFactory = new AsciiRowTemplateFactory();
+    private final TextRowTemplateFactory textRowTemplateFactory = new TextRowTemplateFactory();
 
     /**
      * The row template factory used to create row templates for the hex-area.
@@ -154,7 +154,7 @@ public class BasicHexViewerUI extends HexViewerUI
      */
     protected void installComponents()
     {
-        byteAreasContainer = new ByteAreasContainer(hexViewer.getHexArea(), hexViewer.getAsciiArea());
+        byteAreasContainer = new ByteAreasContainer(hexViewer.getHexArea(), hexViewer.getTextArea());
         offsetAreaContainer = new OffsetAreaContainer(hexViewer.getOffsetArea());
 
         scrollPane = new JScrollPane();
@@ -208,14 +208,14 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setHexRowTemplateConfiguration(createHexRowTemplateConfiguration());
         }
 
-        if (UIDelegateUtils.canInstallValue(hexViewer.getAsciiRowTemplateConfiguration().orElse(null)))
+        if (UIDelegateUtils.canInstallValue(hexViewer.getTextRowTemplateConfiguration().orElse(null)))
         {
-            hexViewer.setAsciiRowTemplateConfiguration(createAsciiRowTemplateConfiguration());
+            hexViewer.setTextRowTemplateConfiguration(createTextRowTemplateConfiguration());
         }
 
         installOffsetAreaDefaults();
         installByteAreaDefaults(hexViewer.getHexArea());
-        installByteAreaDefaults(hexViewer.getAsciiArea());
+        installByteAreaDefaults(hexViewer.getTextArea());
     }
 
     /**
@@ -257,14 +257,14 @@ public class BasicHexViewerUI extends HexViewerUI
             hexViewer.setHexRowTemplateConfiguration(null);
         }
 
-        if (UIDelegateUtils.shouldUninstallValue(hexViewer.getAsciiRowTemplateConfiguration().orElse(null)))
+        if (UIDelegateUtils.shouldUninstallValue(hexViewer.getTextRowTemplateConfiguration().orElse(null)))
         {
-            hexViewer.setAsciiRowTemplateConfiguration(null);
+            hexViewer.setTextRowTemplateConfiguration(null);
         }
 
         uninstallOffsetAreaDefaults();
         uninstallByteAreaDefaults(hexViewer.getHexArea());
-        uninstallByteAreaDefaults(hexViewer.getAsciiArea());
+        uninstallByteAreaDefaults(hexViewer.getTextArea());
     }
 
     /**
@@ -428,9 +428,9 @@ public class BasicHexViewerUI extends HexViewerUI
         hexArea.addPropertyChangeListener(propertyChangeListener);
         hexArea.addMouseListener(mouseAdapter);
 
-        final AsciiArea asciiArea = hexViewer.getAsciiArea();
-        asciiArea.addPropertyChangeListener(propertyChangeListener);
-        asciiArea.addMouseListener(mouseAdapter);
+        final TextArea textArea = hexViewer.getTextArea();
+        textArea.addPropertyChangeListener(propertyChangeListener);
+        textArea.addMouseListener(mouseAdapter);
     }
 
     /**
@@ -448,9 +448,9 @@ public class BasicHexViewerUI extends HexViewerUI
         hexArea.removePropertyChangeListener(propertyChangeListener);
         hexArea.removeMouseListener(mouseAdapter);
 
-        final AsciiArea asciiArea = hexViewer.getAsciiArea();
-        asciiArea.removePropertyChangeListener(propertyChangeListener);
-        asciiArea.removeMouseListener(mouseAdapter);
+        final TextArea textArea = hexViewer.getTextArea();
+        textArea.removePropertyChangeListener(propertyChangeListener);
+        textArea.removeMouseListener(mouseAdapter);
 
         propertyChangeListener = null;
         caretListener = null;
@@ -462,7 +462,7 @@ public class BasicHexViewerUI extends HexViewerUI
         final int rowCount = calculateAreaRowCount();
         hexViewer.getOffsetArea().setRowCount(rowCount);
         hexViewer.getHexArea().setRowCount(rowCount);
-        hexViewer.getAsciiArea().setRowCount(rowCount);
+        hexViewer.getTextArea().setRowCount(rowCount);
     }
 
     private int calculateAreaRowCount()
@@ -474,7 +474,7 @@ public class BasicHexViewerUI extends HexViewerUI
     {
         updateOffsetRowTemplate();
         hexViewer.getHexArea().setRowTemplate(hexRowTemplateFactory.createTemplate(hexViewer));
-        hexViewer.getAsciiArea().setRowTemplate(asciiRowTemplateFactory.createTemplate(hexViewer));
+        hexViewer.getTextArea().setRowTemplate(textRowTemplateFactory.createTemplate(hexViewer));
     }
 
     private void updateOffsetRowTemplate()
@@ -620,15 +620,15 @@ public class BasicHexViewerUI extends HexViewerUI
     }
 
     /**
-     * Creates the row-template configuration for the ascii-area.
+     * Creates the row-template configuration for the text-area.
      * This method can be redefined to provide something else.
      *
      * @return the row-template configuration.
      */
     @Nullable
-    protected AsciiRowTemplateConfiguration createAsciiRowTemplateConfiguration()
+    protected TextRowTemplateConfiguration createTextRowTemplateConfiguration()
     {
-        return AsciiRowTemplateConfiguration.newBuilder().build();
+        return TextRowTemplateConfiguration.newBuilder().build();
     }
 
     @NotNull

@@ -12,19 +12,19 @@ import org.jetbrains.annotations.NotNull;
 public interface IRowWiseByteFormatter
 {
     /**
-     * Formats a byte to an ASCII character.
+     * Formats a byte to a text character.
      *
      * @param value byte to format.
-     * @return the ASCII character of the byte.
+     * @return the text character representing the byte value.
      */
     @NotNull
-    String formatAsciiByte(int value);
+    String formatTextByte(int value);
 
     /**
      * Formats a byte to a hex character.
      *
      * @param value byte to format.
-     * @return the hex character of the byte.
+     * @return the hex character representing the byte value.
      */
     @NotNull
     String formatHexByte(int value);
@@ -55,13 +55,13 @@ public interface IRowWiseByteFormatter
     String hexByteSeparator(int indexOfByteInRow);
 
     /**
-     * Returns the separator to use in front of the ASCII byte.
+     * Returns the separator to use in front of the text byte.
      *
-     * @param indexOfByteInRow index of the ASCII byte to print.
+     * @param indexOfByteInRow index of the text byte to print.
      * @return the separator,
      */
     @NotNull
-    String asciiByteSeparator(int indexOfByteInRow);
+    String textByteSeparator(int indexOfByteInRow);
 
     /**
      * Returns a placeholder for a specific omitted hex byte to fill the space of the omitted hex byte.
@@ -73,13 +73,13 @@ public interface IRowWiseByteFormatter
     String hexBytePlaceholder(int indexInRow);
 
     /**
-     * Returns a placeholder for a specific omitted ASCII byte to fill the space of the omitted ASCII byte.
+     * Returns a placeholder for a specific omitted text byte to fill the space of the omitted text byte.
      *
      * @param indexInRow the index of the byte to omit.
      * @return the placeholder (e.g. a ".").
      */
     @NotNull
-    String asciiBytePlaceholder(int indexInRow);
+    String textBytePlaceholder(int indexInRow);
 
     /**
      * @return the separator to visually separate the hex-area from the offset-area (e.g. a "|").
@@ -88,8 +88,8 @@ public interface IRowWiseByteFormatter
     String offsetHexSeparator();
 
     /**
-     * @return the separator to visually separate the ascii-area from the hex-area (e.g. a "|").
+     * @return the separator to visually separate the text-area from the hex-area (e.g. a "|").
      */
     @NotNull
-    String hexAsciiSeparator();
+    String hexTextSeparator();
 }

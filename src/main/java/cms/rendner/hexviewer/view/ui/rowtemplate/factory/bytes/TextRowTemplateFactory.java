@@ -5,7 +5,7 @@ import cms.rendner.hexviewer.common.geom.Position;
 import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.bytes.ByteRowTemplate;
 import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
-import cms.rendner.hexviewer.model.rowtemplate.configuration.AsciiRowTemplateConfiguration;
+import cms.rendner.hexviewer.model.rowtemplate.configuration.TextRowTemplateConfiguration;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.values.HInsets;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.ui.rowtemplate.factory.utils.ComputeUtils;
@@ -17,29 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory for creating row templates based on a configuration for the ascii-area.
+ * Factory for creating row templates based on a configuration for the text-area.
  *
  * @author rendner
  */
-public class AsciiRowTemplateFactory
+public class TextRowTemplateFactory
 {
     /**
      * Configuration which is temporary stored during the template creation.
      */
-    private AsciiRowTemplateConfiguration configuration;
+    private TextRowTemplateConfiguration configuration;
 
     /**
-     * Creates the row template which defines the layout of the rows for the ascii-area.
+     * Creates the row template which defines the layout of the rows for the text-area.
      *
-     * @param hexViewer the hexViewer component to which the ascii-area belongs. Required to query additional properties
+     * @param hexViewer the hexViewer component to which the text-area belongs. Required to query additional properties
      *                  of the {@link JHexViewer}.
-     * @return the layout template to render the ascii-area.
+     * @return the layout template to render the text-area.
      */
     @Nullable
     public IByteRowTemplate createTemplate(@NotNull final JHexViewer hexViewer)
     {
         IByteRowTemplate result = null;
-        configuration = hexViewer.getAsciiRowTemplateConfiguration().orElse(null);
+        configuration = hexViewer.getTextRowTemplateConfiguration().orElse(null);
 
         if (configuration != null)
         {

@@ -20,7 +20,7 @@ public enum AreaId
     HEX,
 
     /**
-     * The id of the area which displays bytes in ascii format.
+     * The id of the area which displays bytes as text.
      */
-    ASCII
+    TEXT
 }

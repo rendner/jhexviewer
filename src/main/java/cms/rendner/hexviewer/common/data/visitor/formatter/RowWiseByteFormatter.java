@@ -31,10 +31,10 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
     private final IValueFormatter hexByteFormatter;
 
     /**
-     * Used to format the byte values of the ascii-area.
+     * Used to format the byte values of the text-area.
      */
     @NotNull
-    private final IValueFormatter asciiByteFormatter;
+    private final IValueFormatter textByteFormatter;
 
     /**
      * Used to separate rows.
@@ -57,7 +57,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
      * <ul>
      *     <li>offset-area: {@link OffsetFormatter}</li>
      *     <li>hex-area: {@link HexByteFormatter}</li>
-     *     <li>ascii-area: {@link AsciiByteFormatter}</li>
+     *     <li>text-area: {@link AsciiByteFormatter}</li>
      * </ul>
      *
      * @param bytesPerRow number of bytes per row.
@@ -74,24 +74,24 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
      * <ul>
      *     <li>offset-area: {@link OffsetFormatter}</li>
      *     <li>hex-area: {@link HexByteFormatter}</li>
-     *     <li>ascii-area: {@link AsciiByteFormatter}</li>
+     *     <li>text-area: {@link AsciiByteFormatter}</li>
      * </ul>
      *
      * @param bytesPerRow        number of bytes per row.
      * @param offsetFormatter    formatter to format the values of the offset-area.
      * @param hexByteFormatter   formatter to format the values of the hex-area.
-     * @param asciiByteFormatter formatter to format the values of the ascii-area.
+     * @param textByteFormatter formatter to format the values of the text-area.
      */
     public RowWiseByteFormatter(final int bytesPerRow,
                                 @Nullable final IOffsetFormatter offsetFormatter,
                                 @Nullable final IValueFormatter hexByteFormatter,
-                                @Nullable final IValueFormatter asciiByteFormatter)
+                                @Nullable final IValueFormatter textByteFormatter)
     {
         super();
 
         this.offsetFormatter = offsetFormatter == null ? new OffsetFormatter(true, "h") : offsetFormatter;
         this.hexByteFormatter = hexByteFormatter == null ? new HexByteFormatter() : hexByteFormatter;
-        this.asciiByteFormatter = asciiByteFormatter == null ? new AsciiByteFormatter() : asciiByteFormatter;
+        this.textByteFormatter = textByteFormatter == null ? new AsciiByteFormatter() : textByteFormatter;
 
         this.useMultipleOf8Separator = IndexUtils.isMultipleOf(bytesPerRow, 8);
     }
@@ -105,9 +105,9 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
 
     @NotNull
     @Override
-    public String formatAsciiByte(final int value)
+    public String formatTextByte(final int value)
     {
-        return asciiByteFormatter.format(value);
+        return textByteFormatter.format(value);
     }
 
     @NotNull
@@ -143,7 +143,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
 
     @NotNull
     @Override
-    public String asciiByteSeparator(final int indexOfByteInRow)
+    public String textByteSeparator(final int indexOfByteInRow)
     {
         return "";
     }
@@ -157,7 +157,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
 
     @NotNull
     @Override
-    public String asciiBytePlaceholder(final int indexInRow)
+    public String textBytePlaceholder(final int indexInRow)
     {
         return ".";
     }
@@ -171,7 +171,7 @@ public final class RowWiseByteFormatter implements IRowWiseByteFormatter
 
     @NotNull
     @Override
-    public String hexAsciiSeparator()
+    public String hexTextSeparator()
     {
         return areaSeparator;
     }

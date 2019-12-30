@@ -51,9 +51,9 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
 
     /**
      * Used to build the part of the final row from the bytes displayed
-     * in the {@link AreaId#ASCII}.
+     * in the {@link AreaId#TEXT}.
      */
-    private StringBuilder asciiAreaBuilder;
+    private StringBuilder textAreaBuilder;
 
     /**
      * If <code>true</code> the bytes displayed in the
@@ -64,10 +64,10 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
 
     /**
      * If <code>true</code> the bytes displayed in the
-     * {@link AreaId#ASCII} are
+     * {@link AreaId#TEXT} are
      * included in the final row which is passed to the <code>consumer</code>.
      */
-    private boolean includeAsciiArea;
+    private boolean includeTextArea;
 
     /**
      * Creates a new instance.
@@ -108,14 +108,14 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     /**
-     * Sets if the bytes of the {@link AreaId#ASCII} should be included in the
+     * Sets if the bytes of the {@link AreaId#TEXT} should be included in the
      * row-based formatted string.
      *
-     * @param includeAsciiArea if bytes of the ascii-area should be included or not.
+     * @param includeTextArea if bytes of the text-area should be included or not.
      */
-    public void setIncludeAsciiArea(final boolean includeAsciiArea)
+    public void setIncludeTextArea(final boolean includeTextArea)
     {
-        this.includeAsciiArea = includeAsciiArea;
+        this.includeTextArea = includeTextArea;
     }
 
     @Override
@@ -124,7 +124,7 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
         consumer.start();
         rowBuilder = new StringBuilder();
         hexAreaBuilder = new StringBuilder();
-        asciiAreaBuilder = new StringBuilder();
+        textAreaBuilder = new StringBuilder();
     }
 
     @Override
@@ -133,7 +133,7 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
         consumer.end();
         rowBuilder = null;
         hexAreaBuilder = null;
-        asciiAreaBuilder = null;
+        textAreaBuilder = null;
     }
 
     @Override
@@ -157,7 +157,7 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
 
         rowBuilder.setLength(0);
         hexAreaBuilder.setLength(0);
-        asciiAreaBuilder.setLength(0);
+        textAreaBuilder.setLength(0);
     }
 
     /**
@@ -177,10 +177,10 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
             rowBuilder.append(hexAreaBuilder);
         }
 
-        if (includeAsciiArea)
+        if (includeTextArea)
         {
-            rowBuilder.append(formatter.hexAsciiSeparator());
-            rowBuilder.append(asciiAreaBuilder);
+            rowBuilder.append(formatter.hexTextSeparator());
+            rowBuilder.append(textAreaBuilder);
         }
 
         rowBuilder.append(formatter.rowSeparator());
@@ -189,7 +189,7 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     /**
-     * Appends a byte to the <code>hexAreaBuilder</code> and <code>asciiAreaBuilder</code>.
+     * Appends a byte to the <code>hexAreaBuilder</code> and <code>textAreaBuilder</code>.
      *
      * @param value          byte value to add.
      * @param byteIndexInRow the index of the byte in the current row.
@@ -197,7 +197,7 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
     private void appendByte(final int value, final int byteIndexInRow)
     {
         appendByteToHexArea(value, byteIndexInRow);
-        appendByteToAsciiArea(value, byteIndexInRow);
+        appendByteToTextArea(value, byteIndexInRow);
     }
 
     /**
@@ -217,23 +217,23 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     /**
-     * Appends a byte to the <code>asciiAreaBuilder</code> if this area should be included
+     * Appends a byte to the <code>textAreaBuilder</code> if this area should be included
      * in the final formatted row.
      *
      * @param value          byte value to add.
      * @param byteIndexInRow the index of the byte in the current row.
      */
-    private void appendByteToAsciiArea(final int value, final int byteIndexInRow)
+    private void appendByteToTextArea(final int value, final int byteIndexInRow)
     {
-        if (includeAsciiArea)
+        if (includeTextArea)
         {
-            asciiAreaBuilder.append(formatter.asciiByteSeparator(byteIndexInRow));
-            asciiAreaBuilder.append(formatter.formatAsciiByte(value));
+            textAreaBuilder.append(formatter.textByteSeparator(byteIndexInRow));
+            textAreaBuilder.append(formatter.formatTextByte(value));
         }
     }
 
     /**
-     * Fills the space of excluded bytes for the <code>hexAreaBuilder</code> and <code>asciiAreaBuilder</code>
+     * Fills the space of excluded bytes for the <code>hexAreaBuilder</code> and <code>textAreaBuilder</code>
      * with a configured placeholder.
      *
      * @param indexInRow the index in the current row from where to start.
@@ -244,7 +244,7 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
         if (repeats > 0)
         {
             appendBytePlaceholderToHexArea(indexInRow, repeats);
-            appendBytePlaceholderToAsciiArea(indexInRow, repeats);
+            appendBytePlaceholderToTextArea(indexInRow, repeats);
         }
     }
 
@@ -268,20 +268,20 @@ public final class RowWiseByteVisitor implements IRowWiseByteVisitor
     }
 
     /**
-     * Fills the space in the <code>asciiAreaBuilder</code> for the excluded bytes with a configured placeholder.
-     * This method does nothing if the ascii-area shouldn't be included the final row.
+     * Fills the space in the <code>textAreaBuilder</code> for the excluded bytes with a configured placeholder.
+     * This method does nothing if the text-area shouldn't be included the final row.
      *
      * @param indexInRow the index in the current row from where to start.
      * @param repeats    number of placeholders to add.
      */
-    private void appendBytePlaceholderToAsciiArea(final int indexInRow, final int repeats)
+    private void appendBytePlaceholderToTextArea(final int indexInRow, final int repeats)
     {
-        if (includeAsciiArea)
+        if (includeTextArea)
         {
             for (int i = indexInRow; i < indexInRow + repeats; i++)
             {
-                asciiAreaBuilder.append(formatter.asciiByteSeparator(i));
-                asciiAreaBuilder.append(formatter.asciiBytePlaceholder(i));
+                textAreaBuilder.append(formatter.textByteSeparator(i));
+                textAreaBuilder.append(formatter.textBytePlaceholder(i));
             }
         }
     }

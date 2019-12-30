@@ -28,7 +28,7 @@ public class DefaultDamager implements IDamager
     public void install(@NotNull final JHexViewer hexViewer)
     {
         this.hexViewer = hexViewer;
-        areas = Arrays.asList(hexViewer.getHexArea(), hexViewer.getAsciiArea());
+        areas = Arrays.asList(hexViewer.getHexArea(), hexViewer.getTextArea());
     }
 
     @Override

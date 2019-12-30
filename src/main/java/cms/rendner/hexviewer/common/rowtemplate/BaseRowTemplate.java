@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * Describes the layout of a row.
  * <p/>
- * Row templates are used to describe the layout of the rows displayed by the areas (offset, hex and ascii).
+ * Row templates are used to describe the layout of the rows displayed by the areas (offset, hex and text).
  * For each of the areas a separate template exists which describes the exact layout of the rows displayed by these areas.
  * <p/>
  * All subclasses should be immutable.

@@ -1,8 +1,8 @@
 package example.themes.retro;
 
 import cms.rendner.hexviewer.view.JHexViewer;
-import cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
@@ -49,8 +49,8 @@ public class RetroTheme extends AbstractTheme
                     }
                 }
         ));
-        hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<AsciiArea>(hexViewer.getAsciiArea())
+        hexViewer.getTextArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
+                new DefaultBackgroundPainter<TextArea>(hexViewer.getTextArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.WHITE);
 
@@ -100,6 +100,6 @@ public class RetroTheme extends AbstractTheme
 
         hexViewer.getOffsetArea().setColorProvider(offsetColorProvider);
         hexViewer.getHexArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getHexArea()));
-        hexViewer.getAsciiArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getAsciiArea()));
+        hexViewer.getTextArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getTextArea()));
     }
 }

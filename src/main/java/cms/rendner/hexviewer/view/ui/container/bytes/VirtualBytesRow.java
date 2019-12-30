@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 /**
- * Combines the row of the hex-area and ascii-area into a single row.
+ * Combines the row of the hex-area and text-area into a single row.
  * <p/>
  * A combined row is called a virtual row to distinguish between the existing rows of the areas and the combined row.
  *
@@ -121,8 +121,8 @@ final class VirtualBytesRow
     /**
      * Returns the area to which the x location belongs.
      * <p/>
-     * If the locations is left from the ascii-area, the hex-area will be returned
-     * otherwise the ascii-area.
+     * If the locations is left from the text-area, the hex-area will be returned
+     * otherwise the text-area.
      *
      * @param virtualXLocation the x location in the virtual row.
      * @return the area which contains this x location.

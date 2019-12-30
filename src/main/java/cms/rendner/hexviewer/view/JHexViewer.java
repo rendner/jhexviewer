@@ -4,12 +4,12 @@ import cms.rendner.hexviewer.common.utils.CheckUtils;
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.model.data.IDataModel;
 import cms.rendner.hexviewer.model.data.IDisposableModel;
-import cms.rendner.hexviewer.model.rowtemplate.configuration.AsciiRowTemplateConfiguration;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.HexRowTemplateConfiguration;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.OffsetRowTemplateConfiguration;
-import cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea;
+import cms.rendner.hexviewer.model.rowtemplate.configuration.TextRowTemplateConfiguration;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import cms.rendner.hexviewer.view.components.areas.common.AreaId;
 import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
 import cms.rendner.hexviewer.view.components.caret.ICaret;
@@ -113,11 +113,11 @@ public class JHexViewer extends JComponent
     public static final String PROPERTY_HEX_ROW_TEMPLATE_CONFIGURATION = "hexRowTemplateConfiguration";
 
     /**
-     * Constant used to determine when the<code>hexRowTemplateConfiguration</code> property has changed.
+     * Constant used to determine when the<code>textRowTemplateConfiguration</code> property has changed.
      * Note that either value (old and new) can also be null.
      */
     @NotNull
-    public static final String PROPERTY_ASCII_ROW_TEMPLATE_CONFIGURATION = "asciiRowTemplateConfiguration";
+    public static final String PROPERTY_TEXT_ROW_TEMPLATE_CONFIGURATION = "textRowTemplateConfiguration";
 
     /**
      * Constant used to determine when the <code>preferredVisibleRowCount</code> property has changed.
@@ -160,10 +160,10 @@ public class JHexViewer extends JComponent
     @NotNull
     private final HexArea hexArea;
     /**
-     * Displays the data as ascii values.
+     * Displays the data as text.
      */
     @NotNull
-    private final AsciiArea asciiArea;
+    private final TextArea textArea;
     /**
      * The byte area which currently has the caret focus.
      */
@@ -180,10 +180,10 @@ public class JHexViewer extends JComponent
     @Nullable
     private HexRowTemplateConfiguration hexRowTemplateConfiguration;
     /**
-     * To configure the layout of the rows displayed in the ascii-area.
+     * To configure the layout of the rows displayed in the text-area.
      */
     @Nullable
-    private AsciiRowTemplateConfiguration asciiRowTemplateConfiguration;
+    private TextRowTemplateConfiguration textRowTemplateConfiguration;
     /**
      * The font used to render the data model in the areas.
      */
@@ -222,7 +222,7 @@ public class JHexViewer extends JComponent
 
         offsetArea = new OffsetArea();
         hexArea = new HexArea();
-        asciiArea = new AsciiArea();
+        textArea = new TextArea();
 
         caretFocusedArea = hexArea;
 
@@ -289,12 +289,12 @@ public class JHexViewer extends JComponent
     }
 
     /**
-     * @return the ascii-area which displays the data model as ascii values.
+     * @return the text-area which displays the data model as text.
      */
     @NotNull
-    public AsciiArea getAsciiArea()
+    public TextArea getTextArea()
     {
-        return asciiArea;
+        return textArea;
     }
 
     /**
@@ -384,7 +384,7 @@ public class JHexViewer extends JComponent
 
             offsetArea.setFont(rowContentFont);
             hexArea.setFont(rowContentFont);
-            asciiArea.setFont(rowContentFont);
+            textArea.setFont(rowContentFont);
 
             firePropertyChange(PROPERTY_ROW_CONTENT_FONT, oldValue, this.rowContentFont);
         }
@@ -392,7 +392,7 @@ public class JHexViewer extends JComponent
 
     /**
      * Sets the factory to be used to create context menus.
-     * Whenever a mouse-down-right inside of one of the following areas: {@link AreaId#HEX} or {@link AreaId#ASCII}
+     * Whenever a mouse-down-right inside of one of the following areas: {@link AreaId#HEX} or {@link AreaId#TEXT}
      * is detected this factory will be used to create a context menu. If the factory returns <code>null</code> no context
      * menu will be displayed.
      * <p/>
@@ -614,32 +614,32 @@ public class JHexViewer extends JComponent
     }
 
     /**
-     * @return the configuration for the row template of the ascii-area.
+     * @return the configuration for the row template of the text-area.
      */
     @NotNull
-    public Optional<AsciiRowTemplateConfiguration> getAsciiRowTemplateConfiguration()
+    public Optional<TextRowTemplateConfiguration> getTextRowTemplateConfiguration()
     {
-        return Optional.ofNullable(asciiRowTemplateConfiguration);
+        return Optional.ofNullable(textRowTemplateConfiguration);
     }
 
     /**
-     * Sets the new configuration for the row template used by the ascii-area.
+     * Sets the new configuration for the row template used by the text-area.
      * <p/>
      * By default this will be set by the UI that gets installed. This can be changed to a custom configuration if desired.
      * <p/>
      * Setting a new configuration may results in a revalidate and repaint of the component, but this depends on the installed UI.
      * <p/>
-     * A PropertyChange event {@link JHexViewer#PROPERTY_ASCII_ROW_TEMPLATE_CONFIGURATION} is fired when a new configuration is set.
+     * A PropertyChange event {@link JHexViewer#PROPERTY_TEXT_ROW_TEMPLATE_CONFIGURATION} is fired when a new configuration is set.
      *
-     * @param asciiRowTemplateConfiguration the new configuration for the row template of the ascii-area
+     * @param textRowTemplateConfiguration the new configuration for the row template of the text-area
      */
-    public void setAsciiRowTemplateConfiguration(@Nullable final AsciiRowTemplateConfiguration asciiRowTemplateConfiguration)
+    public void setTextRowTemplateConfiguration(@Nullable final TextRowTemplateConfiguration textRowTemplateConfiguration)
     {
-        if (this.asciiRowTemplateConfiguration != asciiRowTemplateConfiguration)
+        if (this.textRowTemplateConfiguration != textRowTemplateConfiguration)
         {
-            final AsciiRowTemplateConfiguration oldValue = this.asciiRowTemplateConfiguration;
-            this.asciiRowTemplateConfiguration = asciiRowTemplateConfiguration;
-            firePropertyChange(PROPERTY_ASCII_ROW_TEMPLATE_CONFIGURATION, oldValue, this.asciiRowTemplateConfiguration);
+            final TextRowTemplateConfiguration oldValue = this.textRowTemplateConfiguration;
+            this.textRowTemplateConfiguration = textRowTemplateConfiguration;
+            firePropertyChange(PROPERTY_TEXT_ROW_TEMPLATE_CONFIGURATION, oldValue, this.textRowTemplateConfiguration);
         }
     }
 
@@ -741,7 +741,7 @@ public class JHexViewer extends JComponent
      */
     public void toggleCaretFocusedArea()
     {
-        setCaretFocusedArea(caretFocusedArea == hexArea ? asciiArea : hexArea);
+        setCaretFocusedArea(caretFocusedArea == hexArea ? textArea : hexArea);
     }
 
     /**

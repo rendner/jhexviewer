@@ -3,10 +3,11 @@ package cms.rendner.hexviewer.model.rowtemplate.configuration;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.values.EMValue;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.values.HInsets;
 import cms.rendner.hexviewer.model.rowtemplate.configuration.values.IValue;
+import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This row template configuration allows to alter the row template of the {@link cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea}.
+ * This row template configuration allows to alter the row template of the {@link TextArea}.
  * <p/>
  * Each row of the area is painted using a description of a row, called a row template. The layout of the rows can be
  * changed during runtime by applying a new configuration to the {@link cms.rendner.hexviewer.view.JHexViewer}.
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * this class or instance:
  * <pre>
  *     // create a new builder
- *     AsciiRowTemplateConfiguration.newBuilder();
+ *     TextRowTemplateConfiguration.newBuilder();
  *
  *     // create a builder pre-initialized with the state of the instance
  *     configurationInstance.toBuilder();
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rendner
  */
-public final class AsciiRowTemplateConfiguration
+public final class TextRowTemplateConfiguration
 {
     /**
      * The insets which defines the trailing and leading space.
@@ -81,7 +82,7 @@ public final class AsciiRowTemplateConfiguration
         return caretWidth;
     }
 
-    private AsciiRowTemplateConfiguration(@NotNull final Builder builder)
+    private TextRowTemplateConfiguration(@NotNull final Builder builder)
     {
         super();
         this.insets = builder.insets;
@@ -130,7 +131,7 @@ public final class AsciiRowTemplateConfiguration
          * @return a new row template configuration instance with the configured values.
          */
         @NotNull
-        public AsciiRowTemplateConfiguration build()
+        public TextRowTemplateConfiguration build()
         {
             if (insets == null)
             {
@@ -140,7 +141,7 @@ public final class AsciiRowTemplateConfiguration
             {
                 caretWidth = new EMValue(0.08d);
             }
-            return new AsciiRowTemplateConfiguration(this);
+            return new TextRowTemplateConfiguration(this);
         }
     }
 }

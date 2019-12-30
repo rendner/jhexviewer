@@ -142,11 +142,11 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             }
         }));
 
-        copyMenu.add(new JMenuItem(new AbstractAction("ascii stream")
+        copyMenu.add(new JMenuItem(new AbstractAction("text stream")
         {
             public void actionPerformed(final ActionEvent e)
             {
-                final IValueFormatter valueFormatter = hexViewer.getAsciiArea().getValueFormatter();
+                final IValueFormatter valueFormatter = hexViewer.getTextArea().getValueFormatter();
                 visitSelectedBytes(hexViewer, new ByteVisitor(valueFormatter));
             }
         }));
@@ -160,14 +160,14 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, null, true, false));
             }
         }));
-        copyMenu.add(new JMenuItem(new AbstractAction("offset ascii")
+        copyMenu.add(new JMenuItem(new AbstractAction("offset text")
         {
             public void actionPerformed(final ActionEvent e)
             {
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, null, false, true));
             }
         }));
-        copyMenu.add(new JMenuItem(new AbstractAction("offset hex ascii")
+        copyMenu.add(new JMenuItem(new AbstractAction("offset hex text")
         {
             public void actionPerformed(final ActionEvent e)
             {
@@ -192,12 +192,12 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             }
         }));
 
-        copyMenu.add(new JMenuItem(new AbstractAction("ascii stream")
+        copyMenu.add(new JMenuItem(new AbstractAction("text stream")
         {
             public void actionPerformed(final ActionEvent e)
             {
                 final ToStringConsumer consumer = new ToStringConsumer(ExampleContextMenuFactory.this::copyToClipboard);
-                final IValueFormatter valueFormatter = hexViewer.getAsciiArea().getValueFormatter();
+                final IValueFormatter valueFormatter = hexViewer.getTextArea().getValueFormatter();
                 visitSelectedBytes(hexViewer, new ByteVisitor(consumer, valueFormatter));
             }
         }));
@@ -212,7 +212,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, true, false));
             }
         }));
-        copyMenu.add(new JMenuItem(new AbstractAction("offset ascii")
+        copyMenu.add(new JMenuItem(new AbstractAction("offset text")
         {
             public void actionPerformed(final ActionEvent e)
             {
@@ -220,7 +220,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 visitSelectedBytes(hexViewer, getConfiguredByteVisitor(hexViewer, consumer, false, true));
             }
         }));
-        copyMenu.add(new JMenuItem(new AbstractAction("offset hex ascii")
+        copyMenu.add(new JMenuItem(new AbstractAction("offset hex text")
         {
             public void actionPerformed(final ActionEvent e)
             {
@@ -252,14 +252,14 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
             }
         }));
 
-        copyMenu.add(new JMenuItem(new AbstractAction("ascii stream")
+        copyMenu.add(new JMenuItem(new AbstractAction("text stream")
         {
             public void actionPerformed(final ActionEvent e)
             {
                 final Path path = chooseFile(hexViewer);
                 if (path != null)
                 {
-                    final IValueFormatter valueFormatter = hexViewer.getAsciiArea().getValueFormatter();
+                    final IValueFormatter valueFormatter = hexViewer.getTextArea().getValueFormatter();
                     visitSelectedBytes(hexViewer,
                             new ByteVisitor(
                                     new ToFileConsumer(path),
@@ -281,7 +281,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 }
             }
         }));
-        copyMenu.add(new JMenuItem(new AbstractAction("offset ascii")
+        copyMenu.add(new JMenuItem(new AbstractAction("offset text")
         {
             public void actionPerformed(final ActionEvent e)
             {
@@ -292,7 +292,7 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
                 }
             }
         }));
-        copyMenu.add(new JMenuItem(new AbstractAction("offset hex ascii")
+        copyMenu.add(new JMenuItem(new AbstractAction("offset hex text")
         {
             public void actionPerformed(final ActionEvent e)
             {
@@ -306,11 +306,11 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     }
 
     @NotNull
-    private RowWiseByteVisitor getConfiguredByteVisitor(@NotNull final JHexViewer hexViewer, @Nullable final IDataConsumer consumer, final boolean includeHexArea, final boolean includeAsciiArea)
+    private RowWiseByteVisitor getConfiguredByteVisitor(@NotNull final JHexViewer hexViewer, @Nullable final IDataConsumer consumer, final boolean includeHexArea, final boolean includeTextArea)
     {
         final RowWiseByteVisitor result = new RowWiseByteVisitor(getConfiguredByteFormatter(hexViewer), consumer, hexViewer.getBytesPerRow());
         result.setIncludeHexArea(includeHexArea);
-        result.setIncludeAsciiArea(includeAsciiArea);
+        result.setIncludeTextArea(includeTextArea);
         return result;
     }
 
@@ -319,8 +319,8 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
     {
         final IOffsetFormatter offsetValueFormatter = hexViewer.getOffsetArea().getValueFormatter();
         final IValueFormatter hexValueFormatter = hexViewer.getHexArea().getValueFormatter();
-        final IValueFormatter asciiValueFormatter = hexViewer.getAsciiArea().getValueFormatter();
-        return new RowWiseByteFormatter(hexViewer.getBytesPerRow(), offsetValueFormatter, hexValueFormatter, asciiValueFormatter);
+        final IValueFormatter textValueFormatter = hexViewer.getTextArea().getValueFormatter();
+        return new RowWiseByteFormatter(hexViewer.getBytesPerRow(), offsetValueFormatter, hexValueFormatter, textValueFormatter);
     }
 
     private void visitSelectedBytes(@NotNull final JHexViewer hexViewer, @NotNull final IRowWiseByteVisitor visitor)

@@ -97,7 +97,7 @@ public abstract class BaseCaret implements ICaret
 
         hexViewer.addPropertyChangeListener(internalHandler);
 
-        areas = Arrays.asList(hexViewer.getHexArea(), hexViewer.getAsciiArea());
+        areas = Arrays.asList(hexViewer.getHexArea(), hexViewer.getTextArea());
         areas.forEach(area -> area.addMouseListener(internalHandler));
 
         adjustBlinker();

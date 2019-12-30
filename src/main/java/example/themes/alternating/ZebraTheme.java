@@ -2,8 +2,8 @@ package example.themes.alternating;
 
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
-import cms.rendner.hexviewer.view.components.areas.bytes.AsciiArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.RowBasedBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
@@ -51,8 +51,8 @@ public class ZebraTheme extends AbstractTheme
                     }
                 })
         );
-        hexViewer.getAsciiArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<AsciiArea>(hexViewer.getAsciiArea())
+        hexViewer.getTextArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
+                new RowBasedBackgroundPainter<TextArea>(hexViewer.getTextArea())
                 {
                     private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -123,6 +123,6 @@ public class ZebraTheme extends AbstractTheme
 
         hexViewer.getOffsetArea().setColorProvider(offsetColorProvider);
         hexViewer.getHexArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getHexArea()));
-        hexViewer.getAsciiArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getAsciiArea()));
+        hexViewer.getTextArea().setColorProvider(new ByteAreaColorProvider(hexViewer, hexViewer.getTextArea()));
     }
 }

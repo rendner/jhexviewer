@@ -41,7 +41,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
     /**
      * Sole constructor, for invocation by subclass constructors.
      *
-     * @param id             the id of the area, {@link AreaId#HEX} or {@link AreaId#ASCII}.
+     * @param id             the id of the area, {@link AreaId#HEX} or {@link AreaId#TEXT}.
      * @param valueFormatter the formatter used to convert the bytes of the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} into displayable strings.
      */
     protected ByteArea(@NotNull final AreaId id, @NotNull final IValueFormatter valueFormatter)
