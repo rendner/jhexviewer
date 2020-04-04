@@ -1,7 +1,12 @@
 package cms.rendner.hexviewer.view.themes;
 
 import cms.rendner.hexviewer.view.JHexViewer;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
+import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.background.IAreaBackgroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Abstract theme which adds some base methods to separate the modifications.
@@ -54,5 +59,37 @@ public abstract class AbstractTheme implements ITheme
      */
     protected void adjustComponentDefaults(@NotNull final JHexViewer hexViewer)
     {
+    }
+
+    /**
+     * Sets the painter responsible for painting the background of the component.
+     *
+     * @param component the component.
+     * @param painter   the painter to set.
+     */
+    protected void setAreaPainter(@NotNull final AreaComponent component, @Nullable final IAreaBackgroundPainter painter)
+    {
+        final IAreaPainter areaPainter = component.getPainter();
+        if (areaPainter != null)
+        {
+            areaPainter.setBackgroundPainter(painter);
+            component.repaint();
+        }
+    }
+
+    /**
+     * Sets the painter responsible for painting the foreground of the component.
+     *
+     * @param component the component.
+     * @param painter   the painter to set.
+     */
+    protected void setAreaPainter(@NotNull final AreaComponent component, @Nullable final IAreaForegroundPainter painter)
+    {
+        final IAreaPainter areaPainter = component.getPainter();
+        if (areaPainter != null)
+        {
+            areaPainter.setForegroundPainter(painter);
+            component.repaint();
+        }
     }
 }

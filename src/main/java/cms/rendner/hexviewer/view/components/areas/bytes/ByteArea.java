@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.Optional;
 
 /**
- * Abstract component which displays the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} rowwise.
+ * Abstract component which displays the data model of the {@link cms.rendner.hexviewer.view.JHexViewer} row-wise.
  * <p/>
  * The layout of the displayed rows are described by an {@link IByteRowTemplate} which is mandatory to allow
  * rendering the data model of the {@link cms.rendner.hexviewer.view.JHexViewer}.
@@ -95,7 +95,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
     {
         CheckUtils.checkMinValue(byteIndex, 0);
 
-        final IByteRowTemplate rowTemplate = getRowTemplate().orElse(null);
+        final IByteRowTemplate rowTemplate = getRowTemplate();
         if (rowTemplate != null)
         {
             final int bytesPerRow = rowTemplate.elementCount();
@@ -121,7 +121,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
     @NotNull
     public Rectangle getCaretRect(final long caretIndex)
     {
-        final IByteRowTemplate rowTemplate = getRowTemplate().orElse(null);
+        final IByteRowTemplate rowTemplate = getRowTemplate();
         if (rowTemplate != null)
         {
             CheckUtils.checkMinValue(caretIndex, 0);
@@ -145,7 +145,7 @@ public abstract class ByteArea extends Area<IByteRowTemplate, IByteColorProvider
     @NotNull
     public Optional<ByteHitInfo> hitTest(final int x, final int y)
     {
-        final IByteRowTemplate rowTemplate = getRowTemplate().orElse(null);
+        final IByteRowTemplate rowTemplate = getRowTemplate();
 
         if (rowTemplate != null)
         {

@@ -2,12 +2,10 @@ package example.themes.simple;
 
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
-import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
-import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.RowBasedBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
-import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
 import cms.rendner.hexviewer.view.themes.AbstractTheme;
 import org.jetbrains.annotations.NotNull;
@@ -27,45 +25,39 @@ public class SimpleTheme extends AbstractTheme
     @Override
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
-        hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<OffsetArea>(hexViewer.getOffsetArea())
-                {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
+        setAreaPainter(hexViewer.getOffsetArea(), new RowBasedBackgroundPainter()
+        {
+            private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
-                    @Override
-                    public void paintRow(@NotNull final RowGraphics rowGraphics, boolean isLastRow)
-                    {
-                        super.paintRow(rowGraphics, isLastRow);
-                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
-                    }
-                }
-        ));
-        hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<HexArea>(hexViewer.getHexArea())
-                {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
+            @Override
+            public void paintRow(@NotNull final RowGraphics rowGraphics, @NotNull final AreaComponent component, boolean isLastRow)
+            {
+                super.paintRow(rowGraphics, component, isLastRow);
+                separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
+            }
+        });
+        setAreaPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
+        {
+            private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
-                    @Override
-                    public void paint(@NotNull final Graphics2D g)
-                    {
-                        super.paint(g);
-                        separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getHeight());
-                    }
-                }
-        ));
-        hexViewer.getTextArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new DefaultBackgroundPainter<TextArea>(hexViewer.getTextArea())
-                {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
+            @Override
+            public void paint(@NotNull final Graphics2D g, @NotNull JHexViewer hexViewer, @NotNull final AreaComponent component)
+            {
+                super.paint(g, hexViewer, component);
+                separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
+            }
+        });
+        setAreaPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
+        {
+            private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
-                    @Override
-                    public void paint(@NotNull final Graphics2D g)
-                    {
-                        super.paint(g);
-                        separator.paintBorder(area, g, 0, 0, area.getWidth(), area.getHeight());
-                    }
-                }
-        ));
+            @Override
+            public void paint(@NotNull final Graphics2D g, @NotNull JHexViewer hexViewer, @NotNull final AreaComponent component)
+            {
+                super.paint(g, hexViewer, component);
+                separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
+            }
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import cms.rendner.hexviewer.common.ranges.ByteRange;
 import cms.rendner.hexviewer.common.ranges.RowRange;
 import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
 import cms.rendner.hexviewer.common.utils.ObjectUtils;
+import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
 import org.jetbrains.annotations.NotNull;
@@ -75,13 +76,14 @@ public class DefaultHighlighter extends AbstractHighlighter
         if (!highlights.isEmpty())
         {
             final ByteRange visibleBytes = computeVisibleBytes(area);
-
             if (visibleBytes.isValid())
             {
-                area.getRowTemplate().ifPresent(rowTemplate -> {
+                final IByteRowTemplate rowTemplate = area.getRowTemplate();
+                if (rowTemplate != null)
+                {
                     final HDimension rowElementsHDimension = computeRowElementsHDimension(rowTemplate);
                     highlights.forEach(entry -> paintHighlight(g, entry, area, visibleBytes, rowElementsHDimension));
-                });
+                }
             }
         }
     }
@@ -106,7 +108,7 @@ public class DefaultHighlighter extends AbstractHighlighter
         {
             final IHighlightPainter highlightPainter = highlight.getPainter();
             final IHighlightPainter painter = highlightPainter == null ? defaultPainter : highlightPainter;
-            painter.paint(g, area, rowElementsHDimension, start, end);
+            painter.paint(g, hexViewer, area, rowElementsHDimension, start, end);
         }
     }
 
@@ -136,8 +138,7 @@ public class DefaultHighlighter extends AbstractHighlighter
     @NotNull
     protected ByteRange computeVisibleBytes(@NotNull final ByteArea area)
     {
-        final Rectangle rectangle = area.getVisibleRect();
-        final RowRange rowRange = area.getIntersectingRows(rectangle);
+        final RowRange rowRange = area.getIntersectingRows(area.getVisibleRect());
 
         if (rowRange.isValid())
         {
@@ -207,13 +208,12 @@ public class DefaultHighlighter extends AbstractHighlighter
         @Nullable
         protected Color getColor(@NotNull final ByteArea area)
         {
-            return area.getColorProvider()
-                    .map(IByteColorProvider::getDefaultHighlight)
-                    .orElse(fallbackColor);
+            final IByteColorProvider cp = area.getColorProvider();
+            return cp == null ? fallbackColor : ObjectUtils.ifNotNullOtherwise(cp.getDefaultHighlight(), fallbackColor);
         }
 
         @Override
-        public void paint(@NotNull final Graphics2D g, @NotNull final ByteArea area,
+        public void paint(@NotNull final Graphics2D g, @NotNull final JHexViewer hexViewer, @NotNull final ByteArea area,
                           @NotNull final HDimension rowElementsHDimension, final long byteStartIndex, final long byteEndIndex)
         {
             g.setColor(ObjectUtils.ifNotNullOtherwise(getColor(area), fallbackColor));

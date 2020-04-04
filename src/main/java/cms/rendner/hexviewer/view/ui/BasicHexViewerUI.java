@@ -12,7 +12,8 @@ import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
-import cms.rendner.hexviewer.view.components.areas.common.painter.BasicAreaPainter;
+import cms.rendner.hexviewer.view.components.areas.common.AreaId;
+import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaPainter;
 import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
 import cms.rendner.hexviewer.view.components.caret.DefaultCaret;
@@ -22,9 +23,11 @@ import cms.rendner.hexviewer.view.components.damager.DefaultDamager;
 import cms.rendner.hexviewer.view.components.damager.IDamager;
 import cms.rendner.hexviewer.view.components.highlighter.DefaultHighlighter;
 import cms.rendner.hexviewer.view.components.highlighter.IHighlighter;
+import cms.rendner.hexviewer.view.ui.areas.AreaComponentUI;
 import cms.rendner.hexviewer.view.ui.container.bytes.ByteAreasContainer;
 import cms.rendner.hexviewer.view.ui.container.offset.OffsetAreaContainer;
 import cms.rendner.hexviewer.view.ui.datatransfer.FileTransferHandler;
+import cms.rendner.hexviewer.view.ui.painter.PainterDelegate;
 import cms.rendner.hexviewer.view.ui.painter.bytes.ByteAreaPainter;
 import cms.rendner.hexviewer.view.ui.painter.offset.OffsetAreaPainter;
 import cms.rendner.hexviewer.view.ui.rowtemplate.factory.bytes.HexRowTemplateFactory;
@@ -107,10 +110,17 @@ public class BasicHexViewerUI extends HexViewerUI
     @NotNull
     private final HexRowTemplateFactory hexRowTemplateFactory = new HexRowTemplateFactory();
 
+    /**
+     * The delegate used to provide the {@link JHexViewer} to all area painters.
+     */
+    @NotNull
+    private final PainterDelegate painterDelegate;
+
     protected BasicHexViewerUI(@NotNull final JHexViewer hexViewer)
     {
         super();
         this.hexViewer = hexViewer;
+        painterDelegate = new PainterDelegate(hexViewer);
     }
 
     /**
@@ -154,7 +164,7 @@ public class BasicHexViewerUI extends HexViewerUI
      */
     protected void installComponents()
     {
-        byteAreasContainer = new ByteAreasContainer(hexViewer.getHexArea(), hexViewer.getTextArea());
+        byteAreasContainer = new ByteAreasContainer(hexViewer);
         offsetAreaContainer = new OffsetAreaContainer(hexViewer.getOffsetArea());
 
         scrollPane = new JScrollPane();
@@ -276,14 +286,20 @@ public class BasicHexViewerUI extends HexViewerUI
     protected void installOffsetAreaDefaults()
     {
         final OffsetArea area = hexViewer.getOffsetArea();
-        if (UIDelegateUtils.canInstallValue(area.getColorProvider().orElse(null)))
+        if (UIDelegateUtils.canInstallValue(area.getColorProvider()))
         {
             area.setColorProvider(createOffsetColorProvider());
         }
 
-        if (UIDelegateUtils.canInstallValue(area.getPainter().orElse(null)))
+        if (UIDelegateUtils.canInstallValue(area.getPainter()))
         {
             area.setPainter(createOffsetAreaPainter());
+        }
+
+        final AreaComponentUI ui = area.getUI();
+        if (ui != null)
+        {
+            ui.setPainterDelegate(painterDelegate);
         }
     }
 
@@ -299,14 +315,20 @@ public class BasicHexViewerUI extends HexViewerUI
     protected void uninstallOffsetAreaDefaults()
     {
         final OffsetArea area = hexViewer.getOffsetArea();
-        if (UIDelegateUtils.shouldUninstallValue(area.getColorProvider().orElse(null)))
+        if (UIDelegateUtils.shouldUninstallValue(area.getColorProvider()))
         {
             area.setColorProvider(null);
         }
 
-        if (UIDelegateUtils.shouldUninstallValue(area.getPainter().orElse(null)))
+        if (UIDelegateUtils.shouldUninstallValue(area.getPainter()))
         {
             area.setPainter(null);
+        }
+
+        final AreaComponentUI ui = area.getUI();
+        if (ui != null)
+        {
+            ui.setPainterDelegate(null);
         }
     }
 
@@ -318,19 +340,25 @@ public class BasicHexViewerUI extends HexViewerUI
      */
     protected void installByteAreaDefaults(@NotNull final ByteArea area)
     {
-        if (UIDelegateUtils.canInstallValue(area.getColorProvider().orElse(null)))
+        if (UIDelegateUtils.canInstallValue(area.getColorProvider()))
         {
-            area.setColorProvider(createByteColorProvider(area));
+            area.setColorProvider(createByteColorProvider(area.getAreaId()));
         }
 
-        if (UIDelegateUtils.canInstallValue(area.getPainter().orElse(null)))
+        if (UIDelegateUtils.canInstallValue(area.getPainter()))
         {
-            area.setPainter(createByteAreaPainter(area));
+            area.setPainter(createByteAreaPainter(area.getAreaId()));
+        }
+
+        final AreaComponentUI ui = area.getUI();
+        if (ui != null)
+        {
+            ui.setPainterDelegate(painterDelegate);
         }
     }
 
     /**
-     * Sets the offset-area defaults, initialized in {@link BasicHexViewerUI#installByteAreaDefaults(ByteArea)}, that have
+     * Sets the byte-area defaults, initialized in {@link BasicHexViewerUI#installByteAreaDefaults(ByteArea)}, that have
      * not been explicitly overridden to {@code null}.
      * <p/>
      * A property is considered overridden if its current value is not an {@code UIResource}.
@@ -340,14 +368,20 @@ public class BasicHexViewerUI extends HexViewerUI
      */
     protected void uninstallByteAreaDefaults(@NotNull final ByteArea area)
     {
-        if (UIDelegateUtils.shouldUninstallValue(area.getColorProvider().orElse(null)))
+        if (UIDelegateUtils.shouldUninstallValue(area.getColorProvider()))
         {
             area.setColorProvider(null);
         }
 
-        if (UIDelegateUtils.shouldUninstallValue(area.getPainter().orElse(null)))
+        if (UIDelegateUtils.shouldUninstallValue(area.getPainter()))
         {
             area.setPainter(null);
+        }
+
+        final AreaComponentUI ui = area.getUI();
+        if (ui != null)
+        {
+            ui.setPainterDelegate(null);
         }
     }
 
@@ -563,10 +597,10 @@ public class BasicHexViewerUI extends HexViewerUI
      *
      * @return the area painter.
      */
-    @Nullable
-    protected BasicAreaPainter<? extends OffsetArea> createOffsetAreaPainter()
+    @NotNull
+    protected IAreaPainter createOffsetAreaPainter()
     {
-        return new OffsetAreaPainterUIResource(hexViewer);
+        return new OffsetAreaPainterUIResource();
     }
 
     /**
@@ -585,11 +619,11 @@ public class BasicHexViewerUI extends HexViewerUI
      * Creates the color provider for a byte-area.
      * This method can be redefined to provide something else.
      *
-     * @param area the area for which the color provider to create.
+     * @param areaId the id of the area for which the color provider should be created.
      * @return the color provider.
      */
     @Nullable
-    protected IByteColorProvider createByteColorProvider(@NotNull final ByteArea area)
+    protected IByteColorProvider createByteColorProvider(@NotNull final AreaId areaId)
     {
         return new ByteColorProviderUIResource();
     }
@@ -598,13 +632,13 @@ public class BasicHexViewerUI extends HexViewerUI
      * Creates the area painter for a byte-area.
      * This method can be redefined to provide something else.
      *
-     * @param area the area for which the area painter to create.
+     * @param areaId the id of the area for which the area painter should be created.
      * @return the area painter.
      */
-    @Nullable
-    protected BasicAreaPainter<? extends ByteArea> createByteAreaPainter(@NotNull final ByteArea area)
+    @NotNull
+    protected IAreaPainter createByteAreaPainter(@NotNull final AreaId areaId)
     {
-        return new ByteAreaPainterUIResource(hexViewer, area);
+        return new ByteAreaPainterUIResource();
     }
 
     /**
@@ -715,7 +749,7 @@ public class BasicHexViewerUI extends HexViewerUI
                             .hitTest(locationInRowsView.x, locationInRowsView.y)
                             .map(byteHitInfo -> Math.min(byteHitInfo.index(), maxByteIndex))
                             .orElse(maxByteIndex);
-                    final JPopupMenu menu = factory.create(hexViewer, area.getId(), byteIndex);
+                    final JPopupMenu menu = factory.create(hexViewer, area.getAreaId(), byteIndex);
 
                     if (menu != null)
                     {
@@ -749,6 +783,10 @@ public class BasicHexViewerUI extends HexViewerUI
     {
         final String propertyName = event.getPropertyName();
         if (JHexViewer.PROPERTY_ROW_CONTENT_FONT.equals(propertyName))
+        {
+            updateAreaRowTemplates();
+        }
+        else if (JHexViewer.PROPERTY_BYTES_PER_ROW.equals(propertyName))
         {
             updateAreaRowTemplates();
         }
@@ -806,18 +844,9 @@ public class BasicHexViewerUI extends HexViewerUI
 
     private static class ByteAreaPainterUIResource extends ByteAreaPainter implements UIResource
     {
-        ByteAreaPainterUIResource(@NotNull final JHexViewer hexViewer, @NotNull final ByteArea area)
-        {
-            super(hexViewer, area);
-        }
     }
 
     private static class OffsetAreaPainterUIResource extends OffsetAreaPainter implements UIResource
     {
-
-        OffsetAreaPainterUIResource(@NotNull final JHexViewer hexViewer)
-        {
-            super(hexViewer, hexViewer.getOffsetArea());
-        }
     }
 }

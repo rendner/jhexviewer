@@ -1,5 +1,6 @@
 package cms.rendner.hexviewer.view.ui.container.bytes;
 
+import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
 import cms.rendner.hexviewer.view.ui.container.common.BaseAreaContainer;
@@ -18,18 +19,6 @@ import java.awt.*;
 public final class ByteAreasContainer extends BaseAreaContainer
 {
     /**
-     * The hex-area component of the {@link cms.rendner.hexviewer.view.JHexViewer}.
-     */
-    @NotNull
-    private final HexArea hexArea;
-
-    /**
-     * The text-area component of the {@link cms.rendner.hexviewer.view.JHexViewer}.
-     */
-    @NotNull
-    private final TextArea textArea;
-
-    /**
      * Used to manage a hex- and text-row as one combined row.
      */
     @NotNull
@@ -37,30 +26,30 @@ public final class ByteAreasContainer extends BaseAreaContainer
 
     /**
      * Creates a new instance.
-     * @param hexArea the hex-area component of the {@link cms.rendner.hexviewer.view.JHexViewer}.
-     * @param textArea the text-area component of the {@link cms.rendner.hexviewer.view.JHexViewer}.
+     *
+     * @param hexViewer reference to the {@link JHexViewer} component.
      */
-    public ByteAreasContainer(@NotNull final HexArea hexArea, @NotNull final TextArea textArea)
+    public ByteAreasContainer(@NotNull JHexViewer hexViewer)
     {
         super();
 
-        this.hexArea = hexArea;
-        this.hexArea.setAutoscrolls(true);
+        final HexArea hexArea = hexViewer.getHexArea();
+        hexArea.setAutoscrolls(true);
 
-        this.textArea = textArea;
-        this.textArea.setAutoscrolls(true);
+        final TextArea textArea = hexViewer.getTextArea();
+        textArea.setAutoscrolls(true);
 
-        virtualBytesRow = new VirtualBytesRow(this.hexArea, this.textArea);
+        virtualBytesRow = new VirtualBytesRow(hexViewer, hexArea, textArea);
 
         setLayout(new BorderLayout());
-        add(this.hexArea, BorderLayout.LINE_START);
-        add(this.textArea, BorderLayout.CENTER);
+        add(hexArea, BorderLayout.LINE_START);
+        add(textArea, BorderLayout.CENTER);
     }
 
     @Override
     public int rowHeight()
     {
-        return hexArea.getRowHeight();
+        return virtualBytesRow.rowHeight();
     }
 
     @Override

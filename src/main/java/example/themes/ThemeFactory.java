@@ -34,7 +34,6 @@ public class ThemeFactory
     {
         if (!availableThemes.isEmpty())
         {
-
             final int themeIndex = new Random().nextInt(availableThemes.size());
             final ITheme theme = availableThemes.get(themeIndex);
             theme.applyTo(hexViewer);

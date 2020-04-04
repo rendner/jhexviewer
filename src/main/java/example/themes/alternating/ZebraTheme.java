@@ -2,11 +2,9 @@ package example.themes.alternating;
 
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
-import cms.rendner.hexviewer.view.components.areas.bytes.HexArea;
-import cms.rendner.hexviewer.view.components.areas.bytes.TextArea;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.RowBasedBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
-import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
 import cms.rendner.hexviewer.view.themes.AbstractTheme;
 import org.jetbrains.annotations.NotNull;
@@ -25,45 +23,39 @@ public class ZebraTheme extends AbstractTheme
     @Override
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
-        hexViewer.getOffsetArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<OffsetArea>(hexViewer.getOffsetArea())
-                {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
+        setAreaPainter(hexViewer.getOffsetArea(), new RowBasedBackgroundPainter()
+        {
+            private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
-                    @Override
-                    public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
-                    {
-                        super.paintRow(rowGraphics, isLastRow);
-                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
-                    }
-                })
-        );
-        hexViewer.getHexArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<HexArea>(hexViewer.getHexArea())
-                {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
+            @Override
+            public void paintRow(@NotNull final RowGraphics rowGraphics, @NotNull AreaComponent component, final boolean isLastRow)
+            {
+                super.paintRow(rowGraphics, component, isLastRow);
+                separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
+            }
+        });
+        setAreaPainter(hexViewer.getHexArea(), new RowBasedBackgroundPainter()
+        {
+            private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
-                    @Override
-                    public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
-                    {
-                        super.paintRow(rowGraphics, isLastRow);
-                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
-                    }
-                })
-        );
-        hexViewer.getTextArea().getPainter().ifPresent(paintCallback -> paintCallback.setBackgroundPainter(
-                new RowBasedBackgroundPainter<TextArea>(hexViewer.getTextArea())
-                {
-                    private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
+            @Override
+            public void paintRow(@NotNull final RowGraphics rowGraphics, @NotNull AreaComponent component, final boolean isLastRow)
+            {
+                super.paintRow(rowGraphics, component, isLastRow);
+                separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
+            }
+        });
+        setAreaPainter(hexViewer.getTextArea(), new RowBasedBackgroundPainter()
+        {
+            private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
-                    @Override
-                    public void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
-                    {
-                        super.paintRow(rowGraphics, isLastRow);
-                        separator.paintBorder(area, rowGraphics.g, 0, 0, area.getWidth(), area.getRowHeight());
-                    }
-                })
-        );
+            @Override
+            public void paintRow(@NotNull final RowGraphics rowGraphics, @NotNull AreaComponent component, final boolean isLastRow)
+            {
+                super.paintRow(rowGraphics, component, isLastRow);
+                separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
+            }
+        });
     }
 
     @Override

@@ -2,6 +2,7 @@ package cms.rendner.hexviewer.view.ui.painter.bytes;
 
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.painter.BasicAreaPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.IAreaBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
@@ -21,35 +22,22 @@ import java.awt.*;
  *
  * @author rendner
  */
-public class ByteAreaPainter extends BasicAreaPainter<ByteArea>
+public class ByteAreaPainter extends BasicAreaPainter
 {
     /**
-     * The {@link JHexViewer} to which the area to be painted belongs.
+     * Creates a new instance which paints a byte-area.
      */
-    @NotNull
-    private final JHexViewer hexViewer;
-
-    /**
-     * Creates a new instance which paints the byte-area.
-     *
-     * @param hexViewer the {@link JHexViewer} to which the area belongs. Required to query additional properties of the {@link JHexViewer}.
-     * @param area      the area to be painted by this instance.
-     *                  This area should be the same which calls {@link #paint(Graphics2D)}
-     *                  on this painter.
-     */
-    public ByteAreaPainter(@NotNull final JHexViewer hexViewer, @NotNull final ByteArea area)
+    public ByteAreaPainter()
     {
-        super(area);
-        this.hexViewer = hexViewer;
-        setForegroundPainter(new ByteRowForegroundPainter(hexViewer, area));
+        setForegroundPainter(new ByteRowForegroundPainter());
     }
 
     @Override
-    public void paint(@NotNull final Graphics2D g)
+    public void paint(@NotNull final Graphics2D g, @NotNull final JHexViewer hexViewer, @NotNull final AreaComponent component)
     {
-        paintBackground(g);
-        paintMiddleground(g);
-        paintForeground(g);
+        paintBackground(g, hexViewer, component);
+        paintMiddleground(g, hexViewer, component);
+        paintForeground(g, hexViewer, component);
     }
 
     /**
@@ -59,8 +47,9 @@ public class ByteAreaPainter extends BasicAreaPainter<ByteArea>
      *
      * @param g the Graphics2D object of the area to paint into.
      */
-    protected void paintMiddleground(@NotNull final Graphics2D g)
+    protected void paintMiddleground(@NotNull final Graphics2D g, @NotNull final JHexViewer hexViewer, @NotNull final AreaComponent component)
     {
+        final ByteArea area = (ByteArea) component;
         hexViewer.getHighlighter().ifPresent(highlighter -> highlighter.paint(g, area));
         hexViewer.getCaret().ifPresent(caret -> caret.paint(g, area));
     }

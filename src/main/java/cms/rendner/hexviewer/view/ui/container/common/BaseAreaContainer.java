@@ -1,7 +1,7 @@
 package cms.rendner.hexviewer.view.ui.container.common;
 
 import cms.rendner.hexviewer.common.utils.CheckUtils;
-import cms.rendner.hexviewer.view.ui.container.BorderlessJComponent;
+import cms.rendner.hexviewer.view.components.BorderlessJComponent;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 

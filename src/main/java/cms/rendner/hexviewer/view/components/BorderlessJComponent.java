@@ -1,4 +1,4 @@
-package cms.rendner.hexviewer.view.ui.container;
+package cms.rendner.hexviewer.view.components;
 
 import org.jetbrains.annotations.Nullable;
 

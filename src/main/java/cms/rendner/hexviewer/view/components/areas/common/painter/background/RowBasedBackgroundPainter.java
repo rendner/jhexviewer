@@ -1,23 +1,24 @@
 package cms.rendner.hexviewer.view.components.areas.common.painter.background;
 
+import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
 /**
- * Paints the area background rowwise.
+ * Paints the area background row-wise.
  * <p/>
  * This class uses the background colors provided by the {@link cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider#getRowBackground(int)}
- * of the area to paint the background rowwise.
- *
- * @param <A> the type of the area which is painted by this class.
+ * of the area to paint the background row-wise.
  */
-public class RowBasedBackgroundPainter<A extends Area<?, ?>> implements IAreaBackgroundPainter
+public class RowBasedBackgroundPainter implements IAreaBackgroundPainter
 {
     /**
      * Is re-used for fetching the bounds of a Graphics2D object.
@@ -26,41 +27,17 @@ public class RowBasedBackgroundPainter<A extends Area<?, ?>> implements IAreaBac
     private final Rectangle clipBounds = new Rectangle();
 
     /**
-     * The area to be painted by this instance.
-     */
-    @NotNull
-    protected final A area;
-
-    /**
      * Updated on every paint call - provides colors for rendering the background.
      */
+    @Nullable
     private IAreaColorProvider colorProvider;
 
-    /**
-     * Creates a new instance responsible for painting the background for this area.
-     * <p/>
-     * Creating an instance of this class doesn't automatically registers this instance for painting the area background.
-     *
-     * @param area the area to be painted.
-     */
-    public RowBasedBackgroundPainter(@NotNull final A area)
-    {
-        super();
-        this.area = area;
-    }
-
     @Override
-    public void paint(final @NotNull Graphics2D g)
+    public void paint(@NotNull final Graphics2D g, @NotNull final JHexViewer hexViewer, @NotNull final AreaComponent component)
     {
-        colorProvider = area.getColorProvider().orElse(null);
+        colorProvider = ((Area<?, ?>) component).getColorProvider();
 
-        final boolean canPaint = colorProvider != null;
-        if (!canPaint)
-        {
-            return;
-        }
-
-        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildBackgroundRowGraphics(g, area);
+        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildBackgroundRowGraphics(g, component);
         if (rowGraphicsList.isEmpty())
         {
             return;
@@ -69,7 +46,7 @@ public class RowBasedBackgroundPainter<A extends Area<?, ?>> implements IAreaBac
         final RowGraphics lastEntry = rowGraphicsList.get(rowGraphicsList.size() - 1);
 
         rowGraphicsList.forEach(rowGraphics -> {
-            paintRow(rowGraphics, rowGraphics == lastEntry);
+            paintRow(rowGraphics, component, rowGraphics == lastEntry);
             rowGraphics.dispose();
         });
     }
@@ -77,10 +54,11 @@ public class RowBasedBackgroundPainter<A extends Area<?, ?>> implements IAreaBac
     /**
      * Paints the background of a row.
      *
-     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
+     * @param rowGraphics the rowGraphics instance which refers to the row to paint.
+     * @param component   a reference to the area. This instance can be casted to the specific area implementation if needed.
      * @param isLastRow   indicates if this is the last row of the area background.
      */
-    protected void paintRow(@NotNull final RowGraphics rowGraphics, final boolean isLastRow)
+    protected void paintRow(@NotNull final RowGraphics rowGraphics, @NotNull AreaComponent component, final boolean isLastRow)
     {
         rowGraphics.g.setColor(getRowBackground(rowGraphics.rowIndex));
         rowGraphics.g.getClipBounds(clipBounds);

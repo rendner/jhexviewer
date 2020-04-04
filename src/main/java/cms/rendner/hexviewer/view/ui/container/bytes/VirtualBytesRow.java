@@ -1,6 +1,6 @@
 package cms.rendner.hexviewer.view.ui.container.bytes;
 
-import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
+import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,12 +25,23 @@ final class VirtualBytesRow
     private final ByteArea leftArea;
     @NotNull
     private final ByteArea rightArea;
+    @NotNull
+    private final JHexViewer hexViewer;
 
-    VirtualBytesRow(@NotNull final ByteArea leftArea, @NotNull final ByteArea rightArea)
+    VirtualBytesRow(@NotNull JHexViewer hexViewer, @NotNull final ByteArea leftArea, @NotNull final ByteArea rightArea)
     {
         super();
         this.leftArea = leftArea;
         this.rightArea = rightArea;
+        this.hexViewer = hexViewer;
+    }
+
+    /**
+     * @return the height of the row.
+     */
+    public int rowHeight()
+    {
+        return leftArea.getRowHeight();
     }
 
     /**
@@ -91,7 +102,7 @@ final class VirtualBytesRow
     private int virtualXLocationToElementIndex(@NotNull final ByteArea area, final int virtualXLocation)
     {
         final int xInRowTemplate = virtualXLocation - area.getX();
-        return area.hitTest(xInRowTemplate, 0).map(hitInfo -> (int)hitInfo.index()).orElse(INVALID_INDEX);
+        return area.hitTest(xInRowTemplate, 0).map(hitInfo -> (int) hitInfo.index()).orElse(INVALID_INDEX);
     }
 
     /**
@@ -135,6 +146,6 @@ final class VirtualBytesRow
 
     private int getBytesPerRow()
     {
-        return leftArea.getRowTemplate().map(IByteRowTemplate::elementCount).orElse(0);
+        return hexViewer.getBytesPerRow();
     }
 }

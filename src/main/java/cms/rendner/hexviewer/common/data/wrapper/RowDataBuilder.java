@@ -35,7 +35,7 @@ public final class RowDataBuilder
     }
 
     /**
-     * Creates a new row data part which points to the data for the specified row.
+     * Creates a new row data part which refers to the data for the specified row.
      *
      * @param rowIndex the index of the row.
      * @return the data of the row.

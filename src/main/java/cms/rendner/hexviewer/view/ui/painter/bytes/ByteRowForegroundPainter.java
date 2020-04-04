@@ -8,6 +8,7 @@ import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
@@ -18,23 +19,12 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Paints the foreground of a byte-area rowwise.
+ * Paints the foreground of a byte-area row-wise.
  *
  * @author rendner
  */
 public final class ByteRowForegroundPainter implements IAreaForegroundPainter
 {
-    /**
-     * The area to be painted by the painter.
-     */
-    @NotNull
-    private final ByteArea area;
-    /**
-     * The {@link JHexViewer} to which the area to be painted belongs.
-     */
-    @NotNull
-    private final JHexViewer hexViewer;
-
     /**
      * Updated on every paint call - the font ascent to align the text vertically.
      */
@@ -53,23 +43,11 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     @Nullable
     private IByteColorProvider colorProvider;
 
-    /**
-     * Creates a new instance which paints the foreground of the byte-area.
-     *
-     * @param hexViewer the {@link JHexViewer} to which the area belongs. Used to query additional properties of the {@link JHexViewer}.
-     * @param area      the area to be painted by this instance.
-     */
-    public ByteRowForegroundPainter(@NotNull final JHexViewer hexViewer, @NotNull final ByteArea area)
-    {
-        super();
-        this.hexViewer = hexViewer;
-        this.area = area;
-    }
-
     @Override
-    public void paint(@NotNull final Graphics2D g)
+    public void paint(@NotNull final Graphics2D g, @NotNull JHexViewer hexViewer, @NotNull final AreaComponent component)
     {
-        rowTemplate = area.getRowTemplate().orElse(null);
+        final ByteArea area = (ByteArea) component;
+        rowTemplate = area.getRowTemplate();
         final RowDataBuilder rowDataBuilder = hexViewer.getDataModel()
                 .map(dataModel -> new RowDataBuilder(dataModel, hexViewer.getBytesPerRow()))
                 .orElse(null);
@@ -81,7 +59,7 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
         }
 
         applyRenderingHints(g);
-        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, area);
+        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, component);
         if (rowGraphicsList.isEmpty())
         {
             return;
@@ -89,12 +67,12 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
 
         valueFormatter = area.getValueFormatter();
         ascent = rowTemplate.fontMetrics().getAscent();
-        colorProvider = area.getColorProvider().orElse(null);
+        colorProvider = area.getColorProvider();
 
         rowGraphicsList.forEach(rowGraphics -> {
             final RowData bytes = rowDataBuilder.build(rowGraphics.rowIndex);
-            paintRowElementsBackground(rowGraphics, bytes);
-            paintRowElementsForeground(rowGraphics, bytes);
+            paintRowElementsBackground(rowGraphics, hexViewer, bytes);
+            paintRowElementsForeground(rowGraphics, hexViewer, bytes);
             rowGraphics.dispose();
         });
     }
@@ -114,12 +92,13 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Paints the foreground of the row elements.
      *
-     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
+     * @param rowGraphics the rowGraphics instance which refers to the row to paint.
+     * @param hexViewer   the JHexViewer to which the area belongs.
      * @param bytes       the data which should be displayed by the row. This can be less as the number of elements provided by the
      *                    {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
      *                    to display.
      */
-    private void paintRowElementsForeground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
+    private void paintRowElementsForeground(@NotNull final RowGraphics rowGraphics, @NotNull final JHexViewer hexViewer, @NotNull final RowData bytes)
     {
         long byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 
@@ -139,12 +118,13 @@ public final class ByteRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Paints the background of the row elements.
      *
-     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
+     * @param rowGraphics the rowGraphics instance which refers to the row to paint.
+     * @param hexViewer   the JHexViewer to which the area belongs.
      * @param bytes       the data which should be displayed by the row. This can be less as the number of elements provided by the
      *                    {@link IByteRowTemplate} of the area, because the last row of an area could have less bytes
      *                    to display.
      */
-    private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, @NotNull final RowData bytes)
+    private void paintRowElementsBackground(@NotNull final RowGraphics rowGraphics, @NotNull final JHexViewer hexViewer, @NotNull final RowData bytes)
     {
         long byteOffset = hexViewer.rowIndexToByteIndex(rowGraphics.rowIndex);
 

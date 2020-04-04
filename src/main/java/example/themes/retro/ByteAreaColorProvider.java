@@ -14,15 +14,15 @@ import java.awt.*;
  */
 public final class ByteAreaColorProvider implements IByteColorProvider
 {
-    private @NotNull final ByteArea area;
-    private @NotNull final JHexViewer hexViewer;
+    private final ByteArea area;
+    private final JHexViewer hexViewer;
 
-    private @NotNull final Color focusedCaret = Color.DARK_GRAY;
-    private @NotNull final Color caret = new Color(0xABB6B9);
-    private @NotNull final Color focusedSelection = new Color(0xFFA11D);
-    private @NotNull final Color selection = new Color(0x41FFA11D, true);
-    private @NotNull final Color background = new Color(0xECEAD3);
-    private @NotNull final Color rowElementForeground = new Color(0x9D8D73);
+    private final Color focusedCaret = Color.DARK_GRAY;
+    private final Color caret = new Color(0xABB6B9);
+    private final Color focusedSelection = new Color(0xFFA11D);
+    private final Color selection = new Color(0x41FFA11D, true);
+    private final Color background = new Color(0xECEAD3);
+    private final Color rowElementForeground = new Color(0x9D8D73);
 
     public ByteAreaColorProvider(@NotNull final JHexViewer hexViewer, @NotNull final ByteArea area)
     {

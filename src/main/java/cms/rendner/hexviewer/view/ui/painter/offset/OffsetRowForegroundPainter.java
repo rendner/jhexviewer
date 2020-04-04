@@ -4,6 +4,7 @@ import cms.rendner.hexviewer.common.data.formatter.offset.IOffsetFormatter;
 import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.offset.IOffsetRowTemplate;
 import cms.rendner.hexviewer.view.JHexViewer;
+import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
@@ -16,24 +17,12 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Paints the foreground of an offset-area rowwise.
+ * Paints the foreground of an offset-area row-wise.
  *
  * @author rendner
  */
 public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
 {
-    /**
-     * The {@link JHexViewer} to which the area to be painted belongs.
-     */
-    @NotNull
-    private final JHexViewer hexViewer;
-
-    /**
-     * The area to be painted by the painter.
-     */
-    @NotNull
-    private final OffsetArea area;
-
     /**
      * Updated on every paint call - the font ascent to align the text vertically.
      */
@@ -47,21 +36,12 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
      */
     private IOffsetColorProvider colorProvider;
 
-    /**
-     * Creates a new instance which paints the foreground of the offset-area.
-     *
-     * @param hexViewer the {@link JHexViewer} to which the area belongs. Used to query additional properties of the {@link JHexViewer}.
-     */
-    public OffsetRowForegroundPainter(@NotNull final JHexViewer hexViewer)
-    {
-        this.hexViewer = hexViewer;
-        area = hexViewer.getOffsetArea();
-    }
-
     @Override
-    public void paint(@NotNull final Graphics2D g)
+    public void paint(@NotNull final Graphics2D g, @NotNull final JHexViewer hexViewer, @NotNull final AreaComponent component)
     {
-        final IOffsetRowTemplate rowTemplate = area.getRowTemplate().orElse(null);
+
+        final OffsetArea area = (OffsetArea) component;
+        final IOffsetRowTemplate rowTemplate = area.getRowTemplate();
 
         final boolean canPaint = rowTemplate != null;
         if (!canPaint)
@@ -70,7 +50,7 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
         }
 
         applyRenderingHints(g);
-        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, area);
+        final List<RowGraphics> rowGraphicsList = RowGraphicsBuilder.buildForegroundRowGraphics(g, component);
         if (rowGraphicsList.isEmpty())
         {
             return;
@@ -78,14 +58,14 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
 
         valueFormatter = area.getValueFormatter();
         ascent = rowTemplate.fontMetrics().getAscent();
-        colorProvider = area.getColorProvider().orElse(null);
+        colorProvider = area.getColorProvider();
 
         final Element element = rowTemplate.element();
 
         rowGraphicsList.forEach(rowGraphics ->
         {
             paintRowElementBackground(rowGraphics, element);
-            paintRowElementForeground(rowGraphics, element);
+            paintRowElementForeground(rowGraphics, hexViewer, element);
             rowGraphics.dispose();
         });
     }
@@ -105,7 +85,7 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Paints the background of an row element.
      *
-     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
+     * @param rowGraphics the rowGraphics instance which refers to the row to paint.
      * @param element     the element to paint.
      */
     private void paintRowElementBackground(@NotNull final RowGraphics rowGraphics, @NotNull final Element element)
@@ -121,12 +101,13 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Paints the foreground of an row element.
      *
-     * @param rowGraphics the rowGraphics instance which belongs to the row to paint.
+     * @param rowGraphics the rowGraphics instance which refers to the row to paint.
+     * @param hexViewer   the JHexViewer to which the offset-area belongs.
      * @param element     the element to paint.
      */
-    private void paintRowElementForeground(@NotNull final RowGraphics rowGraphics, @NotNull final Element element)
+    private void paintRowElementForeground(@NotNull final RowGraphics rowGraphics, @NotNull final JHexViewer hexViewer, @NotNull final Element element)
     {
-        final long value = rowIndexToOffset(rowGraphics.rowIndex);
+        final long value = rowIndexToOffset(hexViewer, rowGraphics.rowIndex);
         final String formattedValue = valueFormatter.format(value);
 
         rowGraphics.g.setColor(getForegroundColor(rowGraphics.rowIndex));
@@ -136,11 +117,12 @@ public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
     /**
      * Returns the offset to be rendered for a row index.
      *
-     * @param rowIndex the index of the row to paint.
+     * @param rowIndex  the index of the row to paint.
+     * @param hexViewer the JHexViewer to which the offset-area belongs.
      * @return the offset of the {@link cms.rendner.hexviewer.view.components.caret.ICaret caret} if the offset should
      * be displayed and the row contains the caret, otherwise the index of the row.
      */
-    private long rowIndexToOffset(final int rowIndex)
+    private long rowIndexToOffset(@NotNull final JHexViewer hexViewer, final int rowIndex)
     {
         final long offset = hexViewer.rowIndexToByteIndex(rowIndex);
 

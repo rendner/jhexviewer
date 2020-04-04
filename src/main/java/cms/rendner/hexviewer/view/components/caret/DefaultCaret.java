@@ -1,9 +1,12 @@
 package cms.rendner.hexviewer.view.components.caret;
 
 import cms.rendner.hexviewer.common.geom.HDimension;
+import cms.rendner.hexviewer.common.rowtemplate.bytes.IByteRowTemplate;
+import cms.rendner.hexviewer.common.utils.ObjectUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
+import cms.rendner.hexviewer.view.components.areas.common.AreaId;
 import cms.rendner.hexviewer.view.components.highlighter.DefaultHighlighter;
 import cms.rendner.hexviewer.view.components.highlighter.IHighlighter;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +27,18 @@ public class DefaultCaret extends BaseCaret
     /**
      * Stores the selection painters for the byte areas served by this caret.
      */
-    private final Map<ByteArea, IHighlighter.IHighlightPainter> selectionPainterMap = new HashMap<>();
+    private final Map<AreaId, IHighlighter.IHighlightPainter> selectionPainterMap = new HashMap<>();
+
+    private final Color DEFAULT_CARET_COLOR = Color.WHITE;
+
+    @Override
+    public void install(final @NotNull JHexViewer hexViewer)
+    {
+        super.install(hexViewer);
+        final IHighlighter.IHighlightPainter selectionPainter = new SelectionHighlighter();
+        selectionPainterMap.put(AreaId.HEX, selectionPainter);
+        selectionPainterMap.put(AreaId.TEXT, selectionPainter);
+    }
 
     @Override
     public void uninstall(final @NotNull JHexViewer hexViewer)
@@ -48,11 +62,13 @@ public class DefaultCaret extends BaseCaret
 
     private void paintSelection(@NotNull final Graphics2D g, @NotNull final ByteArea area)
     {
-        area.getRowTemplate().ifPresent(rowTemplate -> {
+        final IByteRowTemplate rowTemplate = area.getRowTemplate();
+        if (rowTemplate != null)
+        {
             final Rectangle elementBounds = rowTemplate.elementBounds(0, rowTemplate.elementCount() - 1);
             final HDimension elementsBounds = new HDimension(elementBounds.x, elementBounds.width);
-            getPainter(area).paint(g, area, elementsBounds, getSelectionStart(), getSelectionEnd());
-        });
+            selectionPainterMap.get(area.getAreaId()).paint(g, hexViewer, area, elementsBounds, getSelectionStart(), getSelectionEnd());
+        }
     }
 
     private void paintCaret(@NotNull final Graphics2D g, @NotNull final ByteArea area)
@@ -66,30 +82,8 @@ public class DefaultCaret extends BaseCaret
     @NotNull
     private Color getCaretColor(@NotNull final ByteArea area)
     {
-        return area.getColorProvider()
-                .map(IByteColorProvider::getCaret)
-                .orElse(Color.WHITE);
-    }
-
-    @NotNull
-    private IHighlighter.IHighlightPainter getPainter(@NotNull final ByteArea area)
-    {
-        if (!selectionPainterMap.containsKey(area))
-        {
-            selectionPainterMap.put(area, new DefaultHighlighter.DefaultHighlightPainter()
-            {
-                @Nullable
-                @Override
-                protected Color getColor(@NotNull final ByteArea area)
-                {
-                    return area.getColorProvider()
-                            .map(IByteColorProvider::getSelection)
-                            .orElse(null);
-                }
-            });
-        }
-
-        return selectionPainterMap.get(area);
+        final IByteColorProvider cp = area.getColorProvider();
+        return cp == null ? DEFAULT_CARET_COLOR : ObjectUtils.ifNotNullOtherwise(cp.getCaret(), DEFAULT_CARET_COLOR);
     }
 
     @Override
@@ -109,5 +103,16 @@ public class DefaultCaret extends BaseCaret
                     Math.max(newStartIndex, newEndIndex)
             );
         });
+    }
+
+    private static class SelectionHighlighter extends DefaultHighlighter.DefaultHighlightPainter
+    {
+        @Nullable
+        @Override
+        protected Color getColor(@NotNull final ByteArea area)
+        {
+            final IByteColorProvider cp = area.getColorProvider();
+            return cp == null ? null : cp.getSelection();
+        }
     }
 }

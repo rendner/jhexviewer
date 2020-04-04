@@ -137,7 +137,7 @@ public interface IHighlighter
          * @param byteStartIndex        the starting offset in the configuration &gt;= 0
          * @param byteEndIndex          the ending offset in the configuration &gt;= byteStartIndex
          */
-        void paint(@NotNull Graphics2D g, @NotNull ByteArea area,
+        void paint(@NotNull Graphics2D g, @NotNull JHexViewer hexViewer, @NotNull ByteArea area,
                    @NotNull final HDimension rowElementsHDimension, long byteStartIndex, long byteEndIndex);
 
     }

@@ -1,13 +1,8 @@
 package cms.rendner.hexviewer.view.ui.painter.offset;
 
-import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.painter.BasicAreaPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.IAreaBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
-import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
 
 /**
  * Paints the offset-area to which the painter belongs.
@@ -17,19 +12,13 @@ import java.awt.*;
  *
  * @author rendner
  */
-public class OffsetAreaPainter extends BasicAreaPainter<OffsetArea>
+public class OffsetAreaPainter extends BasicAreaPainter
 {
     /**
-     * Creates a new instance which paints the offset-area.
-     *
-     * @param hexViewer the {@link JHexViewer} to which the area belongs. Required to query additional properties of the {@link JHexViewer}.
-     * @param area      the area to be painted by this instance.
-     *                  This area should be the same which calls {@link #paint(Graphics2D)}
-     *                  on this painter.
+     * Creates a new instance which paints an offset-area.
      */
-    public OffsetAreaPainter(@NotNull final JHexViewer hexViewer, @NotNull final OffsetArea area)
+    public OffsetAreaPainter()
     {
-        super(area);
-        setForegroundPainter(new OffsetRowForegroundPainter(hexViewer));
+        setForegroundPainter(new OffsetRowForegroundPainter());
     }
 }

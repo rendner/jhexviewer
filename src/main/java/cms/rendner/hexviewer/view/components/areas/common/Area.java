@@ -1,23 +1,16 @@
 package cms.rendner.hexviewer.view.components.areas.common;
 
-import cms.rendner.hexviewer.common.ranges.RowRange;
-import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.IRowTemplate;
 import cms.rendner.hexviewer.common.utils.CheckUtils;
-import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider;
 import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaPainter;
-import cms.rendner.hexviewer.view.ui.container.BorderlessJComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-import java.util.Optional;
-
 /**
- * Abstract component which displays content rowwise.
+ * Abstract component which displays content row-wise.
  * <p/>
- * An area is rendered by an {@link IAreaPainter} which has to be set to show content at all.
+ * An area is rendered by an {@link IAreaPainter} which has to be present to render the content.
  *
  * @param <T> the row-template describing the layout of the rows displayed by the area.
  * @param <P> the color provider used by several other classes to allow customizing of the used colors.
@@ -26,7 +19,7 @@ import java.util.Optional;
 public abstract class Area<
         T extends IRowTemplate,
         P extends IAreaColorProvider
-        > extends BorderlessJComponent
+        > extends AreaComponent
 {
     /**
      * Constant used to determine when the <code>painter</code> property has changed.
@@ -56,25 +49,14 @@ public abstract class Area<
     public static final String PROPERTY_ROW_COUNT = "rowCount";
 
     /**
-     * Constant representing an invalid index.
+     * Default row height which is used when no rowTemplate is available.
      */
-    protected final static int INVALID_INDEX = IndexUtils.INVALID_INDEX;
+    private final static int DEFAULT_ROW_HEIGHT = 25;
 
     /**
-     * Max possible component height.
-     * Content which is located behind Integer.MAX_VALUE can't be rendered in Swing components.
+     * Default row width which is used when no rowTemplate is available.
      */
-    private final static int MAX_HEIGHT = Integer.MAX_VALUE - 100;
-
-    /**
-     * Dummy row height which is used when no rowTemplate is available.
-     */
-    private final static int DUMMY_ROW_HEIGHT = 25;
-
-    /**
-     * Dummy row width which is used when no rowTemplate is available.
-     */
-    private final static int DUMMY_ROW_WIDTH = 100;
+    private final static int DEFAULT_ROW_WIDTH = 100;
 
     /**
      * describes the layout of the rows of the area.
@@ -89,57 +71,55 @@ public abstract class Area<
     private P colorProvider;
 
     /**
-     * The id of the area.
-     */
-    @NotNull
-    private final AreaId id;
-
-    /**
      * Is used to paint the whole area component.
      */
     @Nullable
     private IAreaPainter painter;
 
     /**
-     * The number of rows, displayed by this component, which contains data.
+     * The number of rows, displayed by this component.
      */
     private int rowCount;
 
     /**
      * Creates a new instance with the provided values.
      *
-     * @param id the id of the area.
+     * @param areaId the id of the area.
      */
-    protected Area(@NotNull final AreaId id)
+    protected Area(@NotNull final AreaId areaId)
     {
-        this.id = id;
+        super(areaId);
     }
 
     /**
-     * @return The id of the area. Used to identify a specific area.
-     */
-    @NotNull
-    public AreaId getId()
-    {
-        return id;
-    }
-
-    /**
-     * Not implemented, throws an exception.
+     * Returns the height of a single row.
+     * <p/>
+     * The height depends on the currently applied <code>rowTemplate</code>. If no <code>rowTemplate</code> is set
+     * a default height of {@link Area#DEFAULT_ROW_HEIGHT} is returned.
      *
-     * @param comp        ignored
-     * @param constraints ignored
-     * @param index       ignored
+     * @return the height of a single row.
      */
     @Override
-    protected void addImpl(final Component comp, final Object constraints, final int index)
+    public final int getRowHeight()
     {
-        throw new UnsupportedOperationException("This instance can't have children. The content of this component is painted by an 'IAreaPainter' instance.");
+        return rowTemplate == null ? DEFAULT_ROW_HEIGHT : rowTemplate.height();
     }
 
     /**
-     * @return the number of rows &gt;= 1, displayed by this component, which contains data.
+     * Returns the width of a single row.
+     * <p/>
+     * The width depends on the currently applied <code>rowTemplate</code>. If no <code>rowTemplate</code> is set
+     * a default width of {@link Area#DEFAULT_ROW_WIDTH} is returned.
+     *
+     * @return the width of a single row.
      */
+    @Override
+    public final int getRowWidth()
+    {
+        return rowTemplate == null ? DEFAULT_ROW_WIDTH : rowTemplate.width();
+    }
+
+    @Override
     public int getRowCount()
     {
         return rowCount;
@@ -195,19 +175,17 @@ public abstract class Area<
      *
      * @return the color provider used to color the rendered content of the area.
      */
-    @NotNull
-    public Optional<P> getColorProvider()
+    @Nullable
+    public P getColorProvider()
     {
-        return Optional.ofNullable(colorProvider);
+        return colorProvider;
     }
 
-    /**
-     * @return the painter responsible for painting the content of the area.
-     */
-    @NotNull
-    public Optional<IAreaPainter> getPainter()
+    @Override
+    @Nullable
+    public IAreaPainter getPainter()
     {
-        return Optional.ofNullable(painter);
+        return painter;
     }
 
     /**
@@ -221,92 +199,13 @@ public abstract class Area<
      */
     public void setPainter(@Nullable final IAreaPainter painter)
     {
-        final IAreaPainter oldValue = this.painter;
-        this.painter = painter;
-        firePropertyChange(PROPERTY_PAINTER, oldValue, this.painter);
-        repaint();
-    }
-
-    /**
-     * Calculates the preferred size for rendering the data model of the area.
-     *
-     * @return the preferred size of the area.
-     */
-    @Override
-    public Dimension getPreferredSize()
-    {
-        final int width = getRowWidth();
-        long height = (getRowHeight() * rowCount);
-
-        // check for overflow
-        if (height < 1 || height > MAX_HEIGHT)
+        if (this.painter != painter)
         {
-            height = MAX_HEIGHT;
+            final IAreaPainter oldValue = this.painter;
+            this.painter = painter;
+            firePropertyChange(PROPERTY_PAINTER, oldValue, this.painter);
+            repaint();
         }
-
-        return new Dimension(width, (int) height);
-    }
-
-    /**
-     * Damages a row of the area (marks a row for repainting).
-     *
-     * @param rowIndex the index of the row which should be damaged.
-     */
-    public void damageRow(final int rowIndex)
-    {
-        repaint(getRowRect(rowIndex));
-    }
-
-    /**
-     * Returns a range of rows that intersect a rectangle.
-     *
-     * @param rectangle the rectangle to determine the intersecting rows.
-     * @return the range of intersection.
-     */
-    @NotNull
-    public RowRange getIntersectingRows(@NotNull final Rectangle rectangle)
-    {
-        if (rectangle.isEmpty())
-        {
-            return RowRange.INVALID;
-        }
-
-        final int topRowIndex = verticalLocationToRowIndex(rectangle.y);
-
-        if (topRowIndex != INVALID_INDEX)
-        {
-            int bottomRowIndex = verticalLocationToRowIndex(rectangle.y + rectangle.height - 1);
-
-            if (bottomRowIndex == INVALID_INDEX)
-            {
-                // in this case use the rowCount
-                bottomRowIndex = Math.max(0, rowCount - 1);
-            }
-
-            return new RowRange(topRowIndex, bottomRowIndex);
-        }
-
-        return RowRange.INVALID;
-    }
-
-    /**
-     * Returns the bounds of the requested row.
-     * <p/>
-     * This method always return the rect of the row even if the row specified by the rowIndex is outside of the
-     * current component bounds.
-     *
-     * @param rowIndex the index of the row, &gt;= 0.
-     * @return a rectangle with the bounds of the specified row.
-     */
-    @NotNull
-    public final Rectangle getRowRect(final int rowIndex)
-    {
-        final int rowHeight = getRowHeight();
-        return new Rectangle(
-                0,
-                rowIndex * rowHeight,
-                getWidth(),
-                rowHeight);
     }
 
     /**
@@ -332,121 +231,9 @@ public abstract class Area<
      *
      * @return the row-template for the area.
      */
-    @NotNull
-    public Optional<T> getRowTemplate()
+    @Nullable
+    public T getRowTemplate()
     {
-        return Optional.ofNullable(rowTemplate);
-    }
-
-    /**
-     * Returns the height of a single row.
-     * <p/>
-     * The height depends on the currently applied <code>rowTemplate</code>. If no <code>rowTemplate</code> is set
-     * a default height of  {@link Area#DUMMY_ROW_HEIGHT} is returned.
-     *
-     * @return the height of a single row.
-     */
-    public final int getRowHeight()
-    {
-        return rowTemplate == null ? DUMMY_ROW_HEIGHT : rowTemplate.height();
-    }
-
-    /**
-     * Returns the width of a single row.
-     * <p/>
-     * The width depends on the currently applied <code>rowTemplate</code>. If no <code>rowTemplate</code> is set
-     * a default width of {@link Area#DUMMY_ROW_WIDTH} is returned.
-     *
-     * @return the width of a single row.
-     */
-    public final int getRowWidth()
-    {
-        return rowTemplate == null ? DUMMY_ROW_WIDTH : rowTemplate.width();
-    }
-
-    /**
-     * Translates the position of an element of a row into the coordinates within the view.
-     * <p/>
-     * This method always return the translated position even if the row specified by the rowIndex is outside of the
-     * current component bounds.
-     *
-     * @param rowIndex the target row index of the row in the component for the element.
-     * @param element  the element inside the row specified by the rowIndex.
-     * @return the translated coordinates.
-     */
-    @NotNull
-    protected Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull final Element element)
-    {
-        final Rectangle rowRect = getRowRect(rowIndex);
-        return new Rectangle(
-                rowRect.x + element.x(),
-                rowRect.y + element.y(),
-                element.width(),
-                element.height()
-        );
-    }
-
-    /**
-     * Translates the position of an element of a single row into the coordinates within the view.
-     * <p/>
-     * This method always return the translated position even if the row specified by the rowIndex is outside of the
-     * current component bounds.
-     *
-     * @param rowIndex      the target row index of the row in the component for the element.
-     * @param elementBounds the relative bounds of an element inside the row specified by the rowIndex.
-     * @return the adjusted elementBounds parameter.
-     */
-    @NotNull
-    protected Rectangle translateIntoViewCoordinates(final int rowIndex, @NotNull final Rectangle elementBounds)
-    {
-        final Rectangle rowRect = getRowRect(rowIndex);
-        return new Rectangle(
-                rowRect.x + elementBounds.x,
-                rowRect.y + elementBounds.y,
-                elementBounds.width,
-                elementBounds.height
-        );
-    }
-
-    /**
-     * Returns the index of the row which contains the specified y coordinate.
-     *
-     * @param yLocation the y value to convert.
-     * @return the index of the row, or <code>-1</code> if the specified y value was out of component bounds.
-     */
-    protected int verticalLocationToRowIndex(final int yLocation)
-    {
-        final int result = yLocation / getRowHeight();
-
-        if (result < 0)
-        {
-            return INVALID_INDEX;
-        }
-        else if (result >= rowCount)
-        {
-            return INVALID_INDEX;
-        }
-        else
-        {
-            return result;
-        }
-    }
-
-    @Override
-    protected void paintComponent(@NotNull final Graphics g)
-    {
-        final Color bgColor = getBackground();
-        if (bgColor != null)
-        {
-            g.setColor(bgColor);
-            g.fillRect(0, 0, getWidth(), getHeight());
-        }
-
-        super.paintComponent(g);
-
-        if (painter != null)
-        {
-            painter.paint((Graphics2D) g);
-        }
+        return rowTemplate;
     }
 }
