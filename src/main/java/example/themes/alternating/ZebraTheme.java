@@ -75,14 +75,10 @@ public class ZebraTheme extends AbstractTheme
     {
         final IOffsetColorProvider offsetColorProvider = new IOffsetColorProvider()
         {
-            private @NotNull
-            final Color rowElementForegroundWhenCaretInRow = Color.BLACK;
-            private @NotNull
-            final Color rowElementForeground = new Color(0x999999);
-            private @NotNull
-            final Color evenRowBackground = new Color(0xE8E8E8);
-            private @NotNull
-            final Color oddRowBackground = new Color(0xCFCFC4);
+            private final Color rowElementForegroundWhenCaretInRow = Color.BLACK;
+            private final Color rowElementForeground = new Color(0x999999);
+            private final Color evenRowBackground = new Color(0xE8E8E8);
+            private final Color oddRowBackground = new Color(0xCFCFC4);
 
             @NotNull
             @Override

@@ -99,12 +99,9 @@ public class ConsoleTheme extends AbstractTheme
     {
         final IOffsetColorProvider offsetColorProvider = new IOffsetColorProvider()
         {
-            private @NotNull
-            final Color rowElementForegroundWhenCaretInRow = new Color(0xFFFFFF);
-            private @NotNull
-            final Color rowElementForeground = new Color(0xABB6B9);
-            private @NotNull
-            final Color background = new Color(0x232629);
+            private final Color rowElementForegroundWhenCaretInRow = new Color(0xFFFFFF);
+            private final Color rowElementForeground = new Color(0xABB6B9);
+            private final Color background = new Color(0x232629);
 
             @NotNull
             @Override
