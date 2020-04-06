@@ -23,7 +23,7 @@ public class ZebraTheme extends AbstractTheme
     @Override
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
-        setAreaPainter(hexViewer.getOffsetArea(), new RowBasedBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getOffsetArea(), new RowBasedBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -34,7 +34,7 @@ public class ZebraTheme extends AbstractTheme
                 separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
             }
         });
-        setAreaPainter(hexViewer.getHexArea(), new RowBasedBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getHexArea(), new RowBasedBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -45,7 +45,7 @@ public class ZebraTheme extends AbstractTheme
                 separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
             }
         });
-        setAreaPainter(hexViewer.getTextArea(), new RowBasedBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getTextArea(), new RowBasedBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 

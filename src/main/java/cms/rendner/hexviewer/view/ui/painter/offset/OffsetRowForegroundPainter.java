@@ -5,7 +5,7 @@ import cms.rendner.hexviewer.common.rowtemplate.Element;
 import cms.rendner.hexviewer.common.rowtemplate.offset.IOffsetRowTemplate;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
-import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaLayerPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
 import cms.rendner.hexviewer.view.components.areas.offset.OffsetArea;
@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author rendner
  */
-public final class OffsetRowForegroundPainter implements IAreaForegroundPainter
+public final class OffsetRowForegroundPainter implements IAreaLayerPainter
 {
     /**
      * Updated on every paint call - the font ascent to align the text vertically.

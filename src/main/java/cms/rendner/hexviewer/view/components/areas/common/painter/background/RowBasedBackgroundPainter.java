@@ -4,6 +4,7 @@ import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.Area;
 import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider;
+import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaLayerPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ import java.util.List;
  * This class uses the background colors provided by the {@link cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider#getRowBackground(int)}
  * of the area to paint the background row-wise.
  */
-public class RowBasedBackgroundPainter implements IAreaBackgroundPainter
+public class RowBasedBackgroundPainter implements IAreaLayerPainter
 {
     /**
      * Is re-used for fetching the bounds of a Graphics2D object.

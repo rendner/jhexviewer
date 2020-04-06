@@ -9,7 +9,7 @@ import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
 import cms.rendner.hexviewer.view.components.areas.bytes.model.colors.IByteColorProvider;
 import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
-import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
+import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaLayerPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphics;
 import cms.rendner.hexviewer.view.components.areas.common.painter.graphics.RowGraphicsBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author rendner
  */
-public final class ByteRowForegroundPainter implements IAreaForegroundPainter
+public final class ByteRowForegroundPainter implements IAreaLayerPainter
 {
     /**
      * Updated on every paint call - the font ascent to align the text vertically.

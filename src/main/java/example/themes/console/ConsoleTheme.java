@@ -3,6 +3,7 @@ package example.themes.console;
 import cms.rendner.hexviewer.common.utils.IndexUtils;
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.bytes.ByteArea;
+import cms.rendner.hexviewer.view.components.areas.bytes.painter.middleground.DefaultMiddlegroundPainter;
 import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
 import cms.rendner.hexviewer.view.components.areas.common.painter.background.DefaultBackgroundPainter;
 import cms.rendner.hexviewer.view.components.areas.offset.model.colors.IOffsetColorProvider;
@@ -23,7 +24,7 @@ public class ConsoleTheme extends AbstractTheme
     @Override
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
-        setAreaPainter(hexViewer.getOffsetArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getOffsetArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
 
@@ -34,17 +35,26 @@ public class ConsoleTheme extends AbstractTheme
                 separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
             }
         });
-        setAreaPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
-            private final Border subSeparator = BorderFactory.createDashedBorder(Color.GRAY, 3.0F, 5.0F);
 
             @Override
             public void paint(@NotNull final Graphics2D g, @NotNull final JHexViewer hexViewer, @NotNull final AreaComponent component)
             {
                 super.paint(g, hexViewer, component);
-                paintMultipleOf4Separator(g, component);
                 separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
+            }
+        });
+        setAreaMiddlegroundPainter(hexViewer.getHexArea(), new DefaultMiddlegroundPainter()
+        {
+            private final Border dashedSeparator = BorderFactory.createDashedBorder(Color.LIGHT_GRAY, 3.0F, 5.0F);
+
+            @Override
+            public void paint(final @NotNull Graphics2D g, final @NotNull JHexViewer hexViewer, final @NotNull AreaComponent component)
+            {
+                super.paint(g, hexViewer, component);
+                paintMultipleOf4Separator(g, component);
             }
 
             private void paintMultipleOf4Separator(@NotNull final Graphics2D g, @NotNull final AreaComponent component)
@@ -64,12 +74,12 @@ public class ConsoleTheme extends AbstractTheme
                     final Rectangle left = area.getByteRect(leftByteIndex);
                     final Rectangle right = area.getByteRect(leftByteIndex + 1);
                     final int spaceBetween = right.x - (left.x + left.width);
-                    subSeparator.paintBorder(component, g, left.x + left.width + spaceBetween / 2, 0, 1, component.getHeight());
+                    dashedSeparator.paintBorder(component, g, left.x + left.width + spaceBetween / 2, 0, 1, component.getHeight());
                     leftByteIndex += multipleCount;
                 }
             }
         });
-        setAreaPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.WHITE);
 

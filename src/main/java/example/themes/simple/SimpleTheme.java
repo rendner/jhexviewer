@@ -25,7 +25,7 @@ public class SimpleTheme extends AbstractTheme
     @Override
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
-        setAreaPainter(hexViewer.getOffsetArea(), new RowBasedBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getOffsetArea(), new RowBasedBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -36,7 +36,7 @@ public class SimpleTheme extends AbstractTheme
                 separator.paintBorder(component, rowGraphics.g, 0, 0, component.getWidth(), component.getRowHeight());
             }
         });
-        setAreaPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 
@@ -47,7 +47,7 @@ public class SimpleTheme extends AbstractTheme
                 separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
             }
         });
-        setAreaPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY);
 

@@ -1,4 +1,4 @@
-package cms.rendner.hexviewer.view.components.areas.common.painter.background;
+package cms.rendner.hexviewer.view.components.areas.common.painter;
 
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
@@ -7,18 +7,17 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 /**
- * A background painter is responsible for painting the background of an area.
+ * A layer contains the painting of a specific part of an area.
  * <p/>
- * An background painter usually paints the background and/or the border of an area. To allow customized colors, the
- * painter should use the {@link cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider} of
- * the area.
+ * To allow customized colors, the painter should use the {@link cms.rendner.hexviewer.view.components.areas.common.model.colors.IAreaColorProvider}
+ * of the area.
  *
  * @author rendner
  */
-public interface IAreaBackgroundPainter
+public interface IAreaLayerPainter
 {
     /**
-     * Paints the background of an area.
+     * Is called whenever the layer should be drawn.
      *
      * @param g         the Graphics2D context of the area to be painted.
      * @param hexViewer the JHexViewer to which the area belongs.

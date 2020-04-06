@@ -21,7 +21,7 @@ public class RetroTheme extends AbstractTheme
     @Override
     protected void adjustPainters(@NotNull final JHexViewer hexViewer)
     {
-        setAreaPainter(hexViewer.getOffsetArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getOffsetArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.GRAY);
 
@@ -32,7 +32,7 @@ public class RetroTheme extends AbstractTheme
                 separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
             }
         });
-        setAreaPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getHexArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.WHITE);
 
@@ -43,7 +43,7 @@ public class RetroTheme extends AbstractTheme
                 separator.paintBorder(component, g, 0, 0, component.getWidth(), component.getHeight());
             }
         });
-        setAreaPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
+        setAreaBackgroundPainter(hexViewer.getTextArea(), new DefaultBackgroundPainter()
         {
             private final Border separator = BorderFactory.createMatteBorder(0, 1, 0, 1, Color.WHITE);
 

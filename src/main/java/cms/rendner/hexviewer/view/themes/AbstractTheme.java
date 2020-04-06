@@ -2,9 +2,8 @@ package cms.rendner.hexviewer.view.themes;
 
 import cms.rendner.hexviewer.view.JHexViewer;
 import cms.rendner.hexviewer.view.components.areas.common.AreaComponent;
+import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaLayerPainter;
 import cms.rendner.hexviewer.view.components.areas.common.painter.IAreaPainter;
-import cms.rendner.hexviewer.view.components.areas.common.painter.background.IAreaBackgroundPainter;
-import cms.rendner.hexviewer.view.components.areas.common.painter.foreground.IAreaForegroundPainter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +66,7 @@ public abstract class AbstractTheme implements ITheme
      * @param component the component.
      * @param painter   the painter to set.
      */
-    protected void setAreaPainter(@NotNull final AreaComponent component, @Nullable final IAreaBackgroundPainter painter)
+    protected void setAreaBackgroundPainter(@NotNull final AreaComponent component, @Nullable final IAreaLayerPainter painter)
     {
         final IAreaPainter areaPainter = component.getPainter();
         if (areaPainter != null)
@@ -78,12 +77,28 @@ public abstract class AbstractTheme implements ITheme
     }
 
     /**
+     * Sets the painter responsible for painting the middleground of the component.
+     *
+     * @param component the component.
+     * @param painter   the painter to set.
+     */
+    protected void setAreaMiddlegroundPainter(@NotNull final AreaComponent component, @Nullable final IAreaLayerPainter painter)
+    {
+        final IAreaPainter areaPainter = component.getPainter();
+        if (areaPainter != null)
+        {
+            areaPainter.setMiddlegroundPainter(painter);
+            component.repaint();
+        }
+    }
+
+    /**
      * Sets the painter responsible for painting the foreground of the component.
      *
      * @param component the component.
      * @param painter   the painter to set.
      */
-    protected void setAreaPainter(@NotNull final AreaComponent component, @Nullable final IAreaForegroundPainter painter)
+    protected void setAreaForegroundPainter(@NotNull final AreaComponent component, @Nullable final IAreaLayerPainter painter)
     {
         final IAreaPainter areaPainter = component.getPainter();
         if (areaPainter != null)
