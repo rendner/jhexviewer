@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
@@ -328,11 +328,18 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         hexViewer.getDataModel().ifPresent(bytes ->
         {
             hexViewer.getCaret().ifPresent(caret -> {
-                final Executor executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> {
-                    final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.getBytesPerRow());
-                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
-                });
+                final ExecutorService executor = Executors.newSingleThreadExecutor();
+                try
+                {
+                    executor.execute(() -> {
+                        final RowWiseByteWalker walker = new RowWiseByteWalker(bytes, hexViewer.getBytesPerRow());
+                        walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                    });
+                }
+                finally
+                {
+                    executor.shutdown();
+                }
             });
         });
     }
@@ -342,11 +349,18 @@ public class ExampleContextMenuFactory implements IContextMenuFactory
         hexViewer.getDataModel().ifPresent(bytes ->
         {
             hexViewer.getCaret().ifPresent(caret -> {
-                final Executor executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> {
-                    final ByteWalker walker = new ByteWalker(bytes);
-                    walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
-                });
+                final ExecutorService executor = Executors.newSingleThreadExecutor();
+                try
+                {
+                    executor.execute(() -> {
+                        final ByteWalker walker = new ByteWalker(bytes);
+                        walker.walk(visitor, caret.getSelectionStart(), caret.getSelectionEnd());
+                    });
+                }
+                finally
+                {
+                    executor.shutdown();
+                }
             });
         });
     }
